@@ -23,7 +23,8 @@ export default {
       console.log(' Web socket onmessage ', e.data)
       self.message = JSON.parse(e.data)
       if (self.message['message'] === 'True') {
-        self.updateMsg()
+        self.updateMsg('読取中')
+        self.getUser()
         console.log('updated at ', self.msg)
       }
     }
@@ -36,9 +37,19 @@ export default {
     }
   },
   methods: {
-    updateMsg: function () {
-      this.msg = '読取中'
+    updateMsg: function (text) {
+      this.msg = text
     },
+    getUser: function () {
+      fetch('http://localhost:3000/api/getUser')
+      .then(response => {
+        return response.json();
+      }).then(res => {
+        console.log(res);
+      }).catch(function (error) {
+        console.log(error);
+      });
+    }
   }
 }
 </script>
