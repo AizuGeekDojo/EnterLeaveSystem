@@ -1,9 +1,11 @@
 click==6.7
 Flask==1.0
+Flask-Cors==3.0.4
 gevent==1.2.2
 gevent-websocket==0.10.1
 greenlet==0.4.13
 itsdangerous==0.24
 Jinja2==2.10
 MarkupSafe==1.0
+six==1.11.0
 Werkzeug==0.14.1
