@@ -42,13 +42,15 @@ export default {
     },
     getUser: function () {
       fetch('http://localhost:3000/api/getUser')
-      .then(response => {
-        return response.json();
-      }).then(res => {
-        console.log(res);
-      }).catch(function (error) {
-        console.log(error);
-      });
+        .then(response => {
+          return response.json()
+        }).then(res => {
+          if (res['isExist'] === true) {
+            this.updateMsg(res['StudentId'] + ' ' + res['Name'])
+          }
+        }).catch(function (error) {
+          console.log(error)
+        })
     }
   }
 }
