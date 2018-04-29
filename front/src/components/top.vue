@@ -46,7 +46,7 @@ export default {
           return response.json()
         }).then(res => {
           if (res['isExist'] === true) {
-            this.updateMsg(res['StudentId'] + ' ' + res['Name'])
+            this.updateMsg('Welcome' + ' ' + res['Name'] + '(' + res['StudentId'] + ')')
           }
         }).catch(function (error) {
           console.log(error)
