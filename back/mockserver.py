@@ -17,6 +17,15 @@ def socket():
             msg = json.dumps({"message": input()})
             ws.send(msg)
 
+@app.route('/api/getUser')
+def getUser():
+	res = json.dumps({
+		"isExist": True,
+		"StudentId": "s1240000",
+		"Name": "Hoge Fuga"
+	})
+	return res
+
 def main():
     app.debug = True
     server = pywsgi.WSGIServer(("", 3000), app, handler_class=WebSocketHandler)
