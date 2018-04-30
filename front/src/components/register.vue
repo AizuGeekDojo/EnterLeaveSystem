@@ -18,7 +18,11 @@ export default {
       console.log('submit', this.snum)
       fetch('http://localhost:3000/api/getUser', {
         method: 'POST',
-        body: JSON.stringify({'hoge': 'hoge'})
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({'snum': this.snum})
       }).then(response => {
         return response.json()
       }).then(res => {
