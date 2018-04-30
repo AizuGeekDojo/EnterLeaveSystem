@@ -16,8 +16,9 @@ def socket():
     if request.environ.get('wsgi.websocket'):
         print("Connected")
         ws = request.environ['wsgi.websocket']
+        print('input responce ')
         msg = json.dumps({"message": input()})
-        ws.send(msg)
+        ws.send(ms)
 
 @app.route('/api/getUser')
 def getUser():
