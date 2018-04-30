@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import top from '@/components/top'
 import regist from '@/components/register'
+import welcome from '@/components/welcome'
 
 Vue.use(Router)
 
@@ -16,6 +17,11 @@ export default new Router({
       path: '/regist',
       name: 'regist',
       component: regist
+    },
+    {
+      path: '/welcome',
+      name: 'welcome',
+      component: welcome
     }
   ]
 })
