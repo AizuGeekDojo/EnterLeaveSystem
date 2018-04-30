@@ -1,0 +1,49 @@
+<template>
+    <div id='snum'>
+        <span>学籍を入力してください: <br> {{ snum }}</span><br>
+        <input v-on:keyup.enter="submit" v-model="snum" placeholder="s120000">
+    </div>
+</template>
+
+<script>
+export default {
+  name: 'snum',
+  data () {
+    return {
+      snum: ''
+    }
+  },
+  methods: {
+    submit: function () {
+      console.log('submit', this.snum)
+      fetch('http://localhost:3000/api/getUser', {
+        method: 'POST',
+        body: JSON.stringify({'hoge': 'hoge'})
+      }).then(response => {
+        return response.json()
+      }).then(res => {
+        console.log(res)
+      }).catch(function (error) {
+        console.log(error)
+      })
+    }
+  }
+}
+</script>
+
+<style scoped>
+h1, h2 {
+  font-weight: normal;
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+li {
+  display: inline-block;
+  margin: 0 10px;
+}
+a {
+  color: #42b983;
+}
+</style>
