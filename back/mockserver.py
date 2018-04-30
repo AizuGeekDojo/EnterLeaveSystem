@@ -28,6 +28,13 @@ def getUser():
 	})
 	return res
 
+# sample request curl  -H "Content-type: application/json" -X POST localhost:3000/api/register -d '{"hoge": "fuga"}'
+@app.route('/api/register', methods=['POST'])
+def register():
+    req_json = json.loads(request.data.decode('utf-8'))
+    print(req_json)
+    return json.dumps({'error': False, 'data': req_json})	
+
 def main():
     app.debug = True
     server = pywsgi.WSGIServer(("", 3000), app, handler_class=WebSocketHandler)
