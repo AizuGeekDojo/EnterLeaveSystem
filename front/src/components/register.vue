@@ -1,7 +1,8 @@
 <template>
     <div id='snum'>
-        <span>学籍を入力してください: <br> {{ snum }}</span><br>
-        <input v-on:keyup.enter="submit" v-model="snum" placeholder="s120000">
+        <p>学籍を入力してください: </p>
+        <p>Input: {{ snum }}</p>
+        <input v-on:keyup.enter="submit" v-model="snum" placeholder="s120000" style="border: 2px, #42b983, double;">
     </div>
 </template>
 
@@ -16,7 +17,7 @@ export default {
   methods: {
     submit: function () {
       console.log('submit', this.snum)
-      fetch('http://localhost:3000/api/getUser', {
+      fetch('http://localhost:3000/api/register', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
