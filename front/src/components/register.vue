@@ -31,6 +31,7 @@ export default {
       }).catch(function (error) {
         console.log(error)
       })
+      location.replace('http://localhost:8080/#/welcome')
     }
   }
 }
