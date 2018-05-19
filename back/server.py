@@ -19,6 +19,8 @@ def socket():
         print("Connected")
         ws = request.environ['wsgi.websocket']
         cardid = nfc_read.nfc_read()
+        while cardid is not "":
+            continue
         msg = json.dumps({
             "IsCard": True,
             "CardID": cardid,
