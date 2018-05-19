@@ -4,6 +4,7 @@ from geventwebsocket.handler import WebSocketHandler
 from flask_cors import CORS
 import json
 from handler import *
+import nfc_read
 
 app = Flask(__name__)
 CORS(app)
@@ -17,8 +18,13 @@ def socket():
     if request.environ.get('wsgi.websocket'):
         print("Connected")
         ws = request.environ['wsgi.websocket']
-        print('input responce ')
-        msg = json.dumps({"message": True})
+        cardid = nfc_read.nfc_read()
+        msg = json.dumps({
+            "IsCard": True,
+            "CardID": cardid,
+            "IsNew": isNewCard(cardid),
+            "timestamp": int(time.time())
+        })
         ws.send(msg)
     return 
 
