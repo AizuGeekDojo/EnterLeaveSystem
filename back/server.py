@@ -3,7 +3,7 @@ from gevent import pywsgi
 from geventwebsocket.handler import WebSocketHandler
 from flask_cors import CORS
 import json
-from db import *
+from handler import *
 
 app = Flask(__name__)
 CORS(app)
