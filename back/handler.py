@@ -1,13 +1,19 @@
 import time
+import db
+
 
 def createUser(req_json: dict):
     """
     ユーザーの作成
     """
     #TODO
-    sid = pass
-    success = pass
+
+    sid = req_json["SID"]
     card_id = req_json["CardID"]
+
+    addUser(card_id,sid)
+    success = True
+
     res = json.dumps({
         "Success": success,
         "SID": sid,
@@ -37,9 +43,13 @@ def updateUser(req_json: dict):
     ユーザの更新
     """
     #TODO
-    sid = pass
-    success = pass
+    
+    sid = req_json["SID"]
     card_id = req_json["CardID"]
+    
+    updateUser(card_id,sid)
+    success = True
+
     res = json.dumps({
         "SID": sid,
         "CardID": card_id,
@@ -47,11 +57,10 @@ def updateUser(req_json: dict):
     })
     return res
 
-    return 
 
 def isNewCard(card_id: str) -> bool:
     """
     新しいカードかの確認
     """
-    #TODO
-    return 
+    return getSIDByIDm(card_id)
+
