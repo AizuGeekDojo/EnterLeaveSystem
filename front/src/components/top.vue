@@ -36,7 +36,6 @@ export default {
     }
     ws.onclose = function (e) {
       console.log(' Web socket onclose ')
-      setTimeout(self.mounted(), 5000)
     }
   },
   methods: {
