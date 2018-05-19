@@ -3,6 +3,7 @@ from gevent import pywsgi
 from geventwebsocket.handler import WebSocketHandler
 from flask_cors import CORS
 import json
+from db import *
 
 app = Flask(__name__)
 CORS(app)
@@ -23,10 +24,14 @@ def socket():
 
 @app.route("/api/createuser/", methods=['POST'])
 def createUserHandler():
+    req_json = json.loads(request.data.decode('utf-8'))
+    createUser(req_json)
     return
 
 @app.route("/api/readuser/", methods=['GET'])
 def readUserHandler():
+    req_json = json.loads(request.data.decode('utf-8'))
+    getUser(req_json)
     return
 
 @app.route("/api/updateuser", methods=['UPDATE'])

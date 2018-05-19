@@ -1,6 +1,7 @@
 # API JSON仕様
 ## UserInfo
-### Create Request
+### Create User
+Request
 ```json
 {
     "SID": string,
@@ -8,7 +9,17 @@
     "timestamp": timestamp,
 }
 ```
-### Update Request
+Response
+```json
+{
+    "Success": bool,
+    "SID": string,
+    "CardID": string,
+    "timestamp": timestamp,
+}
+```
+### Update User
+Request
 ```json
 {
     "SID": string,
@@ -16,7 +27,25 @@
     "timestamp": timestamp,
 }
 ```
-### Read Response
+Response
+```json
+{
+    "Success": bool,
+    "SID": string,
+    "CardID": string,
+    "timestamp": timestamp,
+}
+```
+
+### Read User
+Request
+```json
+{
+    "CardID": string,
+    "timestamp": timestamp,
+}
+```
+Response
 ```json
 {
     "SID": string,
