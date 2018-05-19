@@ -1,20 +1,22 @@
 #EnterLeaveSystem
 
-## Init Virtual env 
-`virtualenv -p python .env/`
-`pip install -r requirement.txt`
+## In virtualenv 
+```
+pipenv shell
+```
 
-## Use VirtualEnv
-`source .env/bin/activate`
+## Add Package
+```
+pipenv install hogehoge
+```
+or  
+```
+pipenv shell
+pip install hogehge
+```
 
-## Exit VirtualEnv
-`deactivate`
-
-## Add Library
-`pip install oooo`
-
-## Upgrade requirement.txt
-`pip freeze > requirement.txt`
-
-
+## RUN In virtual env
+```
+pipenv run hogehoge.py
+```
 
