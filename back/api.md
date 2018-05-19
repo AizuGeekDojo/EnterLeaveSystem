@@ -1,5 +1,6 @@
-UserInfo
-Create Request
+# API JSON仕様
+## UserInfo
+### Create Request
 ```json
 {
     "SID": string,
@@ -7,7 +8,7 @@ Create Request
     "timestamp": timestamp,
 }
 ```
-Update Request
+### Update Request
 ```json
 {
     "SID": string,
@@ -15,7 +16,7 @@ Update Request
     "timestamp": timestamp,
 }
 ```
-Read Response
+### Read Response
 ```json
 {
     "SID": string,
@@ -25,7 +26,7 @@ Read Response
 }
 ```
 
-Websocket Server -> Front
+## Websocket Server -> Front
 ```json
 {
     "IsCard": bool,
@@ -34,3 +35,23 @@ Websocket Server -> Front
     "timestamp": timestamp
 }
 ```
+
+# API URI
+
+## UserInfo
+### create 
+URI : `/api/createuser/`  
+method : `POST`  
+
+### read
+URI : `/api/readuser`
+method : `GET`
+
+### Update
+URI : `/api/updateuser`
+method : `UPDATE`
+
+## WebSocket
+URI : `/socket/readCard`
+
+
