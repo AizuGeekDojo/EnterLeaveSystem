@@ -5,12 +5,13 @@
 </template>
 
 <script>
+import router from '../router'
 const ws = new WebSocket('ws://localhost:3000/socket')
 export default {
   name: 'top',
   data () {
     return {
-      msg: 'カードをリーダーにかざしてください',
+      msg: 'Please hold the card over the reader',
       message: ''
     }
   },
@@ -22,10 +23,11 @@ export default {
     ws.onmessage = function (e) {
       console.log(' Web socket onmessage ', e.data)
       self.message = JSON.parse(e.data)
-      if (self.message['message'] === 'True') {
-        self.updateMsg('読取中')
+      if (self.message['IsCard'] === true) {
+        self.updateMsg('now reading ...')
         self.getUser()
-        console.log('updated at ', self.msg)
+      } else {
+        self.createUser(self.message['CardID'])
       }
     }
     ws.onerror = function (e) {
@@ -34,23 +36,19 @@ export default {
     }
     ws.onclose = function (e) {
       console.log(' Web socket onclose ')
+      setTimeout(self.mounted(), 5000)
     }
   },
   methods: {
     updateMsg: function (text) {
-      this.msg = text
+      const self = this
+      self.msg = text
     },
     getUser: function () {
-      fetch('http://localhost:3000/api/getUser')
-        .then(response => {
-          return response.json()
-        }).then(res => {
-          if (res['isExist'] === true) {
-            this.updateMsg('Welcome' + ' ' + res['Name'] + '(' + res['StudentId'] + ')')
-          }
-        }).catch(function (error) {
-          console.log(error)
-        })
+      setTimeout(router.push({name: 'welcome', params: {cardid: this.$route.params.CardID}}), 2000)
+    },
+    createUser: function (CardID) {
+      setTimeout(router.push({name: 'regist', params: {cardid: CardID}}), 500)
     }
   }
 }

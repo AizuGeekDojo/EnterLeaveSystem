@@ -1,12 +1,13 @@
 <template>
     <div id='snum'>
-        <p>学籍を入力してください: </p>
+        <p>Input Your Student Number: </p>
         <p>Input: {{ snum }}</p>
-        <input v-on:keyup.enter="submit" v-model="snum" placeholder="s120000" style="border: 2px, #42b983, double;">
+        <input v-on:keyup.enter="regist" v-model="snum" placeholder="s120000" style="border: 2px, #42b983, double;">
     </div>
 </template>
 
 <script>
+import router from '../router'
 export default {
   name: 'snum',
   data () {
@@ -15,23 +16,34 @@ export default {
     }
   },
   methods: {
-    submit: function () {
-      console.log('submit', this.snum)
-      fetch('http://localhost:3000/api/register', {
+    regist: function () {
+      let cardid = this.$route.params.CardID
+      let date = new Date()
+      fetch('http://localhost:3000/api/createuser', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({'snum': this.snum})
+        body: JSON.stringify(
+          {
+            'SID': this.snum,
+            'CardID': cardid,
+            'timestamp': date.getTime()
+          }
+        )
       }).then(response => {
         return response.json()
       }).then(res => {
-        console.log(res)
+        if (res['Success'] !== true) {
+          alert('Create failed')
+          setTimeout(router.push({name: 'top'}), 500)
+        } else {
+          setTimeout(router.push({name: 'welcome', params: {cardid: cardid}}), 500)
+        }
       }).catch(function (error) {
         console.log(error)
       })
-      location.replace('http://localhost:8080/#/welcome')
     }
   }
 }
