@@ -6,7 +6,6 @@ def createUser(req_json: dict):
     """
     ユーザーの作成
     """
-    #TODO
 
     sid = req_json["SID"]
     card_id = req_json["CardID"]
@@ -28,7 +27,6 @@ def getUser(req_json: dict):
     """
     sid = req_json["SID"]
     card_id = req_json["CardID"]
-    #TODO
     user_name = pass
     res = json.dumps({
         "SID": sid,
@@ -42,7 +40,6 @@ def updateUser(req_json: dict):
     """
     ユーザの更新
     """
-    #TODO
     
     sid = req_json["SID"]
     card_id = req_json["CardID"]
