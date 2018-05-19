@@ -10,7 +10,7 @@ def createUser(req_json: dict):
     sid = req_json["SID"]
     card_id = req_json["CardID"]
 
-    addUser(card_id,sid)
+    db.addUser(card_id,sid)
     success = True
 
     res = json.dumps({
@@ -27,7 +27,7 @@ def getUser(req_json: dict):
     """
     sid = req_json["SID"]
     card_id = req_json["CardID"]
-    user_name = pass
+    user_name = db.getUserName(sid)
     res = json.dumps({
         "SID": sid,
         "CardID": card_id,
@@ -44,7 +44,7 @@ def updateUser(req_json: dict):
     sid = req_json["SID"]
     card_id = req_json["CardID"]
     
-    updateUser(card_id,sid)
+    db.updateUser(card_id,sid)
     success = True
 
     res = json.dumps({
@@ -59,5 +59,5 @@ def isNewCard(card_id: str) -> bool:
     """
     新しいカードかの確認
     """
-    return getSIDByIDm(card_id)
+    return db.getSIDByIDm(card_id) is None
 
