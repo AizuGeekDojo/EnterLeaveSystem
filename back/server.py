@@ -19,15 +19,16 @@ def socket():
         print("Connected")
         ws = request.environ['wsgi.websocket']
         cardid = nfc_read.nfc_read()
-        while cardid is not "":
-            continue
-        msg = json.dumps({
-            "IsCard": True,
-            "CardID": cardid,
-            "IsNew": isNewCard(cardid),
-            "timestamp": int(time.time())
-        })
-        ws.send(msg)
+        while True:
+            if cardid is not ""
+                msg = json.dumps({
+                    "IsCard": True,
+                    "CardID": cardid,
+                    "IsNew": isNewCard(cardid),
+                    "timestamp": int(time.time())
+                })
+                ws.send(msg)
+                break
     return 
 
 @app.route("/api/createuser/", methods=['POST'])
