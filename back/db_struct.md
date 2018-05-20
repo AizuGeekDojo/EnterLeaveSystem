@@ -5,9 +5,9 @@
 ```
 ## 学生情報
 ```sql
-  create table users (sid text,name text);
+  create table users (sid text,name text,isenter integer);
 ```
 ## 入退室記録
 ```sql
-  create table log (sid text,action text,time integer,ext text);
+  create table log (sid text,isenter integer,time integer,ext text);
 ```
