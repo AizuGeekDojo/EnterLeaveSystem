@@ -43,6 +43,14 @@ def updateUser(idm,sid):
     conn.commit()
     conn.close()
 
+def isUserInside(sid):
+    conn = sqlite3.connect(dbname)
+    c = conn.cursor()
+    c.execute('select isenter from users where sid=?',(sid,))
+    ret = c.fetchone()
+    conn.close()
+    return ret[0]==1
+
 #sid = getSIDByIDm("0000000000000000")
 #print(sid)
 #print(getUserName(sid))

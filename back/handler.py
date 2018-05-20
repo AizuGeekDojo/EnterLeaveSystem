@@ -59,7 +59,7 @@ def updateUser(req_json: dict):
 def addLog(req_json: dict):
     sid = req_json["SID"]
     isent = req_json["IsEnter"]
-    ext = req_json["Ext"]
+    ext = str(req_json["Ext"])
     ts = req_json["timestamp"]
 
     db.addLog(sid,isent,ext,ts)
@@ -75,3 +75,9 @@ def isNewCard(card_id: str) -> bool:
     新しいカードかの確認
     """
     return db.getSIDByIDm(card_id) is None
+
+def isEnter(sid: str) -> bool:
+    """
+    入室済みかの確認
+    """
+    return db.isUserInside(sid)
