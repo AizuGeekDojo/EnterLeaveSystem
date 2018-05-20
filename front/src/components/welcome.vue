@@ -1,6 +1,6 @@
 <template>
     <div id='welcome' class="container align-middle">
-        <h1 class="contents align-middle"> Welcome To Geek Dojo {{ user }} </h1>
+        <h1 class="contents align-middle"> {{ message }}{{ user }} </h1>
     </div>
 </template>
 
@@ -10,8 +10,10 @@ export default {
   name: 'welcome',
   data () {
     return {
-      message: '',
-      user: ''
+      message: 'Welcome To Geek Dojo ',
+      user: '',
+      isEnter: true,
+      sid: ''
     }
   },
   mounted: function () {
@@ -33,14 +35,45 @@ export default {
     }).then(response => {
       return response.json()
     }).then(res => {
+      if (res['IsEnter'] === true) {
+        self.message = 'GoodBye '
+        self.IsEnter = true
+      } else {
+        self.message = 'Welcome To Geek Dojo '
+        self.IsEnter = false
+      }
+      self.sid = res['SID']
       self.user = res['UserName']
       this.user = self.user
+      self.push_log()
     }).catch(function (error) {
       alert('Error ' + error + ' ' + self.message)
     })
+
     setTimeout(function () {
       router.push({name: 'top'})
     }, 3000)
+  },
+  methods: {
+    push_log: function () {
+      const self = this
+      let date = new Date()
+      fetch('http://localhost:3000/api/log', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(
+          {
+            'SID': self.sid,
+            'IsEnter': self.IsEnter,
+            'Ext': {},
+            'timestamp': date.getTime()
+          }
+        )
+      })
+    }
   }
 }
 </script>
