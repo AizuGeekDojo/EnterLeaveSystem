@@ -60,8 +60,11 @@ Requesr
 ```json
 {
     "SID": string,
-    "IsEnter": integer,
-    "Ext": integer,
+    "IsEnter": bool,
+    "Ext": {
+        "anke-to1" :"hoge",
+        "anke-to2" :"fuga",
+    },
     "timestamp": timestamp,
 }
 ```
@@ -78,6 +81,7 @@ Response
 {
     "IsCard": bool,
     "CardID": string,
+    "IsEnter": bool,
     "IsNew": bool,
     "timestamp": timestamp
 }
