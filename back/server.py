@@ -35,14 +35,14 @@ def socket():
 @app.route("/api/createuser/", methods=['POST'])
 def createUserHandler():
     req_json = json.loads(request.data.decode('utf-8'))
-    createUser(req_json)
-    return
+    res = createUser(req_json)
+    return res
 
 @app.route("/api/readuser/", methods=['POST'])
 def readUserHandler():
     req_json = json.loads(request.data.decode('utf-8'))
-    getUser(req_json)
-    return
+    res = getUser(req_json)
+    return res
 
 @app.route("/api/updateuser", methods=['UPDATE'])
 def updateUserHandler():
