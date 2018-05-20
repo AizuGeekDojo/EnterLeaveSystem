@@ -6,7 +6,7 @@
 
 <script>
 import router from '../router'
-const ws = new WebSocket('ws://localhost:3000/socket')
+const ws = new WebSocket('ws://localhost:3000/socket/readCard')
 export default {
   name: 'top',
   data () {
