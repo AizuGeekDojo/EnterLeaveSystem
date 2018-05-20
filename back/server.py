@@ -48,11 +48,16 @@ def readUserHandler():
 def updateUserHandler():
     return
 
-def main():
-    app.debug = True
-    server = pywsgi.WSGIServer(("", 3000), app, handler_class=WebSocketHandler)
-    print("server runnning at port:3000")
-    server.serve_forever()
+class WebSocket(self):
+    def open_websocket(self):
+        app.debug = True
+        self.server = pywsgi.WSGIServer(("", 3000), app, handler_class=WebSocketHandler)
+        print("server runnning at port:3000")
+        server.serve_forever()
+    def close_websocket(self):
+        self.server.close()
+
 
 if __name__ == "__main__":
-	main()
+    ws = WebSocket()
+	ws.open_websocket()
