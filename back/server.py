@@ -47,6 +47,12 @@ def readUserHandler():
 def updateUserHandler():
     return
 
+@app.route("/api/log", methods=["POST"])
+def logHandler():
+    req_json = json.loads(request.data.decode('utf-8'))
+    res = addLog(req_json)
+    return res
+
 class WebSocket():
     def open_websocket(self):
         app.debug = True
