@@ -15,7 +15,7 @@ export default {
   },
   mounted: function () {
     const self = this
-    let cardid = this.$route.params.CardID
+    let cardid = this.$route.params.cardid
     let date = new Date()
     fetch('http://localhost:3000/api/readuser', {
       method: 'POST',

@@ -17,8 +17,9 @@ export default {
   },
   methods: {
     regist: function () {
-      let cardid = this.$route.params.CardID
+      let cardid = this.$route.params.cardid
       let date = new Date()
+      console.log('cardid = ' + cardid)
       fetch('http://localhost:3000/api/createuser', {
         method: 'POST',
         headers: {

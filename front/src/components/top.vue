@@ -23,10 +23,12 @@ export default {
     ws.onmessage = function (e) {
       console.log(' Web socket onmessage ', e.data)
       self.message = JSON.parse(e.data)
+      console.log('Response = ' + self.message)
       if (self.message['IsNew'] === false) {
         self.updateMsg('now reading ...')
-        self.getUser()
+        self.getUser(self.message)
       } else {
+        console.log('Create User CardID = ' + self.message['CardID'])
         self.createUser(self.message['CardID'])
       }
     }
@@ -43,8 +45,8 @@ export default {
       const self = this
       self.msg = text
     },
-    getUser: function () {
-      setTimeout(router.push({name: 'welcome', params: {cardid: this.$route.params.CardID}}), 2000)
+    getUser: function (CardID) {
+      setTimeout(router.push({name: 'welcome', params: {cardid: CardID}}), 500)
     },
     createUser: function (CardID) {
       setTimeout(router.push({name: 'regist', params: {cardid: CardID}}), 500)
