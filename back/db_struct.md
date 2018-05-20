@@ -9,5 +9,5 @@
 ```
 ## 入退室記録
 ```sql
-  create table log (sid text,action text,time integer);
+  create table log (sid text,action text,time integer,ext text);
 ```
