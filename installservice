@@ -1,6 +1,6 @@
 #! /bin/sh
 
-echo installing service
+echo "Installing service..."
 cp enterleavesystemd.service /etc/systemd/system
 
 systemctl daemon-reload 
