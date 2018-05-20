@@ -6,7 +6,7 @@ import slackweb
 import Slack
 
 
-webHookURL = os.getenv("Slack_Webhook_URL")
+webHookURL = os.getenv("SLACK_WEBHOOK_URL")
 
 def createUser(req_json: dict):
     """

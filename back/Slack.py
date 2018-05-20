@@ -4,7 +4,7 @@ import slackweb
 import datetime
 
 
-webHookURL = os.getenv("Slack_Webhook_URL")
+webHookURL = os.getenv("SLACK_WEBHOOK_URL")
 
 
 class webhookSlack():
