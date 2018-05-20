@@ -14,10 +14,10 @@ class webhookSlack():
         self.icon = icon
         self.channel = channel
 
-    def postData(self, sid, isent, ts, test=0):
+    def postData(self, uname, sid, isent, ts, test=0):
         inout = "入室" if isent else "退出"
         time = datetime.datetime.fromtimestamp(ts)
-        outPutText = "{0} さんが {1} に {2} しました。".format(sid, time, inout)
+        outPutText = "{0} : {1} さんが {2} に {3} しました。".format(sid, uname, time, inout)
         if test:
             outPutText = "Test"
         
@@ -32,4 +32,4 @@ class webhookSlack():
 
 if __name__ == '__main__':
     Webhook = webhookSlack(webHookURL)
-    Webhook.postData("Hoge Fugato", 0, 1526799945)
+    Webhook.postData("XXXXXXX", "Hoge Fugato", 0, 1526799945)
