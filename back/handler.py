@@ -58,11 +58,11 @@ def updateUser(req_json: dict):
 
 def addLog(req_json: dict):
     sid = req_json["SID"]
-    cat = req_json["Category"]
+    isent = req_json["IsEnter"]
     ext = req_json["Ext"]
     ts = req_json["timestamp"]
 
-    db.addLog(sid,cat,ext,ts)
+    db.addLog(sid,isent,ext,ts)
 
     res = json.dumps({
         "SID": sid,

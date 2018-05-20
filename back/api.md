@@ -56,12 +56,12 @@ Response
 ```
 
 ### Add Log
-Request
+Requesr
 ```json
 {
     "SID": string,
-    "Category": string,
-    "Ext": string,
+    "IsEnter": integer,
+    "Ext": integer,
     "timestamp": timestamp,
 }
 ```
