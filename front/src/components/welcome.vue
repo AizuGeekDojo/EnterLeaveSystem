@@ -1,6 +1,6 @@
 <template>
     <div id='welcome'>
-        <p> Welcome To Geek Dojo {{ user }} </p>
+        <h1> Welcome To Geek Dojo {{ user }} </h1>
     </div>
 </template>
 

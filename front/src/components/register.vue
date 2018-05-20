@@ -1,7 +1,7 @@
 <template>
     <div id='snum'>
-        <p>Input Your Student Number: </p>
-        <p>Input: {{ snum }}</p>
+        <h1>Please Input Your Student Number</h1>
+        <h1>Input: {{ snum }}</h1>
         <input v-on:keyup.enter="regist" v-model="snum" placeholder="s120000" style="border: 2px, #42b983, double;">
     </div>
 </template>
@@ -63,5 +63,10 @@ li {
 }
 a {
   color: #42b983;
+}
+input {
+  width: 300px;
+  height: 100px;
+  font-size: 26px;
 }
 </style>
