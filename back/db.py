@@ -26,6 +26,11 @@ def addLog(sid,isenter,time,ext):
     conn = sqlite3.connect(dbname)
     c = conn.cursor()
     c.execute('insert into log values(?,?,?,?)',(sid,isenter,time,ext))
+    if isenter == 1:
+        c.execute('update users set isenter=? where sid=?)',(0,sid))
+    else:
+        c.execute('update users set isenter=? where sid=?)',(1,sid))
+
     conn.commit()
     conn.close()
 
