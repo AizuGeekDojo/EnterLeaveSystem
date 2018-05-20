@@ -2,5 +2,5 @@ getent passwd |awk -F: '{print $1 "|" $5}' >users_sqlite
 
 sqlite3 database.db << EOF
 delete from users;
-.import users_sqlite
+.import users_sqlite users
 EOF
