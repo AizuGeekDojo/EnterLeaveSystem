@@ -55,6 +55,24 @@ Response
 }
 ```
 
+### Add Log
+Request
+```json
+{
+    "SID": string,
+    "Category": string,
+    "Ext": string,
+    "timestamp": timestamp,
+}
+```
+Response
+```json
+{
+    "SID": string,
+    "timestamp": timestamp,
+}
+```
+
 ## Websocket Server -> Front
 ```json
 {
@@ -68,7 +86,7 @@ Response
 # API URI
 
 ## UserInfo
-### create 
+### create
 URI : `/api/createuser/`  
 method : `POST`  
 
@@ -82,5 +100,3 @@ method : `UPDATE`
 
 ## WebSocket
 URI : `/socket/readCard`
-
-
