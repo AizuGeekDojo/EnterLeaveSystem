@@ -26,7 +26,7 @@ export default {
       console.log('Response = ' + self.message)
       if (self.message['IsNew'] === false) {
         self.updateMsg('now reading ...')
-        self.getUser(self.message)
+        self.getUser(self.message['CardID'])
       } else {
         console.log('Create User CardID = ' + self.message['CardID'])
         self.createUser(self.message['CardID'])

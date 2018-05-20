@@ -1,6 +1,6 @@
 <template>
     <div id='welcome'>
-        <p> Welcome Geek Dojo {{ message }} </p>
+        <p> Welcome To Geek Dojo {{ user }} </p>
     </div>
 </template>
 
@@ -10,7 +10,8 @@ export default {
   name: 'welcome',
   data () {
     return {
-      message: ''
+      message: '',
+      user: ''
     }
   },
   mounted: function () {
@@ -32,11 +33,15 @@ export default {
     }).then(response => {
       return response.json()
     }).then(res => {
-      self.message = res['UserName']
+      self.user = res['UserName']
+      this.user = self.user
+      console.log('welcome ', self.user)
     }).catch(function (error) {
       alert('Error ' + error + ' ' + self.message)
     })
-    setTimeout(router.push({name: 'top'}), 4000)
+    setTimeout(function () {
+      router.push({name: 'top'})
+    }, 3000)
   }
 }
 </script>
