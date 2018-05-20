@@ -6,7 +6,7 @@
 
 <script>
 import router from '../router'
-const ws = new WebSocket('ws://localhost:3000/socket/readCard')
+
 export default {
   name: 'top',
   data () {
@@ -17,13 +17,14 @@ export default {
   },
   mounted: function () {
     const self = this
+    const ws = new WebSocket('ws://localhost:3000/socket/readCard')
     ws.onopen = function (e) {
       console.log(' Web socket onopen ')
     }
     ws.onmessage = function (e) {
       console.log(' Web socket onmessage ', e.data)
       self.message = JSON.parse(e.data)
-      if (self.message['IsCard'] === true) {
+      if (self.message['IsNew'] === false) {
         self.updateMsg('now reading ...')
         self.getUser()
       } else {
@@ -35,7 +36,7 @@ export default {
       console.log(e)
     }
     ws.onclose = function (e) {
-      console.log(' Web socket onclose ')
+      console.log(' Web socket onclose ' + e)
     }
   },
   methods: {
@@ -56,8 +57,7 @@ export default {
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped>
 h1, h2 {
-  font-weight: normal;
-}
+  font-weight: normal;}
 ul {
   list-style-type: none;
   padding: 0;
