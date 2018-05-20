@@ -15,7 +15,7 @@ class webhookSlack():
         self.channel = channel
 
     def postData(self, uname, sid, isent, ts, test=0):
-        inout = "入室" if isent else "退出"
+        inout = "退出" if isent else "入室"
         time = datetime.datetime.fromtimestamp(ts)
         outPutText = "{0} : {1} さんが {2} に {3} しました。".format(sid, uname, time, inout)
         if test:
