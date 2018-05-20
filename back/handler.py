@@ -1,7 +1,8 @@
 import time
 import db
 import json
-import setting
+import settings
+import os
 import slackweb
 import Slack
 
