@@ -50,6 +50,7 @@ Response
 {
     "SID": string,
     "CardID": string,
+    "IsEnter": bool,
     "UserName": string,
     "timestamp": timestamp,
 }
