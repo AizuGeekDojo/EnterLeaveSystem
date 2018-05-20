@@ -25,7 +25,6 @@ def getUser(req_json: dict):
     """
     ユーザーの取得
     """
-    print("req_json is ", req_json)
     card_id = req_json["CardID"]
     sid = db.getSIDByIDm(card_id)
     user_name = db.getUserName(sid)
