@@ -28,11 +28,11 @@ def getUser(req_json: dict):
     card_id = req_json["CardID"]
     sid = db.getSIDByIDm(card_id)
     user_name = db.getUserName(sid)
-    isEnter = isEnter(sid)
+    is_enter = isEnter(sid)
     res = json.dumps({
         "SID": sid,
         "CardID": card_id,
-        "IsEnter": isEnter
+        "IsEnter": is_enter
         "UserName": user_name,
         "timestamp": int(time.time())
     })
