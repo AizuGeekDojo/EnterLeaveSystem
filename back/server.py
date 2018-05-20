@@ -32,13 +32,13 @@ def socket():
                 break
     return 
 
-@app.route("/api/createuser/", methods=['POST'])
+@app.route("/api/createuser", methods=['POST'])
 def createUserHandler():
     req_json = json.loads(request.data.decode('utf-8'))
     res = createUser(req_json)
     return res
 
-@app.route("/api/readuser/", methods=['POST'])
+@app.route("/api/readuser", methods=['POST'])
 def readUserHandler():
     req_json = json.loads(request.data.decode('utf-8'))
     res = getUser(req_json)
@@ -48,11 +48,16 @@ def readUserHandler():
 def updateUserHandler():
     return
 
-def main():
-    app.debug = True
-    server = pywsgi.WSGIServer(("", 3000), app, handler_class=WebSocketHandler)
-    print("server runnning at port:3000")
-    server.serve_forever()
+class WebSocket(self):
+    def open_websocket(self):
+        app.debug = True
+        self.server = pywsgi.WSGIServer(("", 3000), app, handler_class=WebSocketHandler)
+        print("server runnning at port:3000")
+        server.serve_forever()
+    def close_websocket(self):
+        self.server.close()
+
 
 if __name__ == "__main__":
-	main()
+    ws = WebSocket()
+	ws.open_websocket()
