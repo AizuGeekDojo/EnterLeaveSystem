@@ -19,7 +19,6 @@ export default {
     regist: function () {
       let cardid = this.$route.params.cardid
       let date = new Date()
-      console.log('cardid = ' + cardid)
       fetch('http://localhost:3000/api/createuser', {
         method: 'POST',
         headers: {
@@ -43,7 +42,7 @@ export default {
           setTimeout(router.push({name: 'welcome', params: {cardid: cardid}}), 500)
         }
       }).catch(function (error) {
-        console.log(error)
+        alert(error)
       })
     }
   }

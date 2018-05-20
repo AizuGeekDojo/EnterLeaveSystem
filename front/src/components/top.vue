@@ -25,10 +25,9 @@ export default {
       self.message = JSON.parse(e.data)
       console.log('Response = ' + self.message)
       if (self.message['IsNew'] === false) {
-        self.updateMsg('now reading ...')
+        self.updateMsg('Now Reading ...')
         self.getUser(self.message['CardID'])
       } else {
-        console.log('Create User CardID = ' + self.message['CardID'])
         self.createUser(self.message['CardID'])
       }
     }

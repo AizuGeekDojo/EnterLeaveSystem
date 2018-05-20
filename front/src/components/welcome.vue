@@ -35,7 +35,6 @@ export default {
     }).then(res => {
       self.user = res['UserName']
       this.user = self.user
-      console.log('welcome ', self.user)
     }).catch(function (error) {
       alert('Error ' + error + ' ' + self.message)
     })
