@@ -41,10 +41,10 @@ def updateUser(req_json: dict):
     """
     ユーザの更新
     """
-    
+
     sid = req_json["SID"]
     card_id = req_json["CardID"]
-    
+
     db.updateUser(card_id,sid)
     success = True
 
@@ -56,9 +56,22 @@ def updateUser(req_json: dict):
     return res
 
 
+def addLog(req_json: dict):
+    sid = req_json["SID"]
+    cat = req_json["Category"]
+    ext = req_json["Ext"]
+    ts = req_json["timestamp"]
+
+    db.addLog(sid,cat,ext,ts)
+
+    res = json.dumps({
+        "SID": sid,
+        "timestamp": int(time.time())
+    })
+    return res
+
 def isNewCard(card_id: str) -> bool:
     """
     新しいカードかの確認
     """
     return db.getSIDByIDm(card_id) is None
-
