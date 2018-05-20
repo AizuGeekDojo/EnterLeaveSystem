@@ -38,7 +38,7 @@ def createUserHandler():
     createUser(req_json)
     return
 
-@app.route("/api/readuser/", methods=['GET'])
+@app.route("/api/readuser/", methods=['POST'])
 def readUserHandler():
     req_json = json.loads(request.data.decode('utf-8'))
     getUser(req_json)
