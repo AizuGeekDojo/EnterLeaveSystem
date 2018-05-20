@@ -22,10 +22,10 @@ def getUserName(sid):
         return ret[0]
     return None
 
-def addLog(sid,action,time):
+def addLog(sid,isenter,time,ext):
     conn = sqlite3.connect(dbname)
     c = conn.cursor()
-    c.execute('insert into log values(?,?,?)',(sid,action,time))
+    c.execute('insert into log values(?,?,?,?)',(sid,isenter,time,ext))
     conn.commit()
     conn.close()
 

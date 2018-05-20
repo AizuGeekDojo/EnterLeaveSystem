@@ -1,5 +1,4 @@
 --Create tables
 create table idcard (idm text,sid text);
-create table users (sid text,name text);
-create table log (sid text,action text,time integer);
-
+create table users (sid text,name text,isenter integer);
+create table log (sid text,isenter integer,time integer,ext text);
