@@ -1,6 +1,12 @@
 import time
 import db
 import json
+import setting
+import slackweb
+import Slack
+
+
+webHookURL = os.getenv("SLACK_WEBHOOK_URL")
 
 def createUser(req_json: dict):
     """
@@ -58,10 +64,15 @@ def updateUser(req_json: dict):
 
 
 def addLog(req_json: dict):
+    slack = Slack.webhookSlack(URL=webHookURL)
+    
     sid = req_json["SID"]
     isent = req_json["IsEnter"]
     ext = str(req_json["Ext"])
     ts = req_json["timestamp"]
+
+    res_posted = slack.postData(sid, isent, ts)
+    print(req_posted)
 
     db.addLog(sid,isent,ext,ts)
 
