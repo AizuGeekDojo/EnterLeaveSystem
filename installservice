@@ -1,0 +1,9 @@
+#! /bin/sh
+
+echo "Installing service..."
+cp enterleavesystemd.service /etc/systemd/system
+
+systemctl daemon-reload 
+systemctl enable enterleavesystemd.service
+sudo systemctl start enterleavesystemd.service
+
