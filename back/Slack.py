@@ -32,4 +32,4 @@ class webhookSlack():
 
 if __name__ == '__main__':
     Webhook = webhookSlack(webHookURL)
-    Webhook.postData("s1240056", 0, 1526799945)
+    Webhook.postData("Hoge Fugato", 0, 1526799945)
