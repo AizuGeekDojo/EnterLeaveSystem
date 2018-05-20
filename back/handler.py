@@ -32,7 +32,7 @@ def getUser(req_json: dict):
     res = json.dumps({
         "SID": sid,
         "CardID": card_id,
-        "IsEnter": is_enter
+        "IsEnter": is_enter,
         "UserName": user_name,
         "timestamp": int(time.time())
     })
