@@ -1,8 +1,10 @@
 <template>
-    <div id='snum'>
-        <h1>Please Input Your Student Number</h1>
-        <h1>Input: {{ snum }}</h1>
-        <input v-on:keyup.enter="regist" v-model="snum" placeholder="s120000" style="border: 2px, #42b983, double;">
+    <div id='snum' class="container">
+      <div class="box">
+        <h1 class="">Please Input Your Student Number</h1>
+        <h1 class="">Input: {{ snum }}</h1>
+        <input class="" v-on:keyup.enter="regist" v-model="snum" placeholder="s120000" style="border: 2px, #42b983, double;">
+      </div>
     </div>
 </template>
 
@@ -51,6 +53,7 @@ export default {
 
 <style scoped>
 h1, h2 {
+  width: 100%;
   font-weight: normal;
 }
 ul {
@@ -68,5 +71,13 @@ input {
   width: 300px;
   height: 100px;
   font-size: 26px;
+}
+.box {
+
+}
+.container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

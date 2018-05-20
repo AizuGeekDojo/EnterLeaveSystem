@@ -1,6 +1,6 @@
 <template>
-    <div id='welcome'>
-        <h1> Welcome To Geek Dojo {{ user }} </h1>
+    <div id='welcome' class="container align-middle">
+        <h1 class="contents align-middle"> Welcome To Geek Dojo {{ user }} </h1>
     </div>
 </template>
 
@@ -47,7 +47,12 @@ export default {
 
 <style scoped>
 h1, h2 {
+  display: table-cell;
+  height: 100%;
+  width: 100%;
   font-weight: normal;
+  text-align: center;
+  vertical-align: middle;
 }
 ul {
   list-style-type: none;
@@ -59,5 +64,10 @@ li {
 }
 a {
   color: #42b983;
+}
+div #welcome{
+  display: table;
+  text-align: center;
+  vertical-align: middle;
 }
 </style>

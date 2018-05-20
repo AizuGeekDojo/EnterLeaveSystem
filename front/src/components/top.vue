@@ -1,6 +1,6 @@
 <template>
-  <div id='top' ref="message">
-    <h1>{{ msg }}</h1>
+  <div id='top' ref="message" class="container align-middle">
+    <h1 class="contents align-middle">{{ msg }}</h1>
   </div>
 </template>
 
@@ -57,7 +57,13 @@ export default {
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped>
 h1, h2 {
-  font-weight: normal;}
+  display: table-cell;
+  height: 100%;
+  width: 100%;
+  font-weight: normal;
+  text-align: center;
+  vertical-align: middle;
+}
 ul {
   list-style-type: none;
   padding: 0;
@@ -68,5 +74,10 @@ li {
 }
 a {
   color: #42b983;
+}
+div #top{
+  display: table;
+  text-align: center;
+  vertical-align: middle;
 }
 </style>
