@@ -72,8 +72,9 @@ def addLog(req_json: dict):
     ext = str(req_json["Ext"])
     ts = req_json["timestamp"]
 
-    res_posted = slack.postData(sid, isent, ts)
-    print(req_posted)
+    uname = db.getUserName(sid)
+
+    res_posted = slack.postData(uname, sid, isent, int(ts/1000))
 
     db.addLog(sid,isent,ext,ts)
 
