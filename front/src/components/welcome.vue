@@ -52,7 +52,7 @@ export default {
 
     setTimeout(function () {
       router.push({name: 'top'})
-    }, 3000)
+    }, 5000)
   },
   methods: {
     push_log: function () {
@@ -80,6 +80,7 @@ export default {
 
 <style scoped>
 h1, h2 {
+  font-size: 72px;
   display: table-cell;
   height: 100%;
   width: 100%;
