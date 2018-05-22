@@ -36,8 +36,7 @@ export default {
       return response.json()
     }).then(res => {
       if (res['IsEnter'] === true) {
-        self.message = 'GoodBye '
-        self.IsEnter = true
+        router.push({name: 'question'})
       } else {
         self.message = 'Welcome To Geek Dojo '
         self.IsEnter = false
