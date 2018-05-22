@@ -12,12 +12,12 @@
             <label for="LaserCutter" style="font-size: 20px">LaserCutter</label>
           </div>
           <div class="checkbox">
-            <input class="btn btn-info" type="checkbox" value="Other" v-model="checkedUse">
-            <label for="Other" style="font-size: 20px">Other</label>
-          </div>
-          <div class="checkbox">
             <input class="btn btn-info" type="checkbox" value="Training session" v-model="checkedUse">
             <label for="Training" style="font-size: 20px">Training</label>
+          </div>
+          <div class="checkbox">
+            <input class="btn btn-info" type="checkbox" value="Other" v-model="checkedUse">
+            <label for="Other" style="font-size: 20px">Other</label>
           </div>
         </div>
         <h3>If you have any request please fill in.</h3>
