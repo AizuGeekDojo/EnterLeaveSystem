@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import top from '@/components/top'
 import regist from '@/components/register'
 import welcome from '@/components/welcome'
+import goodbye from '@/components/goodbye'
 import question from '@/components/question'
 
 Vue.use(Router)
@@ -24,6 +25,11 @@ export default new Router({
       name: 'welcome',
       component: welcome
     },
+    {
+      path: '/goodbye',
+      name: 'goodbye',
+      component: goodbye
+    }, 
     {
       path: '/question',
       name: 'question',
