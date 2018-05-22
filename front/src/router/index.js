@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import top from '@/components/top'
 import regist from '@/components/register'
 import welcome from '@/components/welcome'
+import question from '@/components/question'
 
 Vue.use(Router)
 
@@ -22,6 +23,11 @@ export default new Router({
       path: '/welcome',
       name: 'welcome',
       component: welcome
+    },
+    {
+      path: '/question',
+      name: 'question',
+      component: question
     }
   ]
 })
