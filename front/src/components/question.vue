@@ -19,7 +19,7 @@
         <h3>If you have any request please fill in.</h3>
         <p style="white-space: pre-line;">{{ message }}</p>
         <br>
-        <textarea v-model="message" placeholder="add multiple lines"></textarea>
+        <textarea v-model="message" placeholder=""></textarea>
         <br>
         <button class="btn btn-info" v-on:click="send">send</button>
       </div>
