@@ -1,7 +1,7 @@
 <template>
     <div id='ques' style="width: 100%;">
       <div class="question">
-        <h2>What did you use?</h2>
+        <h2>What is your purpose?</h2>
         <div class="checkboxes alignment" data-toggle="buttons-radio">
           <div class="checkbox">
             <input class="btn btn-info" type="checkbox" value="3DPrinter" v-model="checkedUse">
