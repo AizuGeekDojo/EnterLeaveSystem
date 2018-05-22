@@ -27,7 +27,7 @@ export default new Router({
     {
       path: '/goodbye',
       name: 'goodbye',
-      comment: goodbye
+      component: goodbye
     }
   ]
 })

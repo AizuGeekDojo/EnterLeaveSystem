@@ -1,6 +1,6 @@
 <template>
     <div id='goodbye' class="container align-middle">
-        <h1>{{ message }}</h1>
+        <h1 class="contents align-middle">{{ message }} </h1>
     </div>
 </template>
 
@@ -41,7 +41,7 @@ li {
 a {
   color: #42b983;
 }
-div #welcome{
+div #goodbye{
   display: table;
   text-align: center;
   vertical-align: middle;
