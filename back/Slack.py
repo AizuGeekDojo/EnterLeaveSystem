@@ -27,8 +27,6 @@ class webhookSlack():
                           icon_emoji=self.icon
                           )
 
-        return outPutText
-
 
 if __name__ == '__main__':
     Webhook = webhookSlack(webHookURL)

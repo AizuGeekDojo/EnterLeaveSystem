@@ -1,6 +1,6 @@
 <template>
-    <div id='snum' class="container">
-      <div class="box">
+    <div id='snum' style="width: 100%;">
+      <div class="studentNUM">
         <h1 class="">Please Input Your Student Number</h1>
         <h1 class="">Input: {{ snum }}</h1>
         <input class="" v-on:keyup.enter="regist" v-model="snum" placeholder="s120000" style="border: 2px, #42b983, double;">
@@ -53,6 +53,7 @@ export default {
 
 <style scoped>
 h1, h2 {
+  font-size: 72px;
   width: 100%;
   font-weight: normal;
 }
@@ -72,11 +73,10 @@ input {
   height: 100px;
   font-size: 26px;
 }
-.box {
-
-}
-.container{
+div .studentNUM {
+  width: 100%;
   display: flex;
+  flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
 }
