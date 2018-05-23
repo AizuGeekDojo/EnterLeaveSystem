@@ -43,6 +43,8 @@ export default {
     send: function () {
       const self = this
       let date = new Date()
+      let sid = this.$route.params.res['SID']
+      console.log('question res', this.$route.params.res)
       fetch('http://localhost:3000/api/log', {
         method: 'POST',
         headers: {
@@ -51,8 +53,8 @@ export default {
         },
         body: JSON.stringify(
           {
-            'SID': self.sid,
-            'IsEnter': self.IsEnter,
+            'SID': sid,
+            'IsEnter': true,
             'Ext': {
               'Use': self.checkedUse,
               'message': self.message
@@ -61,9 +63,7 @@ export default {
           }
         )
       })
-      setTimeout(function () {
-        router.push({name: 'goodbye'})
-      }, 5000)
+      router.push({name: 'goodbye'})
     }
   }
 }

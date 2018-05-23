@@ -29,7 +29,7 @@ export default new Router({
       path: '/goodbye',
       name: 'goodbye',
       component: goodbye
-    }, 
+    },
     {
       path: '/question',
       name: 'question',
