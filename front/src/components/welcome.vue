@@ -10,7 +10,7 @@ export default {
   name: 'welcome',
   data () {
     return {
-      message: 'Welcome To Geek Dojo ',
+      message: 'Now Reading...',
       user: '',
       isEnter: true,
       sid: ''
@@ -36,22 +36,18 @@ export default {
       return response.json()
     }).then(res => {
       if (res['IsEnter'] === true) {
-        router.push({name: 'question'})
+        router.push({name: 'question', params: {res: res}})
       } else {
         self.message = 'Welcome To Geek Dojo '
         self.IsEnter = false
+        self.sid = res['SID']
+        self.user = res['UserName']
+        this.user = self.user
+        self.push_log()
       }
-      self.sid = res['SID']
-      self.user = res['UserName']
-      this.user = self.user
-      self.push_log()
     }).catch(function (error) {
       alert('Error ' + error + ' ' + self.message)
     })
-
-    setTimeout(function () {
-      router.push({name: 'top'})
-    }, 5000)
   },
   methods: {
     push_log: function () {
@@ -72,6 +68,9 @@ export default {
           }
         )
       })
+      setTimeout(function () {
+        router.push({name: 'top'})
+      }, 5000)
     }
   }
 }
