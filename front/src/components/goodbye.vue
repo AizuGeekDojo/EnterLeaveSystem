@@ -23,6 +23,7 @@ export default {
 
 <style scoped>
 h1, h2 {
+  font-size: 72px;
   display: table-cell;
   height: 100%;
   width: 100%;
