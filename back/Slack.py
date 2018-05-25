@@ -6,7 +6,6 @@ import datetime
 
 webHookURL = os.getenv("SLACK_WEBHOOK_URL")
 
-
 class webhookSlack():
     def __init__(self, URL, userName="Logging Bot", icon=":robot_face:", channel="#enter_leave_log"):
         self.slack = slackweb.Slack(url=URL)
@@ -14,7 +13,7 @@ class webhookSlack():
         self.icon = icon
         self.channel = channel
 
-    def postData(self, uname, sid, isent, ts, test=0, ext):
+    def postData(self, uname, sid, isent, ts, ext, test=0):
         inout = "退出" if isent else "入室"
         time = datetime.datetime.fromtimestamp(ts)
         outPutText = "{0} : {1} さんが {2} に {3} しました。{4}".format(sid, uname, time, inout, ext)
