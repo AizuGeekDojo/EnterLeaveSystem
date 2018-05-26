@@ -45,10 +45,14 @@ export default {
       self.msg = text
     },
     getUser: function (CardID) {
-      setTimeout(router.push({name: 'welcome', params: {cardid: CardID}}), 500)
+      setTimeout(function () {
+        router.push({name: 'welcome', params: {cardid: CardID}})
+      }, 500)
     },
     createUser: function (CardID) {
-      setTimeout(router.push({name: 'regist', params: {cardid: CardID}}), 500)
+      setTimeout(function () {
+        router.push({name: 'regist', params: {cardid: CardID}})
+      }, 500)
     }
   }
 }
