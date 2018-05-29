@@ -14,6 +14,13 @@ export default {
       message: ''
     }
   },
+  created: function () {
+    setTimeout(function () {
+      document.location = '/'
+    }, 30 * 60 * 1000
+    )
+    console.log('Created')
+  },
   mounted: function () {
     const self = this
     const ws = new WebSocket('ws://localhost:3000/socket/readCard')
