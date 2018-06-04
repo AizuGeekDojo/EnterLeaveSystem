@@ -16,11 +16,22 @@ class webhookSlack():
     def postData(self, uname, sid, isent, ts, ext, test=0):
         inout = "退出" if isent else "入室"
         time = datetime.datetime.fromtimestamp(ts)
-        outPutText = "{0} : {1} さんが {2} に {3} しました。{4}".format(sid, uname, time, inout, ext)
+        purpose = ext["anke-to1"]
+        impress = ext["anke-to2"]
+        outPutText = "{0} : {1} さんが {2} に {3} しました。".format(sid, uname, time, inout)
+
+        attachments = []
+        elements = {"title": "アンケート結果",
+                    "pretext": outPutText,
+                    "text": "目的 : {0} \n 感想 : {1}".format(purpose, impress)
+                    }
+
+        attachments.append(elements)
+
         if test:
             outPutText = "Test"
-        
-        self.slack.notify(text=outPutText,
+
+        self.slack.notify(attachments=attachments,
                           channel=self.channel,
                           usename=self.userName,
                           icon_emoji=self.icon
