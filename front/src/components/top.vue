@@ -14,6 +14,13 @@ export default {
       message: ''
     }
   },
+  created: function () {
+    setTimeout(function () {
+      document.location = '/'
+    }, 30 * 60 * 1000
+    )
+    console.log('Created')
+  },
   mounted: function () {
     const self = this
     const ws = new WebSocket('ws://localhost:3000/socket/readCard')
@@ -45,10 +52,14 @@ export default {
       self.msg = text
     },
     getUser: function (CardID) {
-      setTimeout(router.push({name: 'welcome', params: {cardid: CardID}}), 500)
+      setTimeout(function () {
+        router.push({name: 'welcome', params: {cardid: CardID}})
+      }, 500)
     },
     createUser: function (CardID) {
-      setTimeout(router.push({name: 'regist', params: {cardid: CardID}}), 500)
+      setTimeout(function () {
+        router.push({name: 'regist', params: {cardid: CardID}})
+      }, 500)
     }
   }
 }

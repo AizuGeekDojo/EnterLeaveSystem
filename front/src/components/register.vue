@@ -39,9 +39,13 @@ export default {
       }).then(res => {
         if (res['Success'] !== true) {
           alert('Create failed')
-          setTimeout(router.push({name: 'top'}), 500)
+          setTimeout(function () {
+            router.push({name: 'top'})
+          }, 500)
         } else {
-          setTimeout(router.push({name: 'welcome', params: {cardid: cardid}}), 500)
+          setTimeout(function () {
+            router.push({name: 'welcome', params: {cardid: cardid}})
+          }, 500)
         }
       }).catch(function (error) {
         alert(error)
