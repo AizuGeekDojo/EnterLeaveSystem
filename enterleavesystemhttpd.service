@@ -4,13 +4,13 @@ After=network.target local-fs.target
 Requires=network.target local-fs.target
 
 [Service]
+ExecStart=/bin/sh -c "cd /home/pi/EnterLeaveSystem/front/dev && /home/pi/.pyenv/shims/python -m http.server"
+Restart=always
+Type=simple
 User=pi
 Group=pi
-PIDFile=/run/enterleavesystemd.pid
-WorkingDirectory=/home/pi/EnterLeaveSystem/back
-ExecStart=/home/pi/.pyenv/shims/pipenv run python server.py
-ExecStop=/bin/kill -SIGINT $MAINPID
 
 [Install]
 WantedBy = multi-user.target
+
 
