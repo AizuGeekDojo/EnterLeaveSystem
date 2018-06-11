@@ -63,8 +63,8 @@ Requesr
     "SID": string,
     "IsEnter": bool,
     "Ext": {
-        "anke-to1" :"hoge",
-        "anke-to2" :"fuga",
+        "Use" :"Purpose of using Aizu Geek Dojo",
+        "message" :"impression",
     },
     "timestamp": timestamp,
 }
