@@ -1,9 +1,20 @@
 #! /bin/sh
 
-echo "Installing service..."
-cp enterleavesystemd.service /etc/systemd/system
+if [ ! "$UID" = "0" ];then
+  echo "You are not root."
+  exit 1
+fi
 
+echo "Installing service..."
+echo "Copying files..."
+cp enterleavesystemd.service /etc/systemd/system/
+cp enterleavesystemhttpd.service /etc/systemd/system/
+
+echo "Enabling Services..."
 systemctl daemon-reload 
 systemctl enable enterleavesystemd.service
-sudo systemctl start enterleavesystemd.service
+systemctl start enterleavesystemd.service
+
+systemctl enable enterleavesystemhttpd.service
+systemctl start enterleavesystemhttpd.service
 
