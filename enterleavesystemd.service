@@ -4,13 +4,14 @@ After=network.target local-fs.target
 Requires=network.target local-fs.target
 
 [Service]
-User=pi
-Group=pi
+User=root
+Group=root
 PIDFile=/run/enterleavesystemd.pid
 WorkingDirectory=/home/pi/EnterLeaveSystem/back
-ExecStart=/home/pi/.pyenv/shims/pipenv run python server.py
+ExecStart=/usr/bin/python3 server.py
 ExecStop=/bin/kill -SIGINT $MAINPID
+Restart=always
+Type=simple
 
 [Install]
 WantedBy = multi-user.target
-

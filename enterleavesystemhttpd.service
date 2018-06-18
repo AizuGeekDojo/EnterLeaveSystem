@@ -1,16 +1,17 @@
 [Unit]
-Description=Enter Leave System Daemon
+Description=Enter Leave System HTTP Server Daemon
 After=network.target local-fs.target
 Requires=network.target local-fs.target
 
 [Service]
-ExecStart=/bin/sh -c "cd /home/pi/EnterLeaveSystem/front/dev && /home/pi/.pyenv/shims/python -m http.server"
+User=root
+Group=root
+PIDFile=/run/enterleavesystemhttpd.pid
+WorkingDirectory=/home/pi/EnterLeaveSystem/front/dev
+ExecStart=/usr/bin/python3 -m http.server
+ExecStop=/bin/kill -SIGINT $MAINPID
 Restart=always
 Type=simple
-User=pi
-Group=pi
 
 [Install]
 WantedBy = multi-user.target
-
-
