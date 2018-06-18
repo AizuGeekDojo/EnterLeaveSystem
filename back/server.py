@@ -42,7 +42,7 @@ def createUserHandler():
     res = Response(createUser(req_json))
     res.headers['Access-Control-Allow-Origin'] = '*'
     res.headers['Access-Control-Allow-Headers'] = "Origin, X-Requested-With, Content-Type, Accept"
-    res.headers['Access-Control-Allow-Credentials'] = True
+    res.headers['Access-Control-Allow-Credentials'] = "true"
     return res
 
 @app.route("/api/readuser", methods=['POST'])
@@ -53,7 +53,7 @@ def readUserHandler():
     res = Response(getUser(req_json))
     res.headers['Access-Control-Allow-Origin'] = '*'
     res.headers['Access-Control-Allow-Headers'] = "Origin, X-Requested-With, Content-Type, Accept"
-    res.headers['Access-Control-Allow-Credentials'] = True
+    res.headers['Access-Control-Allow-Credentials'] = "true"
     return res
 
 @app.route("/api/updateuser", methods=['UPDATE'])
@@ -70,7 +70,7 @@ def logHandler():
     res = Response(addLog(req_json))
     res.headers['Access-Control-Allow-Origin'] = '*'
     res.headers['Access-Control-Allow-Headers'] = "Origin, X-Requested-With, Content-Type, Accept"
-    res.headers['Access-Control-Allow-Credentials'] = True
+    res.headers['Access-Control-Allow-Credentials'] = "true"
     return res
 
 class WebSocket():
