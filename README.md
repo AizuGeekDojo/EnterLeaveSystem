@@ -7,6 +7,5 @@ cd EnterLeaveSystem
 
 #Python、サービス等をインストール
 ./install
-#TODO Chromeの自動起動設定用スクリプトを用意
 
 ```
