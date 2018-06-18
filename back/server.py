@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, Response
 from gevent import pywsgi
 from geventwebsocket.handler import WebSocketHandler
 from flask_cors import CORS
@@ -8,12 +8,15 @@ import nfc_read
 
 app = Flask(__name__)
 CORS(app)
+# cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 @app.route("/")
 def index():
     return "Hello World!"
 
 @app.route('/socket/readCard')
+# @content_type('application/json')
+# @cross_origin()
 def socket():
     if request.environ.get('wsgi.websocket'):
         print("Connected")
@@ -32,25 +35,42 @@ def socket():
     return 
 
 @app.route("/api/createuser", methods=['POST'])
+# @content_type('application/json')
+# @cross_origin()
 def createUserHandler():
     req_json = json.loads(request.data.decode('utf-8'))
-    res = createUser(req_json)
+    res = Response(createUser(req_json))
+    res.headers['Access-Control-Allow-Origin'] = 'http://localhost:8000'
+    res.headers['Access-Control-Allow-Headers'] = "Origin, X-Requested-With, Content-Type, Accept"
+    res.headers['Access-Control-Allow-Credentials'] = "true"
     return res
 
 @app.route("/api/readuser", methods=['POST'])
+# @content_type('application/json')
+# @cross_origin()
 def readUserHandler():
     req_json = json.loads(request.data.decode('utf-8'))
-    res = getUser(req_json)
+    res = Response(getUser(req_json))
+    res.headers['Access-Control-Allow-Origin'] = 'http://localhost:8000'
+    res.headers['Access-Control-Allow-Headers'] = "Origin, X-Requested-With, Content-Type, Accept"
+    res.headers['Access-Control-Allow-Credentials'] = "true"
     return res
 
 @app.route("/api/updateuser", methods=['UPDATE'])
+# @content_type('application/json')
+# @cross_origin()
 def updateUserHandler():
     return
 
 @app.route("/api/log", methods=["POST"])
+# @content_type('application/json')
+# @cross_origin()
 def logHandler():
     req_json = json.loads(request.data.decode('utf-8'))
-    res = addLog(req_json)
+    res = Response(addLog(req_json))
+    res.headers['Access-Control-Allow-Origin'] = 'http://localhost:8000'
+    res.headers['Access-Control-Allow-Headers'] = "Origin, X-Requested-With, Content-Type, Accept"
+    res.headers['Access-Control-Allow-Credentials'] = "true"
     return res
 
 class WebSocket():
