@@ -1,9 +1,9 @@
 #! /bin/sh
 
-if [ ! "$UID" = "0" ];then
-  echo "You are not root."
-  exit 1
-fi
+# if [ ! "$UID" = "0" ];then
+#   echo "You are not root."
+#   exit 1
+# fi
 
 echo "Updating system..."
 apt update
