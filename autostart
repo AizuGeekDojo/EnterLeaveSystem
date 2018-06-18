@@ -1,0 +1,8 @@
+@lxpanel --profile LXDE-pi
+@pcmanfm --desktop --profile LXDE-pi
+@xscreensaver -no-splash
+
+@xset s off
+@xset -dpms
+@xset s noblank
+@chromium-browser --noerrdialogs --kiosk http://localhost:8000/
