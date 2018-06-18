@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request 
 from gevent import pywsgi
 from geventwebsocket.handler import WebSocketHandler
 from flask_cors import CORS
@@ -6,17 +6,20 @@ import json
 from handler import *
 import nfc_read
 
+
+
 app = Flask(__name__)
 # CORS(app, supports_credentials=True)
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
 
 @app.route("/")
-# @cross_origin()
+@cross_origin()
 def index():
     return "Hello World!"
 
 @app.route('/socket/readCard')
-# @cross_origin()
+@content_type('application/json')
+@cross_origin()
 def socket():
     if request.environ.get('wsgi.websocket'):
         print("Connected")
@@ -35,29 +38,34 @@ def socket():
     return 
 
 @app.route("/api/createuser", methods=['POST'])
-# @cross_origin()
+@content_type('application/json')
+@cross_origin()
 def createUserHandler():
     req_json = json.loads(request.data.decode('utf-8'))
     res = createUser(req_json)
     return res
 
 @app.route("/api/readuser", methods=['POST'])
-# @cross_origin()
+@content_type('application/json')
+@cross_origin()
 def readUserHandler():
     req_json = json.loads(request.data.decode('utf-8'))
     res = getUser(req_json)
     return res
 
 @app.route("/api/updateuser", methods=['UPDATE'])
-# @cross_origin()
+@content_type('application/json')
+@cross_origin()
 def updateUserHandler():
     return
 
 @app.route("/api/log", methods=["POST"])
-# @cross_origin()
+@content_type('application/json')
+@cross_origin()
 def logHandler():
     req_json = json.loads(request.data.decode('utf-8'))
     res = addLog(req_json)
+    res.headers[]
     return res
 
 class WebSocket():
