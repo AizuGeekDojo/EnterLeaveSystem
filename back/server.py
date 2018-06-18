@@ -7,8 +7,8 @@ from handler import *
 import nfc_read
 
 app = Flask(__name__)
-# CORS(app, supports_credentials=True)
-cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+# CORS(app, resources=r'/api/*')
+# cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 @app.route("/")
 def index():
