@@ -1,0 +1,35 @@
+#! /bin/sh
+
+if [ ! "$UID" = "0" ];then
+  echo "You are not root."
+  exit 1
+fi
+
+echo "Updating system..."
+apt update
+apt upgrade
+
+echo "Installing python and environment..."
+apt install python2.7 python3 python-pip
+pip2 install --upgrade pip
+pip2 install nfcpy
+pip install -r requirement.txt
+
+echo "Installing service..."
+echo "Copying files..."
+cp enterleavesystemd.service /etc/systemd/system/
+cp enterleavesystemhttpd.service /etc/systemd/system/
+
+echo "Enabling Services..."
+systemctl daemon-reload
+systemctl enable enterleavesystemd.service
+systemctl start enterleavesystemd.service
+
+systemctl enable enterleavesystemhttpd.service
+systemctl start enterleavesystemhttpd.service
+
+echo "Configurating autostart"
+mv /home/pi/.config/lxsession/LXDE-pi/autostart /home/pi/.config/lxsession/LXDE-pi/autostart_old
+mv autostart /home/pi/.config/lxsession/LXDE-pi/autostart
+
+echo "Finished! Please restart the system."

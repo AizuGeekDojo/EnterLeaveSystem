@@ -5,10 +5,8 @@
 git clone https://github.com/AizuGeekDojo/EnterLeaveSystem.git
 cd EnterLeaveSystem
 
-#TODO pip系インストール
-
-#起動用のサービスをインストール
-./installservice
+#Python、サービス等をインストール
+./install
 #TODO Chromeの自動起動設定用スクリプトを用意
 
 ```
