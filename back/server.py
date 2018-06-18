@@ -65,7 +65,6 @@ def updateUserHandler():
 def logHandler():
     req_json = json.loads(request.data.decode('utf-8'))
     res = addLog(req_json)
-    res.headers[]
     return res
 
 class WebSocket():
