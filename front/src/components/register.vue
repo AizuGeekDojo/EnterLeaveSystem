@@ -22,6 +22,7 @@ export default {
       let cardid = this.$route.params.cardid
       let date = new Date()
       fetch('http://localhost:3000/api/createuser', {
+        mode: 'cors',
         method: 'POST',
         headers: {
           'Accept': 'application/json',

@@ -21,6 +21,7 @@ export default {
     let cardid = this.$route.params.cardid
     let date = new Date()
     fetch('http://localhost:3000/api/readuser', {
+      mode: 'cors',
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -54,6 +55,7 @@ export default {
       const self = this
       let date = new Date()
       fetch('http://localhost:3000/api/log', {
+        mode: 'cors',
         method: 'POST',
         headers: {
           'Accept': 'application/json',
