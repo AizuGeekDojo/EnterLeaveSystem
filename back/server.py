@@ -6,19 +6,16 @@ import json
 from handler import *
 import nfc_read
 
-
-
 app = Flask(__name__)
 # CORS(app, supports_credentials=True)
-cors = CORS(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 @app.route("/")
-@cross_origin()
 def index():
     return "Hello World!"
 
 @app.route('/socket/readCard')
-@content_type('application/json')
+# @content_type('application/json')
 @cross_origin()
 def socket():
     if request.environ.get('wsgi.websocket'):
@@ -38,7 +35,7 @@ def socket():
     return 
 
 @app.route("/api/createuser", methods=['POST'])
-@content_type('application/json')
+# @content_type('application/json')
 @cross_origin()
 def createUserHandler():
     req_json = json.loads(request.data.decode('utf-8'))
@@ -46,7 +43,7 @@ def createUserHandler():
     return res
 
 @app.route("/api/readuser", methods=['POST'])
-@content_type('application/json')
+# @content_type('application/json')
 @cross_origin()
 def readUserHandler():
     req_json = json.loads(request.data.decode('utf-8'))
@@ -54,13 +51,13 @@ def readUserHandler():
     return res
 
 @app.route("/api/updateuser", methods=['UPDATE'])
-@content_type('application/json')
+# @content_type('application/json')
 @cross_origin()
 def updateUserHandler():
     return
 
 @app.route("/api/log", methods=["POST"])
-@content_type('application/json')
+# @content_type('application/json')
 @cross_origin()
 def logHandler():
     req_json = json.loads(request.data.decode('utf-8'))
