@@ -23,6 +23,7 @@ export default {
       let date = new Date()
       fetch('http://localhost:3000/api/createuser', {
         mode: 'cors',
+        credentials: 'include',
         method: 'POST',
         headers: {
           'Accept': 'application/json',

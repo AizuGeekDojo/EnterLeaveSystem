@@ -22,7 +22,6 @@ export default {
     let date = new Date()
     fetch('http://localhost:3000/api/readuser', {
       mode: 'cors',
-      credentials: 'include',
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -56,8 +55,7 @@ export default {
       const self = this
       let date = new Date()
       fetch('http://localhost:3000/api/log', {
-        mode: 'cors',
-        credentials: 'include',
+        mode: 'no-cors',
         method: 'POST',
         headers: {
           'Accept': 'application/json',
