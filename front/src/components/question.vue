@@ -46,7 +46,7 @@ export default {
       let sid = this.$route.params.res['SID']
       console.log('question res', this.$route.params.res)
       fetch('http://localhost:3000/api/log', {
-        mode: 'cors',
+        mode: 'no-cors',
         credentials: 'include',
         method: 'POST',
         headers: {
