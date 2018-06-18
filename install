@@ -13,7 +13,7 @@ echo "Installing python and environment..."
 apt install python2.7 python3 python-pip
 pip2 install --upgrade pip
 pip2 install nfcpy
-pip install -r requirement.txt
+pip3 install -r back/requirements.txt
 
 echo "Installing service..."
 echo "Copying files..."
@@ -30,6 +30,6 @@ systemctl start enterleavesystemhttpd.service
 
 echo "Configurating autostart"
 mv /home/pi/.config/lxsession/LXDE-pi/autostart /home/pi/.config/lxsession/LXDE-pi/autostart_old
-mv autostart /home/pi/.config/lxsession/LXDE-pi/autostart
+cp autostart /home/pi/.config/lxsession/LXDE-pi/autostart
 
 echo "Finished! Please restart the system."
