@@ -76,7 +76,7 @@ def addLog(req_json: dict):
 
     slack.postData(uname, sid, isent, int(ts/1000), ext)
 
-    db.addLog(sid,isent,ext,ts)
+    db.addLog(sid,isent,ts,ext)
 
     res = json.dumps({
         "SID": sid,
