@@ -1,4 +1,5 @@
 import os
+import time
 import settings
 import slackweb
 import datetime
@@ -18,9 +19,13 @@ class webhookSlack():
         time = datetime.datetime.fromtimestamp(ts)
         outPutText = "{0} : {1} さんが {2} に {3} しました。".format(sid, uname, time, inout)
 
-        self.postAgdIO(outPutText)
+        if isent == 0:
+            self.postAgdIn(outPutText)
 
-    def postAgdIO(self, msg):
+        elif isent:
+            self.postAgdOut(outPutText, ext)
+
+    def postAgdIn(self, msg):
         self.slack.notify(text=msg,
                           channel=self.channel,
                           usename=self.userName,
@@ -28,7 +33,7 @@ class webhookSlack():
                           )
 
     def postAgdOut(self, msg, ext):
-        purpose = ext['Use']
+        purpose = ", ".join([e for e in ext['Use']])
         impress = ext['message']
 
         attachments = []
@@ -47,6 +52,14 @@ class webhookSlack():
 
 if __name__ == '__main__':
     Webhook = webhookSlack(webHookURL)
-    jsonForOut = {'Use': ['Other'], 'message': 'This is Test'}
+    jsonForOut1 = {'Use': ['3DPrinter', 'LaserCutter'], 'message': '3DPrinter Test'}
+    jsonForOut2 = {'Use': ['LaserCutter', 'Other'], 'message': 'LaserCutter Test'}
+    jsonForOut3 = {'Use': ['Training session', '3DPrinter'], 'message': 'Training session Test'}
     jsonForIn = {}
-    Webhook.postData("XXXXXXX", "Hoge Fugato", 0, 1526799945, jsonForIn)
+    Webhook.postData("XXXXXXX", "Hoge Fugato", 1, 1526799945, jsonForOut1)
+    time.sleep(3)
+    Webhook.postData("XXXXXXX", "Hoge Yasaka", 1, 1526799945, jsonForOut2)
+    time.sleep(3)
+    Webhook.postData("XXXXXXX", "Noah Orberg", 1, 1526799945, jsonForOut3)
+    time.sleep(3)
+
