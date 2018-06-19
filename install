@@ -10,10 +10,11 @@ apt update
 apt upgrade
 
 echo "Installing python and environment..."
-apt install python2.7 python3 python-pip
-pip2 install --upgrade pip
-pip2 install nfcpy
-pip3 install -r back/requirements.txt
+apt install python2.7 python3 python-pip python3-pip
+python2 -m pip install --upgrade pip
+python2 -m pip install nfcpy
+python3 -m pip install --upgrade pip
+python3 -m pip install -r back/requirements.txt
 
 echo "Installing service..."
 echo "Copying files..."
