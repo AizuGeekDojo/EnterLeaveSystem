@@ -15,10 +15,6 @@ export default {
     }
   },
   created: function () {
-    setTimeout(function () {
-      document.location = '/'
-    }, 30 * 60 * 1000
-    )
     console.log('Created')
   },
   mounted: function () {
