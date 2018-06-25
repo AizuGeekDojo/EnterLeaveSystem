@@ -38,11 +38,14 @@ def socket():
 # @content_type('application/json')
 # @cross_origin()
 def createUserHandler():
-    req_json = json.loads(request.data.decode('utf-8'))
-    res = Response(createUser(req_json))
+    req_json = json.loads(
+        request.data.decode('utf-8')
+    )
+    res = Response(response=createUser(req_json), content_type='application/json', status=200)
     res.headers['Access-Control-Allow-Origin'] = 'http://localhost:8000'
     res.headers['Access-Control-Allow-Headers'] = "Origin, X-Requested-With, Content-Type, Accept"
     res.headers['Access-Control-Allow-Credentials'] = "true"
+    
     return res
 
 @app.route("/api/readuser", methods=['POST'])

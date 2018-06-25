@@ -22,7 +22,7 @@ export default {
       let cardid = this.$route.params.cardid
       let date = new Date()
       fetch('http://localhost:3000/api/createuser', {
-        mode: 'cors',
+        mode: 'no-cors',
         credentials: 'include',
         method: 'POST',
         headers: {
@@ -37,20 +37,21 @@ export default {
           }
         )
       }).then(response => {
-        return response.json()
+        console.log(response)
+        return JSON.parse(response || null)
       }).then(res => {
         if (res['Success'] !== true) {
-          alert('Create failed')
+          console.log('Create failed')
           setTimeout(function () {
             router.push({name: 'top'})
           }, 500)
         } else {
           setTimeout(function () {
             router.push({name: 'welcome', params: {cardid: cardid}})
-          }, 500)
+          }, 100)
         }
       }).catch(function (error) {
-        alert(error)
+        console.log(error)
       })
     }
   }
