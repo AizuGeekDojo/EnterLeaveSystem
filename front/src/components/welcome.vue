@@ -34,10 +34,13 @@ export default {
         timestamp: date.getTime()
       })
     })
-      .then(response => {
-        return response.json();
+      .then(function(response) {
+        return response.text().then(function(text) {
+          return text ? JSON.parse(text) : {};
+        });
       })
       .then(res => {
+        console.log(res);
         if (res["IsEnter"] === true) {
           router.push({ name: "question", params: { res: res } });
         } else {
@@ -50,7 +53,7 @@ export default {
         }
       })
       .catch(function(error) {
-        console.log("Error " + error + " " + self.message);
+        console.error(error);
       });
   },
   methods: {
@@ -70,10 +73,12 @@ export default {
           Ext: {},
           timestamp: date.getTime()
         })
-      });
-      setTimeout(function() {
-        router.push({ name: "top" });
-      }, 5000);
+      }).catch(function(error) {
+        console.error(error);
+      }),
+        setTimeout(function() {
+          router.push({ name: "top" });
+        }, 5000);
     }
   }
 };

@@ -59,7 +59,10 @@ def createUserHandler():
 # @cross_origin()
 def readUserHandler():
     req_json = json.loads(request.data.decode('utf-8'))
-    res = Response(getUser(req_json))
+    res = Response(
+        response=getUser(req_json),
+        content_type='application/json',
+        status=200)
     res.headers['Access-Control-Allow-Origin'] = 'http://localhost:8000'
     res.headers[
         'Access-Control-Allow-Headers'] = "Origin, X-Requested-With, Content-Type, Accept"

@@ -53,7 +53,7 @@ export default {
           }
         })
         .catch(function(error) {
-          alert(error);
+          console.log(error);
           setTimeout(function() {
             router.push({ name: "top" });
           }, 500);

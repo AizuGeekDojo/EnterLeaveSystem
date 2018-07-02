@@ -5,65 +5,66 @@
 </template>
 
 <script>
-import router from '../router'
+import router from "../router";
 export default {
-  name: 'top',
-  data () {
+  name: "top",
+  data() {
     return {
-      msg: 'Please hold the card over the reader',
-      message: ''
-    }
+      msg: "Please hold the card over the reader",
+      message: ""
+    };
   },
-  created: function () {
-    console.log('Created')
+  created: function() {
+    console.log("Created");
   },
-  mounted: function () {
-    const self = this
-    const ws = new WebSocket('ws://localhost:3000/socket/readCard')
-    ws.onopen = function (e) {
-      console.log(' Web socket onopen ')
-    }
-    ws.onmessage = function (e) {
-      console.log(' Web socket onmessage ', e.data)
-      self.message = JSON.parse(e.data)
-      console.log('Response = ' + self.message)
-      if (self.message['IsNew'] === false) {
-        self.updateMsg('Now Reading ...')
-        self.getUser(self.message['CardID'])
+  mounted: function() {
+    const self = this;
+    const ws = new WebSocket("ws://localhost:3000/socket/readCard");
+    ws.onopen = function(e) {
+      console.log(" Web socket onopen ");
+    };
+    ws.onmessage = function(e) {
+      console.log(" Web socket onmessage ", e.data);
+      self.message = JSON.parse(e.data);
+      console.log("Response = " + self.message);
+      if (self.message["IsNew"] === false) {
+        self.updateMsg("Now Reading ...");
+        self.getUser(self.message["CardID"]);
       } else {
-        self.createUser(self.message['CardID'])
+        self.createUser(self.message["CardID"]);
       }
-    }
-    ws.onerror = function (e) {
-      console.log(' Web socket error ')
-      console.log(e)
-    }
-    ws.onclose = function (e) {
-      console.log(' Web socket onclose ' + e)
-    }
+    };
+    ws.onerror = function(e) {
+      console.log(" Web socket error ");
+      console.log(e);
+    };
+    ws.onclose = function(e) {
+      console.log(" Web socket onclose " + e);
+    };
   },
   methods: {
-    updateMsg: function (text) {
-      const self = this
-      self.msg = text
+    updateMsg: function(text) {
+      const self = this;
+      self.msg = text;
     },
-    getUser: function (CardID) {
-      setTimeout(function () {
-        router.push({name: 'welcome', params: {cardid: CardID}})
-      }, 500)
+    getUser: function(CardID) {
+      setTimeout(function() {
+        router.push({ name: "welcome", params: { cardid: CardID } });
+      }, 500);
     },
-    createUser: function (CardID) {
-      setTimeout(function () {
-        router.push({name: 'regist', params: {cardid: CardID}})
-      }, 500)
+    createUser: function(CardID) {
+      setTimeout(function() {
+        router.push({ name: "regist", params: { cardid: CardID } });
+      }, 500);
     }
   }
-}
+};
 </script>
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
+h1,
+h2 {
   font-size: 72px;
   display: table-cell;
   height: 100%;
@@ -83,7 +84,7 @@ li {
 a {
   color: #42b983;
 }
-div #top{
+div #top {
   display: table;
   text-align: center;
   vertical-align: middle;
