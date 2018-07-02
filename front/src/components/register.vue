@@ -9,57 +9,63 @@
 </template>
 
 <script>
-import router from '../router'
+import router from "../router";
 export default {
-  name: 'snum',
-  data () {
+  name: "snum",
+  data() {
     return {
-      snum: ''
-    }
+      snum: "",
+      cardid: ""
+    };
   },
   methods: {
-    regist: function () {
-      let cardid = this.$route.params.cardid
-      let date = new Date()
-      fetch('http://localhost:3000/api/createuser', {
-        mode: 'no-cors',
-        credentials: 'include',
-        method: 'POST',
+    regist: function() {
+      this.cardid = this.$route.params.cardid;
+      let date = new Date();
+      fetch("http://localhost:3000/api/createuser", {
+        mode: "no-cors",
+        credentials: "include",
+        method: "POST",
         headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
+          Accept: "application/json",
+          "Content-Type": "application/json"
         },
-        body: JSON.stringify(
-          {
-            'SID': this.snum,
-            'CardID': cardid,
-            'timestamp': date.getTime()
-          }
-        )
-      }).then(response => {
-        console.log(response)
-        return JSON.parse(response || null)
-      }).then(res => {
-        if (res['Success'] !== true) {
-          console.log('Create failed')
-          setTimeout(function () {
-            router.push({name: 'top'})
-          }, 500)
-        } else {
-          setTimeout(function () {
-            router.push({name: 'welcome', params: {cardid: cardid}})
-          }, 100)
-        }
-      }).catch(function (error) {
-        console.log(error)
+        body: JSON.stringify({
+          SID: this.snum,
+          CardID: this.cardid,
+          timestamp: date.getTime()
+        })
       })
+        .then(response => {
+          console.log(response);
+          return response.json(response);
+        })
+        .then(res => {
+          if (res["Success"] !== true) {
+            console.log("Create failed");
+            setTimeout(function() {
+              router.push({ name: "top" });
+            }, 500);
+          } else {
+            setTimeout(function() {
+              router.push({ name: "welcome", params: { cardid: this.cardid } });
+            }, 100);
+          }
+        })
+        .catch(function(error) {
+          alert(error);
+          setTimeout(function() {
+            router.push({ name: "top" });
+          }, 500);
+        });
     }
   }
-}
+};
 </script>
 
 <style scoped>
-h1, h2 {
+h1,
+h2 {
   font-size: 72px;
   width: 100%;
   font-weight: normal;

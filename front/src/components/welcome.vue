@@ -5,81 +5,83 @@
 </template>
 
 <script>
-import router from '../router'
+import router from "../router";
 export default {
-  name: 'welcome',
-  data () {
+  name: "welcome",
+  data() {
     return {
-      message: 'Now Reading...',
-      user: '',
+      message: "Now Reading...",
+      user: "",
       isEnter: true,
-      sid: ''
-    }
+      sid: "",
+      cardid: ""
+    };
   },
-  mounted: function () {
-    const self = this
-    let cardid = this.$route.params.cardid
-    let date = new Date()
-    fetch('http://localhost:3000/api/readuser', {
-      mode: 'cors',
-      method: 'POST',
+  mounted: function() {
+    const self = this;
+    this.cardid = this.$route.params.cardid;
+    let date = new Date();
+    fetch("http://localhost:3000/api/readuser", {
+      mode: "no-cors",
+      credentials: "include",
+      method: "POST",
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        Accept: "application/json",
+        "Content-Type": "application/json"
       },
-      body: JSON.stringify(
-        {
-          'CardID': cardid,
-          'timestamp': date.getTime()
-        }
-      )
-    }).then(response => {
-      return response.json()
-    }).then(res => {
-      if (res['IsEnter'] === true) {
-        router.push({name: 'question', params: {res: res}})
-      } else {
-        self.message = 'Welcome To Geek Dojo '
-        self.IsEnter = false
-        self.sid = res['SID']
-        self.user = res['UserName']
-        this.user = self.user
-        self.push_log()
-      }
-    }).catch(function (error) {
-      alert('Error ' + error + ' ' + self.message)
+      body: JSON.stringify({
+        CardID: this.cardid,
+        timestamp: date.getTime()
+      })
     })
+      .then(response => {
+        return response.json();
+      })
+      .then(res => {
+        if (res["IsEnter"] === true) {
+          router.push({ name: "question", params: { res: res } });
+        } else {
+          self.message = "Welcome To Geek Dojo ";
+          self.IsEnter = false;
+          self.sid = res["SID"];
+          self.user = res["UserName"];
+          this.user = self.user;
+          self.push_log();
+        }
+      })
+      .catch(function(error) {
+        console.log("Error " + error + " " + self.message);
+      });
   },
   methods: {
-    push_log: function () {
-      const self = this
-      let date = new Date()
-      fetch('http://localhost:3000/api/log', {
-        mode: 'no-cors',
-        method: 'POST',
+    push_log: function() {
+      const self = this;
+      let date = new Date();
+      fetch("http://localhost:3000/api/log", {
+        mode: "no-cors",
+        method: "POST",
         headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
+          Accept: "application/json",
+          "Content-Type": "application/json"
         },
-        body: JSON.stringify(
-          {
-            'SID': self.sid,
-            'IsEnter': self.IsEnter,
-            'Ext': {},
-            'timestamp': date.getTime()
-          }
-        )
-      })
-      setTimeout(function () {
-        router.push({name: 'top'})
-      }, 5000)
+        body: JSON.stringify({
+          SID: self.sid,
+          IsEnter: self.IsEnter,
+          Ext: {},
+          timestamp: date.getTime()
+        })
+      });
+      setTimeout(function() {
+        router.push({ name: "top" });
+      }, 5000);
     }
   }
-}
+};
 </script>
 
 <style scoped>
-h1, h2 {
+h1,
+h2 {
   font-size: 72px;
   display: table-cell;
   height: 100%;
@@ -99,7 +101,7 @@ li {
 a {
   color: #42b983;
 }
-div #welcome{
+div #welcome {
   display: table;
   text-align: center;
   vertical-align: middle;
