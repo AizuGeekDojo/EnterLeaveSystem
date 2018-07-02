@@ -42,6 +42,7 @@ export default {
           });
         })
         .then(res => {
+          console.log(res);
           if (res["Success"] !== true) {
             console.log("Create failed");
             setTimeout(function() {
