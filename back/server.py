@@ -49,7 +49,7 @@ def createUserHandler():
     res.headers['Access-Control-Allow-Origin'] = 'http://localhost:8000'
     res.headers[
         'Access-Control-Allow-Headers'] = "Origin, X-Requested-With, Content-Type, Accept"
-    res.headers['Access-Control-Allow-Credentials'] = "true"
+    res.headers['Access-Control-Allow-Credentials'] = True
 
     return res
 
@@ -66,7 +66,7 @@ def readUserHandler():
     res.headers['Access-Control-Allow-Origin'] = 'http://localhost:8000'
     res.headers[
         'Access-Control-Allow-Headers'] = "Origin, X-Requested-With, Content-Type, Accept"
-    res.headers['Access-Control-Allow-Credentials'] = "true"
+    res.headers['Access-Control-Allow-Credentials'] = True
     return res
 
 
@@ -86,7 +86,7 @@ def logHandler():
     res.headers['Access-Control-Allow-Origin'] = 'http://localhost:8000'
     res.headers[
         'Access-Control-Allow-Headers'] = "Origin, X-Requested-With, Content-Type, Accept"
-    res.headers['Access-Control-Allow-Credentials'] = "true"
+    res.headers['Access-Control-Allow-Credentials'] = True
     return res
 
 
