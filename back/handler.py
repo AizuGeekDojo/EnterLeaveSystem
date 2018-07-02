@@ -6,8 +6,8 @@ import os
 import slackweb
 import Slack
 
-
 webHookURL = os.getenv("SLACK_WEBHOOK_URL")
+
 
 def createUser(req_json: dict):
     """
@@ -17,7 +17,7 @@ def createUser(req_json: dict):
     sid = req_json["SID"]
     card_id = req_json["CardID"]
 
-    db.addUser(card_id,sid)
+    db.addUser(card_id, sid)
     success = True
 
     res = json.dumps({
@@ -27,6 +27,7 @@ def createUser(req_json: dict):
         "timestamp": int(time.time())
     })
     return res
+
 
 def getUser(req_json: dict):
     """
@@ -45,6 +46,7 @@ def getUser(req_json: dict):
     })
     return res
 
+
 def updateUser(req_json: dict):
     """
     ユーザの更新
@@ -53,7 +55,7 @@ def updateUser(req_json: dict):
     sid = req_json["SID"]
     card_id = req_json["CardID"]
 
-    db.updateUser(card_id,sid)
+    db.updateUser(card_id, sid)
     success = True
 
     res = json.dumps({
@@ -66,7 +68,7 @@ def updateUser(req_json: dict):
 
 def addLog(req_json: dict):
     slack = Slack.webhookSlack(URL=webHookURL)
-    
+
     sid = req_json["SID"]
     isent = req_json["IsEnter"]
     ext = req_json["Ext"]
@@ -74,21 +76,20 @@ def addLog(req_json: dict):
 
     uname = db.getUserName(sid)
 
-    slack.postData(uname, sid, isent, int(ts/1000), ext)
+    slack.postData(uname, sid, isent, int(ts / 1000), ext)
 
-    db.addLog(sid,isent,ts,str(ext))
+    db.addLog(sid, isent, ts, str(ext))
 
-    res = json.dumps({
-        "SID": sid,
-        "timestamp": int(time.time())
-    })
+    res = json.dumps({"SID": sid, "timestamp": int(time.time())})
     return res
+
 
 def isNewCard(card_id: str) -> bool:
     """
     新しいカードかの確認
     """
     return db.getSIDByIDm(card_id) is None
+
 
 def isEnter(sid: str) -> bool:
     """

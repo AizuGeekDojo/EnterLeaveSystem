@@ -82,7 +82,8 @@ def updateUserHandler():
 # @cross_origin()
 def logHandler():
     req_json = json.loads(request.data.decode('utf-8'))
-    res = Response(addLog(req_json))
+    res = Response(
+        addLog(req_json), content_type='application/json', status=200)
     res.headers['Access-Control-Allow-Origin'] = '*'
     res.headers[
         'Access-Control-Allow-Headers'] = "Origin, X-Requested-With, Content-Type, Accept"
