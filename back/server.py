@@ -50,7 +50,7 @@ def createUserHandler():
     res.headers[
         'Access-Control-Allow-Headers'] = "Origin, X-Requested-With, Content-Type, Accept"
     res.headers['Access-Control-Allow-Credentials'] = True
-
+    print(req_json, res)
     return res
 
 
@@ -67,6 +67,7 @@ def readUserHandler():
     res.headers[
         'Access-Control-Allow-Headers'] = "Origin, X-Requested-With, Content-Type, Accept"
     res.headers['Access-Control-Allow-Credentials'] = True
+    print(req_json, res)
     return res
 
 
@@ -88,6 +89,8 @@ def logHandler():
     res.headers[
         'Access-Control-Allow-Headers'] = "Origin, X-Requested-With, Content-Type, Accept"
     res.headers['Access-Control-Allow-Credentials'] = True
+    slack_notify(req_json)
+    console.log(req_json, res)
     return res
 
 

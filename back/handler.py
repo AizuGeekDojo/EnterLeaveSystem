@@ -67,21 +67,27 @@ def updateUser(req_json: dict):
 
 
 def addLog(req_json: dict):
-    slack = Slack.webhookSlack(URL=webHookURL)
 
     sid = req_json["SID"]
     isent = req_json["IsEnter"]
     ext = req_json["Ext"]
     ts = req_json["timestamp"]
-
     uname = db.getUserName(sid)
-
-    slack.postData(uname, sid, isent, int(ts / 1000), ext)
 
     db.addLog(sid, isent, ts, str(ext))
 
     res = json.dumps({"SID": sid, "timestamp": int(time.time())})
     return res
+
+
+def slack_notify(req_json: dict):
+    sid = req_json["SID"]
+    isent = req_json["IsEnter"]
+    ext = req_json["Ext"]
+    ts = req_json["timestamp"]
+    uname = db.getUserName(sid)
+    slack = Slack.webhookSlack(URL=webHookURL)
+    slack.postData(uname, sid, isent, int(ts / 1000), ext)
 
 
 def isNewCard(card_id: str) -> bool:

@@ -11,10 +11,10 @@ export default {
   data() {
     return {
       message: "Now Reading...",
-      user: "",
+      user: " ",
       isEnter: true,
-      sid: "",
-      cardid: ""
+      sid: " ",
+      cardid: " "
     };
   },
   mounted: function() {
