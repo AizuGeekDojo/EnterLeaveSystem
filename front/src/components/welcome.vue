@@ -20,10 +20,11 @@ export default {
   mounted: function() {
     const self = this;
     this.cardid = this.$route.params.cardid;
+    self.cardid = this.cardid;
     let date = new Date();
     fetch("http://localhost:3000/api/readuser", {
       mode: "cors",
-      credentials: "include",
+      // credentials: "include",
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -35,7 +36,7 @@ export default {
       })
     })
       .then(response => {
-        conosle.log(response);
+        // .log(response);
         return response.json();
       })
       .then(res => {
@@ -63,7 +64,7 @@ export default {
       const self = this;
       let date = new Date();
       fetch("http://localhost:3000/api/log", {
-        mode: "no-cors",
+        mode: "cors",
         method: "POST",
         headers: {
           Accept: "application/json",

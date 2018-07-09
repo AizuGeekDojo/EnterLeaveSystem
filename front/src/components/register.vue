@@ -20,11 +20,11 @@ export default {
   },
   methods: {
     regist: function() {
+      const self = this;
       this.cardid = this.$route.params.cardid;
       let date = new Date();
       fetch("http://localhost:3000/api/createuser", {
-        mode: "no-cors",
-        credentials: "include",
+        mode: "cors",
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -48,7 +48,7 @@ export default {
             }, 500);
           } else {
             setTimeout(function() {
-              router.push({ name: "welcome", params: { cardid: this.cardid } });
+              router.push({ name: "welcome", params: { cardid: self.cardid } });
             }, 100);
           }
         })
