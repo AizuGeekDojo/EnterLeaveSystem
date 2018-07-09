@@ -7,7 +7,13 @@ from handler import *
 import nfc_read
 
 app = Flask(__name__)
-CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
+CORS(
+    app,
+    resources={r"/api": {
+        "origins": "http://localhost:8000"
+    }},
+    supports_credentials=True)
 # cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 
@@ -45,10 +51,10 @@ def createUserHandler():
     response = createUser(req_json)
     res = Response(
         response=response, content_type='application/json', status=200)
-    res.headers['Access-Control-Allow-Origin'] = 'http://localhost:8000'
-    res.headers[
-        'Access-Control-Allow-Headers'] = "Origin, X-Requested-With, Content-Type, Accept"
-    res.headers['Access-Control-Allow-Credentials'] = 'true'
+    res.headers.add('Access-Control-Allow-Origin', 'http://localhost:8000')
+    res.headers.add('Access-Control-Allow-Headers',
+                    "Origin, X-Requested-With, Content-Type, Accept")
+    res.headers.add('Access-Control-Allow-Credentials', 'true')
     print(req_json, response)
     return res
 
@@ -61,10 +67,10 @@ def readUserHandler():
     response = getUser(req_json)
     res = Response(
         response=response, content_type='application/json', status=200)
-    res.headers['Access-Control-Allow-Origin'] = 'http://localhost:8000'
-    res.headers[
-        'Access-Control-Allow-Headers'] = "Origin, X-Requested-With, Content-Type, Accept"
-    res.headers['Access-Control-Allow-Credentials'] = 'true'
+    res.headers.add('Access-Control-Allow-Origin', 'http://localhost:8000')
+    res.headers.add('Access-Control-Allow-Headers',
+                    "Origin, X-Requested-With, Content-Type, Accept")
+    res.headers.add('Access-Control-Allow-Credentials', 'true')
     print(req_json, response)
     return res
 
@@ -83,10 +89,10 @@ def logHandler():
     req_json = json.loads(request.data.decode('utf-8'))
     response = addLog(req_json)
     res = Response(response, content_type='application/json', status=200)
-    res.headers['Access-Control-Allow-Origin'] = 'http://localhost:800'
-    res.headers[
-        'Access-Control-Allow-Headers'] = "Origin, X-Requested-With, Content-Type, Accept"
-    res.headers['Access-Control-Allow-Credentials'] = True
+    res.headers.add('Access-Control-Allow-Origin', 'http://localhost:8000')
+    res.headers.add('Access-Control-Allow-Headers',
+                    "Origin, X-Requested-With, Content-Type, Accept")
+    res.headers.add('Access-Control-Allow-Credentials', 'true')
     slack_notify(req_json)
     print(req_json, response)
 
