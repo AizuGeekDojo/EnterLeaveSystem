@@ -42,15 +42,14 @@ def socket():
 # @cross_origin()
 def createUserHandler():
     req_json = json.loads(request.data.decode('utf-8'))
+    response = createUser(req_json)
     res = Response(
-        response=createUser(req_json),
-        content_type='application/json',
-        status=200)
+        response=response, content_type='application/json', status=200)
     res.headers['Access-Control-Allow-Origin'] = '*'
     res.headers[
         'Access-Control-Allow-Headers'] = "Origin, X-Requested-With, Content-Type, Accept"
     res.headers['Access-Control-Allow-Credentials'] = True
-    print(req_json, res)
+    print(req_json, response)
     return res
 
 
@@ -59,15 +58,14 @@ def createUserHandler():
 # @cross_origin()
 def readUserHandler():
     req_json = json.loads(request.data.decode('utf-8'))
+    response = getUser(req_json)
     res = Response(
-        response=getUser(req_json),
-        content_type='application/json',
-        status=200)
+        response=response, content_type='application/json', status=200)
     res.headers['Access-Control-Allow-Origin'] = '*'
     res.headers[
         'Access-Control-Allow-Headers'] = "Origin, X-Requested-With, Content-Type, Accept"
     res.headers['Access-Control-Allow-Credentials'] = True
-    print(req_json, res)
+    print(req_json, response)
     return res
 
 
@@ -83,14 +81,15 @@ def updateUserHandler():
 # @cross_origin()
 def logHandler():
     req_json = json.loads(request.data.decode('utf-8'))
-    res = Response(
-        addLog(req_json), content_type='application/json', status=200)
+    response = addLog(req_json)
+    res = Response(response, content_type='application/json', status=200)
     res.headers['Access-Control-Allow-Origin'] = '*'
     res.headers[
         'Access-Control-Allow-Headers'] = "Origin, X-Requested-With, Content-Type, Accept"
     res.headers['Access-Control-Allow-Credentials'] = True
     slack_notify(req_json)
-    console.log(req_json, res)
+    print(req_json, response)
+
     return res
 
 
