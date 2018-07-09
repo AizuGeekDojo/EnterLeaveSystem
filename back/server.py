@@ -8,12 +8,8 @@ import nfc_read
 
 app = Flask(__name__)
 app.config['CORS_HEADERS'] = 'Content-Type'
-CORS(
-    app,
-    resources={r"/api": {
-        "origins": "http://localhost:8000"
-    }},
-    supports_credentials=True)
+# CORS(app, supports_credentials=True)
+CORS(app)
 # cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 
