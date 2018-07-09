@@ -35,6 +35,7 @@ export default {
       })
     })
       .then(response => {
+        conosle.log(response);
         return response.json();
       })
       .then(res => {

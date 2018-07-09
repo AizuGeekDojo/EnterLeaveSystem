@@ -45,7 +45,7 @@ def createUserHandler():
     response = createUser(req_json)
     res = Response(
         response=response, content_type='application/json', status=200)
-    res.headers['Access-Control-Allow-Origin'] = '*'
+    res.headers['Access-Control-Allow-Origin'] = 'http://localhost:800'
     res.headers[
         'Access-Control-Allow-Headers'] = "Origin, X-Requested-With, Content-Type, Accept"
     res.headers['Access-Control-Allow-Credentials'] = True
@@ -61,7 +61,7 @@ def readUserHandler():
     response = getUser(req_json)
     res = Response(
         response=response, content_type='application/json', status=200)
-    res.headers['Access-Control-Allow-Origin'] = '*'
+    res.headers['Access-Control-Allow-Origin'] = 'http://localhost:800'
     res.headers[
         'Access-Control-Allow-Headers'] = "Origin, X-Requested-With, Content-Type, Accept"
     res.headers['Access-Control-Allow-Credentials'] = True
@@ -83,7 +83,7 @@ def logHandler():
     req_json = json.loads(request.data.decode('utf-8'))
     response = addLog(req_json)
     res = Response(response, content_type='application/json', status=200)
-    res.headers['Access-Control-Allow-Origin'] = '*'
+    res.headers['Access-Control-Allow-Origin'] = 'http://localhost:800'
     res.headers[
         'Access-Control-Allow-Headers'] = "Origin, X-Requested-With, Content-Type, Accept"
     res.headers['Access-Control-Allow-Credentials'] = True
