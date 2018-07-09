@@ -37,9 +37,7 @@ export default {
         })
       })
         .then(response => {
-          return response.text().then(function(text) {
-            return text ? JSON.parse(text) : {};
-          });
+          return response.json();
         })
         .then(res => {
           console.log(res);

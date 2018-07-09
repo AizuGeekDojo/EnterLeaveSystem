@@ -1,13 +1,13 @@
 from flask import Flask, request, Response
 from gevent import pywsgi
 from geventwebsocket.handler import WebSocketHandler
-from flask_cors import CORS
+# from flask_cors import CORS
 import json
 from handler import *
 import nfc_read
 
 app = Flask(__name__)
-CORS(app)
+# CORS(app)
 # cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 

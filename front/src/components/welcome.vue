@@ -22,7 +22,7 @@ export default {
     this.cardid = this.$route.params.cardid;
     let date = new Date();
     fetch("http://localhost:3000/api/readuser", {
-      mode: "no-cors",
+      mode: "cors",
       credentials: "include",
       method: "POST",
       headers: {
@@ -34,10 +34,8 @@ export default {
         timestamp: date.getTime()
       })
     })
-      .then(function(response) {
-        return response.text().then(function(text) {
-          return text ? JSON.parse(text) : {};
-        });
+      .then(response => {
+        return response.json();
       })
       .then(res => {
         console.log(res);
@@ -49,6 +47,9 @@ export default {
           self.sid = res["SID"];
           self.user = res["UserName"];
           this.user = self.user;
+          this.sid = self.sid;
+          this.IsEnter = self.IsEnter;
+          this.message = self.message;
           self.push_log();
         }
       })
