@@ -17,8 +17,12 @@ def createUser(req_json: dict):
     sid = req_json["SID"]
     card_id = req_json["CardID"]
 
-    db.addUser(card_id, sid)
-    success = True
+    if db.getUserName(sid) is None:
+        success = False
+    else:
+        db.addUser(card_id,sid)
+        success = True
+
 
     res = json.dumps({
         "Success": success,
