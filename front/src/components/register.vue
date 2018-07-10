@@ -44,9 +44,9 @@ export default {
           if (res["Success"] !== true) {
             alert('The ID is not found.');
             console.log("Create failed");
-            setTimeout(function() {
-              router.push({ name: "top" });
-            }, 500);
+            // setTimeout(function() {
+            //   router.push({ name: "top" });
+            // }, 500);
           } else {
             setTimeout(function() {
               router.push({ name: "welcome", params: { cardid: self.cardid } });
