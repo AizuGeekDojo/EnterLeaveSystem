@@ -42,7 +42,7 @@ export default {
         .then(res => {
           console.log(res);
           if (res["Success"] !== true) {
-            window.alert('The ID is not found.');
+            alert('The ID is not found.');
             console.log("Create failed");
             setTimeout(function() {
               router.push({ name: "top" });
