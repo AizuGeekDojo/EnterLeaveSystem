@@ -17,8 +17,11 @@ def createUser(req_json: dict):
     sid = req_json["SID"]
     card_id = req_json["CardID"]
 
-    db.addUser(card_id,sid)
-    success = True
+    if db.getUserName(sid) is None:
+        success = False
+    else:
+        db.addUser(card_id,sid)
+        success = True
 
     res = json.dumps({
         "Success": success,
@@ -66,7 +69,7 @@ def updateUser(req_json: dict):
 
 def addLog(req_json: dict):
     slack = Slack.webhookSlack(URL=webHookURL)
-    
+
     sid = req_json["SID"]
     isent = req_json["IsEnter"]
     ext = req_json["Ext"]
