@@ -7,12 +7,16 @@ from handler import *
 import nfc_read
 
 app = Flask(__name__)
-CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
+CORS(app, supports_credentials='true')
+# CORS(app)
 # cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+
 
 @app.route("/")
 def index():
     return "Hello World!"
+
 
 @app.route('/socket/readCard')
 # @content_type('application/json')
@@ -32,29 +36,40 @@ def socket():
                 })
                 ws.send(msg)
                 break
-    return 
+    return
+
 
 @app.route("/api/createuser", methods=['POST'])
 # @content_type('application/json')
 # @cross_origin()
 def createUserHandler():
     req_json = json.loads(request.data.decode('utf-8'))
-    res = Response(createUser(req_json))
-    res.headers['Access-Control-Allow-Origin'] = 'http://localhost:8000'
-    res.headers['Access-Control-Allow-Headers'] = "Origin, X-Requested-With, Content-Type, Accept"
-    res.headers['Access-Control-Allow-Credentials'] = "true"
+    response = createUser(req_json)
+    res = Response(
+        response=response, content_type='application/json', status=200)
+    res.headers.add('Access-Control-Allow-Origin', 'http://localhost:8000')
+    res.headers.add('Access-Control-Allow-Headers',
+                    "Origin, X-Requested-With, Content-Type, Accept")
+    res.headers.add('Access-Control-Allow-Credentials', True)
+    print(req_json, response)
     return res
+
 
 @app.route("/api/readuser", methods=['POST'])
 # @content_type('application/json')
 # @cross_origin()
 def readUserHandler():
     req_json = json.loads(request.data.decode('utf-8'))
-    res = Response(getUser(req_json))
-    res.headers['Access-Control-Allow-Origin'] = 'http://localhost:8000'
-    res.headers['Access-Control-Allow-Headers'] = "Origin, X-Requested-With, Content-Type, Accept"
-    res.headers['Access-Control-Allow-Credentials'] = "true"
+    response = getUser(req_json)
+    res = Response(
+        response=response, content_type='application/json', status=200)
+    res.headers.add('Access-Control-Allow-Origin', 'http://localhost:8000')
+    res.headers.add('Access-Control-Allow-Headers',
+                    "Origin, X-Requested-With, Content-Type, Accept")
+    res.headers.add('Access-Control-Allow-Credentials', True)
+    print(req_json, response)
     return res
+
 
 @app.route("/api/updateuser", methods=['UPDATE'])
 # @content_type('application/json')
@@ -62,23 +77,32 @@ def readUserHandler():
 def updateUserHandler():
     return
 
+
 @app.route("/api/log", methods=["POST"])
 # @content_type('application/json')
 # @cross_origin()
 def logHandler():
     req_json = json.loads(request.data.decode('utf-8'))
-    res = Response(addLog(req_json))
-    res.headers['Access-Control-Allow-Origin'] = 'http://localhost:8000'
-    res.headers['Access-Control-Allow-Headers'] = "Origin, X-Requested-With, Content-Type, Accept"
-    res.headers['Access-Control-Allow-Credentials'] = "true"
+    response = addLog(req_json)
+    res = Response(response, content_type='application/json', status=200)
+    res.headers.add('Access-Control-Allow-Origin', 'http://localhost:8000')
+    res.headers.add('Access-Control-Allow-Headers',
+                    "Origin, X-Requested-With, Content-Type, Accept")
+    res.headers.add('Access-Control-Allow-Credentials', True)
+    slack_notify(req_json)
+    print(req_json, response)
+
     return res
+
 
 class WebSocket():
     def open_websocket(self):
         app.debug = True
-        self.server = pywsgi.WSGIServer(("", 3000), app, handler_class=WebSocketHandler)
+        self.server = pywsgi.WSGIServer(
+            ("", 3000), app, handler_class=WebSocketHandler)
         print("server runnning at port:3000")
         self.server.serve_forever()
+
     def close_websocket(self):
         self.server.close()
 
