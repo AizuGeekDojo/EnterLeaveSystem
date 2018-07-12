@@ -74,7 +74,8 @@ def addLog(req_json: dict):
 
     sid = req_json["SID"]
     isent = req_json["IsEnter"]
-    ext = req_json["Ext"]
+    # ext = req_json["Ext"]
+    ext = ""
     ts = req_json["timestamp"]
     uname = db.getUserName(sid)
 

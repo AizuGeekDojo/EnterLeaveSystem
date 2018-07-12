@@ -89,7 +89,7 @@ def logHandler():
     res.headers.add('Access-Control-Allow-Headers',
                     "Origin, X-Requested-With, Content-Type, Accept")
     res.headers.add('Access-Control-Allow-Credentials', True)
-    slack_notify(req_json)
+    # slack_notify(req_json)
     print(req_json, response)
 
     return res

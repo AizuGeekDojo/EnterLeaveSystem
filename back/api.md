@@ -62,10 +62,6 @@ Requesr
 {
     "SID": string,
     "IsEnter": bool,
-    "Ext": {
-        "Use" :"Purpose of using Aizu Geek Dojo",
-        "message" :"impression",
-    },
     "timestamp": timestamp,
 }
 ```
