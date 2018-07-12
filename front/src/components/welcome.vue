@@ -44,7 +44,7 @@ export default {
         if (res["IsEnter"] === true) {
           router.push({ name: "goodbye", params: { res: res } })
         } else {
-          self.message = "Welcome To Grobal Lounge "
+          self.message = "Welcome To Global Lounge "
           self.IsEnter = false
           self.sid = res["SID"]
           self.user = res["UserName"]
