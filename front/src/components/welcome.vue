@@ -42,7 +42,7 @@ export default {
       .then(res => {
         console.log(res)
         if (res["IsEnter"] === true) {
-          router.push({ name: "question", params: { res: res } })
+          router.push({ name: "goodbye", params: { res: res } })
         } else {
           self.message = "Welcome To Geek Dojo "
           self.IsEnter = false

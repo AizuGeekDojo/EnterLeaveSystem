@@ -13,35 +13,35 @@ export default {
       message: "Good bye"
     }
   },
-  mounted: () => {
-    this.send()
-    setTimeout(function() {
-      router.push({ name: "top" })
-    }, 3000)
-  },
-  methods: {
-    send: () => {
-      return new Promise(function(resolve, reject) {
-        const self = this
-        let date = new Date()
-        let sid = this.$route.params.res["SID"]
-        // console.log('question res', this.$route.params.res)
-        fetch("http://localhost:3000/api/log", {
-          mode: "no-cors",
-          credentials: "include",
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            SID: sid,
-            IsEnter: true,
-            timestamp: date.getTime()
-          })
+  mounted: function() {
+    const self = this
+    return new Promise((resolve, reject) => {
+      const date = new Date()
+      const sid = self.$route.params.res["SID"]
+      fetch("http://localhost:3000/api/log", {
+        mode: "cors",
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          SID: sid,
+          IsEnter: true,
+          timestamp: date.getTime()
         })
       })
-    }
+        .then(() => {
+          setTimeout(() => {
+            router.push({ name: "top" })
+          }, 3000)
+          resolve(true)
+        })
+        .catch(err => {
+          console.log(err)
+          reject(err)
+        })
+    })
   }
 }
 </script>
