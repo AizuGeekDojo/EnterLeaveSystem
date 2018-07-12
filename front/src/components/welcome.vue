@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import router from "../router";
+import router from "../router"
 export default {
   name: "welcome",
   data() {
@@ -15,13 +15,13 @@ export default {
       isEnter: true,
       sid: " ",
       cardid: " "
-    };
+    }
   },
   mounted: function() {
-    const self = this;
-    this.cardid = this.$route.params.cardid;
-    self.cardid = this.cardid;
-    let date = new Date();
+    const self = this
+    this.cardid = this.$route.params.cardid
+    self.cardid = this.cardid
+    let date = new Date()
     fetch("http://localhost:3000/api/readuser", {
       mode: "cors",
       // credentials: "include",
@@ -37,32 +37,32 @@ export default {
     })
       .then(response => {
         // .log(response);
-        return response.json();
+        return response.json()
       })
       .then(res => {
-        console.log(res);
+        console.log(res)
         if (res["IsEnter"] === true) {
-          router.push({ name: "question", params: { res: res } });
+          router.push({ name: "question", params: { res: res } })
         } else {
-          self.message = "Welcome To Geek Dojo ";
-          self.IsEnter = false;
-          self.sid = res["SID"];
-          self.user = res["UserName"];
-          this.user = self.user;
-          this.sid = self.sid;
-          this.IsEnter = self.IsEnter;
-          this.message = self.message;
-          self.push_log();
+          self.message = "Welcome To Geek Dojo "
+          self.IsEnter = false
+          self.sid = res["SID"]
+          self.user = res["UserName"]
+          this.user = self.user
+          this.sid = self.sid
+          this.IsEnter = self.IsEnter
+          this.message = self.message
+          self.push_log()
         }
       })
       .catch(function(error) {
-        console.error(error);
-      });
+        console.error(error)
+      })
   },
   methods: {
     push_log: function() {
-      const self = this;
-      let date = new Date();
+      const self = this
+      let date = new Date()
       fetch("http://localhost:3000/api/log", {
         mode: "cors",
         method: "POST",
@@ -73,18 +73,17 @@ export default {
         body: JSON.stringify({
           SID: self.sid,
           IsEnter: self.IsEnter,
-          Ext: {},
           timestamp: date.getTime()
         })
       }).catch(function(error) {
-        console.error(error);
+        console.error(error)
       }),
         setTimeout(function() {
-          router.push({ name: "top" });
-        }, 5000);
+          router.push({ name: "top" })
+        }, 5000)
     }
   }
-};
+}
 </script>
 
 <style scoped>

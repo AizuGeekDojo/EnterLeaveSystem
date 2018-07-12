@@ -4,7 +4,6 @@ import top from '@/components/top'
 import regist from '@/components/register'
 import welcome from '@/components/welcome'
 import goodbye from '@/components/goodbye'
-import question from '@/components/question'
 
 Vue.use(Router)
 
@@ -29,11 +28,6 @@ export default new Router({
       path: '/goodbye',
       name: 'goodbye',
       component: goodbye
-    },
-    {
-      path: '/question',
-      name: 'question',
-      component: question
     }
   ]
 })
