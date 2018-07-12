@@ -79,7 +79,7 @@ def addLog(req_json: dict):
     ts = req_json["timestamp"]
     uname = db.getUserName(sid)
 
-    db.addLog(sid, isent, ts, str(ext))
+    db.addLog(sid, isent, ts, json.dumps(ext))
 
     res = json.dumps({"SID": sid, "timestamp": int(time.time())})
     return res
