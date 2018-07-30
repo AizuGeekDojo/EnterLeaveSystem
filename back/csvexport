@@ -1,0 +1,62 @@
+#! /usr/local/bin/python3
+
+# /usr/bin/python3
+# /usr/local/bin/python3
+
+import os
+import sys
+import json
+import sqlite3
+import datetime
+
+dbname = 'database.db'
+csvname = 'out.csv'
+
+def getAllLog():
+    conn = sqlite3.connect(dbname)
+    c = conn.cursor()
+    c.execute('select name,log.isenter,time,log.sid,ext from log,users where log.sid=users.sid')
+    ret = c.fetchall()
+    conn.close()
+    return ret
+
+ans = input("Export file name?[out.csv] ")
+if ans != "":
+    csvname = ans
+
+if os.path.exists(csvname):
+    ans = input("The file " + csvname + "already exist. Continue?[y/N] ")
+    if ans != "Y" and ans != "y" and ans != "yes" and ans != "Yes" and ans != "YES":
+        print("Abort.")
+        sys.exit()
+
+
+ret = getAllLog()
+
+csv = ["日時,学籍番号,名前,入退室,目的,コメント\n"]
+
+for i in ret:
+    date = str(datetime.datetime.fromtimestamp(int(int(i[2])/1000)))
+    ext = json.loads(i[4])
+    comment = ""
+    usepurpose = ""
+    entstr = "N/A"
+
+    if ('message' in ext):
+        comment = ext['message']
+
+    if ('Use' in ext):
+        for u in ext['Use']:
+            usepurpose += u + " "
+    
+    if int(i[1]) == 0:
+        entstr = "入室"
+    elif int(i[1]) == 1:
+        entstr = "退室"
+
+    csv.append(date + "," + i[3] + "," + i[0] + "," + entstr + "," + usepurpose + ",\"" + comment + "\"\n")
+ 
+with open(csvname, mode='w') as f:
+    f.writelines(csv)
+
+print("Export data as " + csvname)
