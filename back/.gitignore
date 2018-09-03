@@ -1,2 +1,6 @@
 .env
 *.db
+.vscode/
+./vscode/settings.json
+
+

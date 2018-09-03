@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "/Users/nozomi/.local/share/virtualenvs/back-MiFRmnst/bin/python"
+    "python.pythonPath": "/Users/nozomi/.local/share/virtualenvs/back-MiFRmnst/bin/python",
+    "python.linting.pylintEnabled": false
 }
