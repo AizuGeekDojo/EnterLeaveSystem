@@ -67,9 +67,6 @@ with open(csvname, mode='w') as f:
 
 # print("Export data as " + csvname)
 
-print(TOKEN)
-print(CHANNEL)
-
 files = {'file': open(csvname, 'rb')}
 param = {
     'token':TOKEN,
