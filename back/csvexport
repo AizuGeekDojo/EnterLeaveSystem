@@ -10,8 +10,8 @@ import sqlite3
 import datetime
 import requests
 
-TOKEN = os.getenv("SLACK_TOKEN")
-CHANNEL = os.getenv("SLACK_CHANNEL")
+TOKEN = ""
+CHANNEL = ""
 
 
 
@@ -67,12 +67,15 @@ with open(csvname, mode='w') as f:
 
 # print("Export data as " + csvname)
 
+print(TOKEN)
+print(CHANNEL)
+
 files = {'file': open(csvname, 'rb')}
 param = {
     'token':TOKEN,
     'channels':CHANNEL,
     'filename':"log.csv",
-    'initial_comment': "hogehoge",
+    'initial_comment': "Enter leave log (csv format) by csvexport",
     'title': "log.csv"
 }
 requests.post(url="https://slack.com/api/files.upload",params=param, files=files)
