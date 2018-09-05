@@ -19,11 +19,13 @@ class webhookSlack():
         time = datetime.datetime.fromtimestamp(ts)
         outPutText = "{0} : {1} さんが {2} に {3} しました。".format(sid, uname, time, inout)
 
-        if isent == 0:
-            self.postAgdIn(outPutText)
+        self.postAgdIn(outPutText)
 
-        elif isent:
-            self.postAgdOut(outPutText, ext)
+        # if isent == 0:
+        #     self.postAgdIn(outPutText)
+
+        # elif isent:
+        #     self.postAgdOut(outPutText, ext)
 
     def postAgdIn(self, msg):
         self.slack.notify(text=msg,
@@ -41,7 +43,7 @@ class webhookSlack():
                     "pretext": msg,
                     "text": "目的 : {0} \n 感想 : {1}".format(purpose, impress)
                     }
-
+        
         attachments.append(elements)
         self.slack.notify(attachments=attachments,
                           channel=self.channel,
