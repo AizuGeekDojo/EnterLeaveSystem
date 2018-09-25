@@ -10,8 +10,8 @@ import sqlite3
 import datetime
 import requests
 
-TOKEN = ""
-CHANNEL = ""
+TOKEN = os.getenv("SLACK_FILEUP_TOKEN")
+CHANNEL = os.getenv("SLACK_FILEUP_CHANNEL")
 
 
 
