@@ -20,9 +20,8 @@ def createUser(req_json: dict):
     if db.getUserName(sid) is None:
         success = False
     else:
-        db.addUser(card_id,sid)
+        db.addUser(card_id, sid)
         success = True
-
 
     res = json.dumps({
         "Success": success,
@@ -80,7 +79,8 @@ def addLog(req_json: dict):
     uname = db.getUserName(sid)
 
     db.addLog(sid, isent, ts, json.dumps(ext))
-
+    # notify to slack
+    slack_notify(req_json)
     res = json.dumps({"SID": sid, "timestamp": int(time.time())})
     return res
 
@@ -91,6 +91,7 @@ def slack_notify(req_json: dict):
     # ext = req_json["Ext"]
     ext = ""
     ts = req_json["timestamp"]
+
     uname = db.getUserName(sid)
     slack = Slack.webhookSlack(URL=webHookURL)
     slack.postData(uname, sid, isent, int(ts / 1000), ext)

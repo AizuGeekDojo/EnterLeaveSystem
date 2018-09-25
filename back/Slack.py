@@ -43,7 +43,7 @@ class webhookSlack():
                     "pretext": msg,
                     "text": "目的 : {0} \n 感想 : {1}".format(purpose, impress)
                     }
-
+        
         attachments.append(elements)
         self.slack.notify(attachments=attachments,
                           channel=self.channel,
