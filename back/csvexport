@@ -10,8 +10,10 @@ import sqlite3
 import datetime
 import requests
 
-TOKEN = os.getenv("SLACK_FILEUP_TOKEN")
-CHANNEL = os.getenv("SLACK_FILEUP_CHANNEL")
+# TOKEN = os.getenv("SLACK_FILEUP_TOKEN")
+# CHANNEL = os.getenv("SLACK_FILEUP_CHANNEL")
+TOKEN = ""
+CHANNEL = ""
 
 
 
@@ -45,8 +47,8 @@ def removeAllLog():
 
 ret = getAllLog()
 
-csv = ["日時,学籍番号,名前,入退室,目的,コメント\n"]
-
+# csv = ["日時,学籍番号,名前,入退室,目的,コメント\n"]
+csv = ["Date,StudentID,Name,Enter/Leave,Purpose,Comment\n"]
 for i in ret:
     date = str(datetime.datetime.fromtimestamp(int(int(i[2])/1000)))
     ext = json.loads(i[4])
@@ -62,12 +64,16 @@ for i in ret:
             usepurpose += u + " "
     
     if int(i[1]) == 0:
-        entstr = "入室"
+        # entstr = "入室"
+        entstr = "Enter"
     elif int(i[1]) == 1:
-        entstr = "退室"
+        # entstr = "退室"
+        entstr = "Leave"
 
     csv.append(date + "," + i[3] + "," + i[0] + "," + entstr + "," + usepurpose + ",\"" + comment + "\"\n")
- 
+
+print
+
 with open(csvname, mode='w') as f:
     f.writelines(csv)
 
@@ -83,5 +89,5 @@ param = {
 }
 r = requests.post(url="https://slack.com/api/files.upload",params=param, files=files)
 
-if r.status_code == 200:
+if r.json()["ok"] :
     removeAllLog()
