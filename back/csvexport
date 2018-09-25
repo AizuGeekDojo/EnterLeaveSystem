@@ -26,6 +26,12 @@ def getAllLog():
     conn.close()
     return ret
 
+def removeAllLog():
+    conn = sqlite3.connect(dbname)
+    conn.execute('delete from log')
+    conn.commit()
+    conn.close()
+
 # ans = input("Export file name?[out.csv] ")
 # if ans != "":
 #     csvname = ans
@@ -75,5 +81,7 @@ param = {
     'initial_comment': "Enter leave log (csv format) by csvexport",
     'title': "log.csv"
 }
-requests.post(url="https://slack.com/api/files.upload",params=param, files=files)
+r = requests.post(url="https://slack.com/api/files.upload",params=param, files=files)
 
+if r.status_code == 200:
+    removeAllLog()
