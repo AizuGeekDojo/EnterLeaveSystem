@@ -48,7 +48,8 @@ def removeAllLog():
 ret = getAllLog()
 
 # csv = ["日時,学籍番号,名前,入退室,目的,コメント\n"]
-csv = ["Date,StudentID,Name,Enter/Leave,Purpose,Comment\n"]
+# csv = ["Date,StudentID,Name,Enter/Leave,Purpose,Comment\n"]
+csv = ["Date,StudentID,Name,Enter/Leave\n"]
 for i in ret:
     date = str(datetime.datetime.fromtimestamp(int(int(i[2])/1000)))
     # ext = json.loads(i[4])
@@ -70,7 +71,7 @@ for i in ret:
         # entstr = "退室"
         entstr = "Leave"
 
-    csv.append(date + "," + i[3] + "," + i[0] + "," + entstr + "," + usepurpose + ",\"" + comment + "\"\n")
+    csv.append(date + "," + i[3] + "," + i[0] + "," + entstr + "\n")
 
 
 with open(csvname, mode='w') as f:
