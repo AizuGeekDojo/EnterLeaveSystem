@@ -8,6 +8,14 @@ import sys
 import json
 import sqlite3
 import datetime
+import requests
+
+# TOKEN = os.getenv("SLACK_FILEUP_TOKEN")
+# CHANNEL = os.getenv("SLACK_FILEUP_CHANNEL")
+TOKEN = ""
+CHANNEL = ""
+
+
 
 dbname = 'database.db'
 csvname = 'out.csv'
@@ -20,21 +28,27 @@ def getAllLog():
     conn.close()
     return ret
 
-ans = input("Export file name?[out.csv] ")
-if ans != "":
-    csvname = ans
+def removeAllLog():
+    conn = sqlite3.connect(dbname)
+    conn.execute('delete from log')
+    conn.commit()
+    conn.close()
 
-if os.path.exists(csvname):
-    ans = input("The file " + csvname + "already exist. Continue?[y/N] ")
-    if ans != "Y" and ans != "y" and ans != "yes" and ans != "Yes" and ans != "YES":
-        print("Abort.")
-        sys.exit()
+# ans = input("Export file name?[out.csv] ")
+# if ans != "":
+#     csvname = ans
+
+# if os.path.exists(csvname):
+#     ans = input("The file " + csvname + "already exist. Continue?[y/N] ")
+#     if ans != "Y" and ans != "y" and ans != "yes" and ans != "Yes" and ans != "YES":
+#         print("Abort.")
+#         sys.exit()
 
 
 ret = getAllLog()
 
-csv = ["日時,学籍番号,名前,入退室,目的,コメント\n"]
-
+# csv = ["日時,学籍番号,名前,入退室,目的,コメント\n"]
+csv = ["Date,StudentID,Name,Enter/Leave,Purpose,Comment\n"]
 for i in ret:
     date = str(datetime.datetime.fromtimestamp(int(int(i[2])/1000)))
     ext = json.loads(i[4])
@@ -50,13 +64,30 @@ for i in ret:
             usepurpose += u + " "
     
     if int(i[1]) == 0:
-        entstr = "入室"
+        # entstr = "入室"
+        entstr = "Enter"
     elif int(i[1]) == 1:
-        entstr = "退室"
+        # entstr = "退室"
+        entstr = "Leave"
 
     csv.append(date + "," + i[3] + "," + i[0] + "," + entstr + "," + usepurpose + ",\"" + comment + "\"\n")
- 
+
+print
+
 with open(csvname, mode='w') as f:
     f.writelines(csv)
 
-print("Export data as " + csvname)
+# print("Export data as " + csvname)
+
+files = {'file': open(csvname, 'rb')}
+param = {
+    'token':TOKEN,
+    'channels':CHANNEL,
+    'filename':"log.csv",
+    'initial_comment': "Enter leave log (csv format) by csvexport",
+    'title': "log.csv"
+}
+r = requests.post(url="https://slack.com/api/files.upload",params=param, files=files)
+
+if r.json()["ok"] :
+    removeAllLog()
