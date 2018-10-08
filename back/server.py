@@ -28,9 +28,11 @@ def socket():
         while True:
             cardid = nfc_read.nfc_read()
             if cardid is not "":
+                sid = getSID(cardid)
                 msg = json.dumps({
                     "IsCard": True,
                     "CardID": cardid,
+                    "SID": sid,
                     "IsNew": isNewCard(cardid),
                     "timestamp": int(time.time())
                 })

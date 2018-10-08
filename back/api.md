@@ -82,6 +82,7 @@ Response
 {
     "IsCard": bool,
     "CardID": string,
+    "SID": string,
     "IsEnter": bool,
     "IsNew": bool,
     "timestamp": timestamp

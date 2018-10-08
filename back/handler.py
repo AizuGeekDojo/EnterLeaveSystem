@@ -106,3 +106,10 @@ def isEnter(sid: str) -> bool:
     入室済みかの確認
     """
     return db.isUserInside(sid)
+
+
+def getSID(card_id: str):
+    """
+    カードIDからsidに変換
+    """
+    return db.getUserName(sid)
