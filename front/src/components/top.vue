@@ -29,7 +29,7 @@ export default {
       console.log("Response = " + self.message);
       if (self.message["IsNew"] === false) {
         self.updateMsg("Now Reading ...");
-        self.getUser(self.message["CardID"]);
+        self.getUser(self.message["SID"]);
       } else {
         self.createUser(self.message["CardID"]);
       }
@@ -47,9 +47,9 @@ export default {
       const self = this;
       self.msg = text;
     },
-    getUser: function(CardID) {
+    getUser: function(SID) {
       setTimeout(function() {
-        router.push({ name: "welcome", params: { cardid: CardID } });
+        router.push({ name: "welcome", params: { sid: SID } });
       }, 500);
     },
     createUser: function(CardID) {

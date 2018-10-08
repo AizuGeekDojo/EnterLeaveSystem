@@ -13,14 +13,13 @@ export default {
       message: "Now Reading...",
       user: " ",
       isEnter: true,
-      sid: " ",
-      cardid: " "
+      sid: " "
     };
   },
   mounted: function() {
     const self = this;
-    this.cardid = this.$route.params.cardid;
-    self.cardid = this.cardid;
+    this.sid = this.$route.params.sid;
+    self.sid = this.sid;
     let date = new Date();
     fetch("http://localhost:3000/api/readuser", {
       mode: "cors",
@@ -31,7 +30,7 @@ export default {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        CardID: this.cardid,
+        SID: this.sid,
         timestamp: date.getTime()
       })
     })
@@ -46,10 +45,10 @@ export default {
         } else {
           self.message = "Welcome To Geek Dojo ";
           self.IsEnter = false;
-          self.sid = res["SID"];
+          // self.sid = res["SID"];
           self.user = res["UserName"];
           this.user = self.user;
-          this.sid = self.sid;
+          // this.sid = self.sid;
           this.IsEnter = self.IsEnter;
           this.message = self.message;
           self.push_log();
