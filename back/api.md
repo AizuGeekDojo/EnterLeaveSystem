@@ -56,6 +56,23 @@ Response
 }
 ```
 
+### Check User
+Request
+```json
+{
+    "SID": string,
+    "timestamp": timestamp,
+}
+```
+Response
+```json
+{
+    "isValid": string,
+    "SID": string,
+    "timestamp": timestamp,
+}
+```
+
 ### Add Log
 Requesr
 ```json
@@ -102,6 +119,10 @@ method : `GET`
 ### Update
 URI : `/api/updateuser`
 method : `UPDATE`
+
+### Check
+URI : `/api/checkuser`
+method : `GET`
 
 ## WebSocket
 URI : `/socket/readCard`

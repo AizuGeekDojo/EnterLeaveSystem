@@ -71,6 +71,22 @@ def readUserHandler():
     return res
 
 
+@app.route("/api/checkuser", methods=['POST'])
+# @content_type('application/json')
+# @cross_origin()
+def checkUserHandler():
+    req_json = json.loads(request.data.decode('utf-8'))
+    response = checkUser(req_json["SID"])
+    res = Response(
+        response=response, content_type='application/json', status=200)
+    res.headers.add('Access-Control-Allow-Origin', 'http://localhost:8000')
+    res.headers.add('Access-Control-Allow-Headers',
+                    "Origin, X-Requested-With, Content-Type, Accept")
+    res.headers.add('Access-Control-Allow-Credentials', True)
+    print(req_json, response)
+    return res
+
+
 @app.route("/api/updateuser", methods=['UPDATE'])
 # @content_type('application/json')
 # @cross_origin()

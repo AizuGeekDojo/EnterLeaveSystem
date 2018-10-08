@@ -106,3 +106,21 @@ def isEnter(sid: str) -> bool:
     入室済みかの確認
     """
     return db.isUserInside(sid)
+
+def checkUser(sid: str):
+    """
+    ユーザーの存在確認
+    """
+
+    if db.getUserName(sid) is None:
+        success = False
+    else:
+        success = True
+
+    res = json.dumps({
+        "isValid": success,
+        "SID": sid,
+        "timestamp": int(time.time())
+    })
+    return res
+
