@@ -33,7 +33,7 @@ def createUser(req_json: dict):
     return res
 
 
-def getUser(sid: dict):
+def getUser(sid: str):
     """
     ユーザーの取得
     """
