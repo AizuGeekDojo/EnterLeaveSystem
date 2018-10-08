@@ -33,12 +33,10 @@ def createUser(req_json: dict):
     return res
 
 
-def getUser(req_json: dict):
+def getUser(sid: dict):
     """
     ユーザーの取得
     """
-    card_id = req_json["CardID"]
-    sid = db.getSIDByIDm(card_id)
     user_name = db.getUserName(sid)
     is_enter = isEnter(sid)
     res = json.dumps({
