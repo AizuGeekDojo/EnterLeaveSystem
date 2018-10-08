@@ -112,4 +112,4 @@ def getSID(card_id: str):
     """
     カードIDからsidに変換
     """
-    return db.getUserName(sid)
+    return db.getSIDByIDm(card_id)
