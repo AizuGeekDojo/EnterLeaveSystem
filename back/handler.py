@@ -41,7 +41,6 @@ def getUser(sid: str):
     is_enter = isEnter(sid)
     res = json.dumps({
         "SID": sid,
-        "CardID": card_id,
         "IsEnter": is_enter,
         "UserName": user_name,
         "timestamp": int(time.time())
