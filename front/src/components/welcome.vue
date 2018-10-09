@@ -45,10 +45,8 @@ export default {
         } else {
           self.message = "Welcome To Geek Dojo ";
           self.IsEnter = false;
-          // self.sid = res["SID"];
           self.user = res["UserName"];
           this.user = self.user;
-          // this.sid = self.sid;
           this.IsEnter = self.IsEnter;
           this.message = self.message;
           self.push_log();
