@@ -43,8 +43,7 @@ export default {
             console.log("Check failed");
           } else {
             setTimeout(function() {
-              // TODO: Show welcome view
-              // router.push({ name: "welcome", params: { cardid: self.cardid } });
+              router.push({ name: "welcome", params: { sid: self.cardid } });
             }, 100);
           }
         })
