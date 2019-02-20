@@ -1,6 +1,7 @@
 <template>
   <div id='top' ref="message" class="container align-middle">
-    <h1 class="contents align-middle">{{ msg }}</h1>
+    <h1 class="contents align-middle">{{ msg }}<br/>
+    Or <router-link to="/forgot">forgot your card</router-link></h1>
   </div>
 </template>
 
