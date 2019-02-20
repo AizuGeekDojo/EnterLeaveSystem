@@ -46,7 +46,7 @@ export default {
             console.log("Create failed");
           } else {
             setTimeout(function() {
-              router.push({ name: "welcome", params: { cardid: self.cardid } });
+              router.push({ name: "welcome", params: { sid: self.snum } });
             }, 100);
           }
         })

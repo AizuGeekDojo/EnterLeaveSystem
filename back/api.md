@@ -41,7 +41,7 @@ Response
 Request
 ```json
 {
-    "CardID": string,
+    "SID": string,
     "timestamp": timestamp,
 }
 ```
@@ -49,7 +49,6 @@ Response
 ```json
 {
     "SID": string,
-    "CardID": string,
     "IsEnter": bool,
     "UserName": string,
     "timestamp": timestamp,
@@ -99,6 +98,7 @@ Response
 {
     "IsCard": bool,
     "CardID": string,
+    "SID": string,
     "IsEnter": bool,
     "IsNew": bool,
     "timestamp": timestamp
