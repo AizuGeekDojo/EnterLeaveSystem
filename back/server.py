@@ -26,18 +26,25 @@ def socket():
         print("Connected")
         ws = request.environ['wsgi.websocket']
         while True:
-            cardid = nfc_read.nfc_read()
-            if cardid is not "":
+            cardtype, cardid = nfc_read.nfc_read()
+            if cardtype == "univ":
+                sid = cardid
+                isNew = False
+            elif cardtype == "general":
                 sid = getSID(cardid)
-                msg = json.dumps({
-                    "IsCard": True,
-                    "CardID": cardid,
-                    "SID": sid,
-                    "IsNew": isNewCard(cardid),
-                    "timestamp": int(time.time())
-                })
-                ws.send(msg)
-                break
+                isNew = isNewCard(cardid)
+            else:
+                continue
+
+            msg = json.dumps({
+                "IsCard": True,
+                "CardID": cardid,
+                "SID": sid,
+                "IsNew": isNew,
+                "timestamp": int(time.time())
+            })
+            ws.send(msg)
+            break
     return
 
 
