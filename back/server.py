@@ -27,10 +27,10 @@ def socket():
         ws = request.environ['wsgi.websocket']
         while True:
             cardtype, cardid = nfc_read.nfc_read()
-            if cardtype == "univ":
+            if cardtype == "student":
                 sid = cardid
                 isNew = False
-            elif cardtype == "general":
+            elif cardtype == "univ" or cardtype == "general":
                 sid = getSID(cardid)
                 isNew = isNewCard(cardid)
             else:

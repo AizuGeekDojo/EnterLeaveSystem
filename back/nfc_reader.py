@@ -13,11 +13,11 @@ def on_connect(tag):
             if data[0:4] == "1000":
                 sid = data[4:11]
                 if sid[0] == "1":
-                    print "univ s" + sid
+                    print "student s" + sid
                 elif sid[0] == "5":
-                    print "univ m" + sid
+                    print "student m" + sid
                 elif sid[0] == "8":
-                    print "univ d" + sid
+                    print "student d" + sid
             else:
                 print "univ " + data
         except Exception as e:
