@@ -3,13 +3,12 @@ package handler
 import (
 	"fmt"
 	"net/http"
-	"strings"
 )
 
 //AccountAPIHandler handles http request for account
 func LogAPIHandler(w http.ResponseWriter, r *http.Request) {
 	//Cors Header
-	w.Header().Add("Access-Control-Allow-Origin", strings.Join([]string{"http://", common.OriginDomain}, ""))
+	w.Header().Add("Access-Control-Allow-Origin", "*")
 
 	//Cors Option check
 	if r.Method == "OPTIONS" {
