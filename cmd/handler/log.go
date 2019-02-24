@@ -18,19 +18,16 @@ func LogAPIHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// //Routing
-	// switch r.URL.Path {
-	// case "/api/log":
-	// 	// loginHandler(w, r)
-	// default:
-	// 	w.WriteHeader(404)
-	// 	fmt.Fprintf(w, "Unknown API")
-	// }
-
 	if r.Method == "POST" {
-		// downloadHandler(w, r)
+		addLogHandler(w, r)
 	} else {
 		w.WriteHeader(405)
 		fmt.Fprintf(w, "Unexpected method")
 	}
+}
+
+func addLogHandler(w http.ResponseWriter, r *http.Request) {
+	// TODO:
+	// AddLog
+	// Slack notify
 }

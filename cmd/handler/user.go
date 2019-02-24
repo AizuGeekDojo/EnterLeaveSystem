@@ -20,10 +20,21 @@ func UserAPIHandler(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case "GET":
+		getUserHandler(w, r)
 	case "POST":
-		// loginHandler(w, r)
+		createUserHandler(w, r)
 	default:
 		w.WriteHeader(405)
 		fmt.Fprintf(w, "Unexpected method")
 	}
+}
+
+func getUserHandler(w http.ResponseWriter, r *http.Request) {
+	//学番を確認して、ユーザーが存在するかチェック
+	//結果を返す
+}
+
+func createUserHandler(w http.ResponseWriter, r *http.Request) {
+	//GetUserByCardIDで登録されてないか確認、重複チェック
+	//AddCard
 }
