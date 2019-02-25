@@ -21,10 +21,10 @@ type RegistUserResInfo struct {
 	Reason  string `json:"Reason"`
 }
 
-// UserInfoReq is user data structue for request
-type UserInfoReq struct {
-	UID string `json:"SID"`
-}
+// // UserInfoReq is user data structue for request
+// type UserInfoReq struct {
+// 	UID string `json:"SID"`
+// }
 
 // UserInfo is user data structue for response
 type UserInfo struct {
@@ -60,18 +60,19 @@ func UserAPIHandler(w http.ResponseWriter, r *http.Request) {
 func getUserHandler(w http.ResponseWriter, r *http.Request) {
 	//学番を確認して、ユーザーが存在するかチェック
 	//結果を返す
-	var userreqdat UserInfoReq
+	// var userreqdat UserInfoReq
 	var userresdat UserInfo
-
-	reqlen, _ := strconv.Atoi(r.Header.Get("Content-Length"))
-	body := make([]byte, reqlen)
-	r.Body.Read(body)
-	json.Unmarshal(body, &userreqdat)
+	r.ParseForm()
+	var uid = r.Form["sid"][0]
+	// reqlen, _ := strconv.Atoi(r.Header.Get("Content-Length"))
+	// body := make([]byte, reqlen)
+	// r.Body.Read(body)
+	// json.Unmarshal(body, &userreqdat)
 
 	// ts := time.Now()
 
-	userresdat.UID = userreqdat.UID
-	username, isenter, err := db.GetUserInfo(userreqdat.UID)
+	userresdat.UID = uid
+	username, isenter, err := db.GetUserInfo(uid)
 	if err != nil {
 		w.WriteHeader(400)
 	}
