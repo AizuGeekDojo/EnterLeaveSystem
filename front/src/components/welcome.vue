@@ -1,85 +1,33 @@
 <template>
     <div id='welcome' class="container align-middle">
-        <h1 class="contents align-middle"> {{ message }}{{ user }} </h1>
+        <h1 class="contents align-middle"> Welcome To Geek Dojo {{ username }} </h1>
     </div>
 </template>
 
 <script>
-import router from "../router";
+// import router from "../router";
+import util from "../util.js";
+
 export default {
   name: "welcome",
   data() {
     return {
       message: "Now Reading...",
-      user: " ",
+      username: " ",
       isEnter: true,
       sid: " "
     };
   },
   mounted: function() {
-    const self = this;
-    this.sid = this.$route.params.sid;
-    self.sid = this.sid;
-    let date = new Date();
-    fetch("http://localhost:3000/api/readuser", {
-      mode: "cors",
-      // credentials: "include",
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        SID: this.sid,
-        timestamp: date.getTime()
-      })
-    })
-      .then(response => {
-        // .log(response);
-        return response.json();
-      })
-      .then(res => {
-        console.log(res);
-        if (res["IsEnter"] === true) {
-          router.push({ name: "question", params: { res: res } });
-        } else {
-          self.message = "Welcome To Geek Dojo ";
-          self.IsEnter = false;
-          self.user = res["UserName"];
-          this.user = self.user;
-          this.IsEnter = self.IsEnter;
-          this.message = self.message;
-          self.push_log();
-        }
-      })
-      .catch(function(error) {
-        console.error(error);
-      });
-  },
-  methods: {
-    push_log: function() {
-      const self = this;
-      let date = new Date();
-      fetch("http://localhost:3000/api/log", {
-        mode: "cors",
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          SID: self.sid,
-          IsEnter: self.IsEnter,
-          Ext: {},
-          timestamp: date.getTime()
-        })
-      }).catch(function(error) {
-        console.error(error);
-      }),
-        setTimeout(function() {
-          router.push({ name: "top" });
-        }, 5000);
-    }
+    var userinfo = this.$route.params.userinfo;
+    this.username = userinfo["UserName"]
+    var sid = userinfo["SID"]
+    var IsEnter = userinfo["IsEnter"]
+    util.addLog(sid,true,"")
+    var self = this
+    setTimeout(function() {
+      self.$router.push({ name: "top" });
+    }, 5000);
   }
 };
 </script>

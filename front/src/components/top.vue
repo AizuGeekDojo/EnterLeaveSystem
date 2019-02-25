@@ -1,44 +1,60 @@
 <template>
   <div id='top' ref="message" class="container align-middle">
-    <h1 class="contents align-middle">{{ msg }}</h1>
+    <h1 class="contents align-middle">Please hold the card over the reader</h1>
   </div>
 </template>
 
 <script>
-import router from "../router";
+// import router from "../router";
+import util from "../util.js";
+
 export default {
   name: "top",
-  data() {
-    return {
-      msg: "Please hold the card over the reader",
-      message: ""
-    };
-  },
-  created: function() {
-    console.log("Created");
+  // data() {
+  //   return {
+  //     message: ""
+  //   };
+  // },
+  // created: function() {
+  //   console.log("Created");
+  // },
+  destroyed: function() {
+    console.log(this.ws)
+    this.ws.close()
   },
   mounted: function() {
     const self = this;
-    const ws = new WebSocket("ws://localhost:3000/socket/readCard");
-    ws.onopen = function(e) {
+    this.ws = new WebSocket("ws://localhost:3000/socket/readCard");
+    this.ws.onopen = function(e) {
       console.log(" Web socket onopen ");
     };
-    ws.onmessage = function(e) {
+    this.ws.onmessage = function(e) {
+      // console.log(this)
       console.log(" Web socket onmessage ", e.data);
-      self.message = JSON.parse(e.data);
-      console.log("Response = " + self.message);
-      if (self.message["IsNew"] === false) {
-        self.updateMsg("Now Reading ...");
-        self.getUser(self.message["SID"]);
+      var message = JSON.parse(e.data);
+      console.log("Response = " + message);
+      if (message["IsNew"] === false) {
+        util.getUserInfo(message["SID"])
+          .then(res => {
+            if (res["IsEnter"]) {
+              self.$router.push({ name: "question", params: { userinfo: res } });
+            } else {
+              self.$router.push({ name: "welcome", params: { userinfo: res } });
+            }
+          })
+        // self.updateMsg("Now Reading ...");
+        // self.getUser(message["SID"]);
       } else {
-        self.createUser(self.message["CardID"]);
+                self.$router.push({ name: "regist", params: { cardid: message["CardID"] } });
+
+        // self.createUser(message["CardID"]);
       }
     };
-    ws.onerror = function(e) {
+    this.ws.onerror = function(e) {
       console.log(" Web socket error ");
       console.log(e);
     };
-    ws.onclose = function(e) {
+    this.ws.onclose = function(e) {
       console.log(" Web socket onclose " + e);
     };
   },
