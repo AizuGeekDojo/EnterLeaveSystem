@@ -1,33 +1,30 @@
 export default {
   getUserInfo (sid) {
     return fetch(`http://localhost:3000/api/user?sid=${sid}`, {
-      mode: "cors",
-      method: "GET",
+      mode: 'cors',
+      method: 'GET',
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      }//,
-      // body: JSON.stringify({
-      //   SID: sid
-      // })
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
     })
       .then(response => {
         if (!response.ok) {
           throw response
         }
-        return response.json();
+        return response.json()
       })
-      .catch(function(error) {
-        console.error(error);
-      });
+      .catch(function (error) {
+        console.error(error)
+      })
   },
   registCardInfo (cardid, sid) {
-    return fetch("http://localhost:3000/api/user", {
-      mode: "cors",
-      method: "POST",
+    return fetch('http://localhost:3000/api/user', {
+      mode: 'cors',
+      method: 'POST',
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         SID: sid,
@@ -35,11 +32,11 @@ export default {
       })
     })
       .then(response => {
-        return response.json();
+        return response.json()
       })
-      .catch(function(error) {
-        console.error(error);
-      });
+      .catch(function (error) {
+        console.error(error)
+      })
   },
   addLog (sid, isenter, ext) {
     console.log({
@@ -47,12 +44,12 @@ export default {
       IsEnter: (isenter ? 1 : 0),
       Ext: ext
     })
-    return fetch("http://localhost:3000/api/log", {
-      mode: "cors",
-      method: "POST",
+    return fetch('http://localhost:3000/api/log', {
+      mode: 'cors',
+      method: 'POST',
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         SID: sid,
@@ -64,10 +61,10 @@ export default {
         if (!response.ok) {
           throw response
         }
-        return response;
+        return response
       })
-      .catch(function(error) {
-        console.error(error);
-      });
+      .catch(function (error) {
+        console.error(error)
+      })
   }
 }

@@ -9,43 +9,42 @@
 </template>
 
 <script>
-import util from "../util.js";
+import util from '../util.js'
 
 export default {
-  name: "regist",
-  data() {
+  name: 'regist',
+  data () {
     return {
-      sid: ""
-    };
+      sid: ''
+    }
   },
   methods: {
-    regist: function() {
-      const self = this;
-      const cardid = this.$route.params.cardid;
-      util.registCardInfo(cardid,this.sid)
+    regist: function () {
+      const self = this
+      const cardid = this.$route.params.cardid
+      util.registCardInfo(cardid, this.sid)
         .then(res => {
-          console.log(res);
-          if (res["Success"] !== true) {
-            alert('The ID is not found.');
-            console.log("Create failed");
+          if (res['Success'] !== true) {
+            console.log('Card register failed')
+            alert('The ID is not found.')
           } else {
             util.getUserInfo(self.sid)
               .then(res => {
-                if (res["IsEnter"]) {
-                  self.$router.push({ name: "question", params: { userinfo: res } });
+                if (res['IsEnter']) {
+                  self.$router.push({ name: 'question', params: { userinfo: res } })
                 } else {
-                  self.$router.push({ name: "welcome", params: { userinfo: res } });
+                  self.$router.push({ name: 'welcome', params: { userinfo: res } })
                 }
               })
           }
         })
-        .catch(function(error) {
-          console.error(error);
-          self.$router.push({ name: "top" });
-        });
+        .catch(function (error) {
+          console.error(error)
+          self.$router.push({ name: 'top' })
+        })
     }
   }
-};
+}
 </script>
 
 <style scoped>

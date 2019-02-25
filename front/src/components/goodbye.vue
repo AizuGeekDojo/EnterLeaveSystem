@@ -1,6 +1,6 @@
 <template>
     <div id='goodbye' class="container align-middle">
-        <h1 class="contents align-middle">{{ message }} </h1>
+        <h1 class="contents align-middle">Good bye</h1>
     </div>
 </template>
 
@@ -8,14 +8,9 @@
 import router from '../router'
 export default {
   name: 'goodbye',
-  data () {
-    return {
-      message: 'Good bye'
-    }
-  },
   mounted: function () {
     setTimeout(function () {
-      router.push({name: 'top'})
+      router.push({ name: 'top' })
     }, 3000)
   }
 }

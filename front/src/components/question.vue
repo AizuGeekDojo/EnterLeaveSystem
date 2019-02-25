@@ -30,8 +30,7 @@
 </template>
 
 <script>
-// import router from '../router'
-import util from "../util.js";
+import util from '../util.js'
 
 export default {
   name: 'ques',
@@ -43,35 +42,15 @@ export default {
   },
   methods: {
     send: function () {
-      var userinfo = this.$route.params.userinfo;
-      var answer =  JSON.stringify({
+      var userinfo = this.$route.params.userinfo
+      var answer = JSON.stringify({
         'Use': this.checkedUse,
         'message': this.message
       })
-      util.addLog(userinfo["SID"],false,answer)
-      .then(res=>{
-      this.$router.push({name: 'goodbye'})
-      })
-      // const self = this
-      // let date = new Date()
-      // let sid = this.$route.params.res['SID']
-      // console.log('question res', this.$route.params.res)
-      // fetch('http://localhost:3000/api/log', {
-      //   mode: 'no-cors',
-      //   credentials: 'include',
-      //   method: 'POST',
-      //   headers: {
-      //     'Accept': 'application/json',
-      //     'Content-Type': 'application/json'
-      //   },
-      //   body: JSON.stringify(
- 
-      //         'Use': self.checkedUse,
-      //         'message': self.message
-            
-      //   )
-      // })
-      
+      util.addLog(userinfo['SID'], false, answer)
+        .then(res => {
+          this.$router.push({ name: 'goodbye' })
+        })
     }
   }
 }

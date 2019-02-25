@@ -5,31 +5,26 @@
 </template>
 
 <script>
-// import router from "../router";
-import util from "../util.js";
+import util from '../util.js'
 
 export default {
-  name: "welcome",
-  data() {
+  name: 'welcome',
+  data () {
     return {
-      message: "Now Reading...",
-      username: " ",
-      isEnter: true,
-      sid: " "
-    };
+      username: ''
+    }
   },
-  mounted: function() {
-    var userinfo = this.$route.params.userinfo;
-    this.username = userinfo["UserName"]
-    var sid = userinfo["SID"]
-    var IsEnter = userinfo["IsEnter"]
-    util.addLog(sid,true,"")
+  mounted: function () {
+    var userinfo = this.$route.params.userinfo
+    this.username = userinfo['UserName']
+    var sid = userinfo['SID']
+    util.addLog(sid, true, '')
     var self = this
-    setTimeout(function() {
-      self.$router.push({ name: "top" });
-    }, 5000);
+    setTimeout(function () {
+      self.$router.push({ name: 'top' })
+    }, 5000)
   }
-};
+}
 </script>
 
 <style scoped>
