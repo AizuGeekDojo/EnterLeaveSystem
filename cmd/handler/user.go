@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-	"time"
 
 	"github.com/AizuGeekDojo/EnterLeaveSystem/cmd/db"
 )
@@ -69,7 +68,7 @@ func getUserHandler(w http.ResponseWriter, r *http.Request) {
 	r.Body.Read(body)
 	json.Unmarshal(body, &userreqdat)
 
-	ts := time.Now()
+	// ts := time.Now()
 
 	userresdat.UID = userreqdat.UID
 	username, isenter, err := db.GetUserInfo(userreqdat.UID)
@@ -92,7 +91,7 @@ func createUserHandler(w http.ResponseWriter, r *http.Request) {
 	r.Body.Read(body)
 	json.Unmarshal(body, &userdat)
 
-	ts := time.Now()
+	// ts := time.Now()
 
 	err := db.RegisterCard(userdat.CardID, userdat.UID)
 	if err == nil {

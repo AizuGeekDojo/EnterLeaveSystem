@@ -8,13 +8,13 @@ import (
 	"time"
 
 	"github.com/AizuGeekDojo/EnterLeaveSystem/cmd/db"
-	slack "github.com/AizuGeekDojo/EnterLeaveSystem/cmd/el_slack"
+	"github.com/AizuGeekDojo/EnterLeaveSystem/cmd/slack"
 )
 
 // LogInfo is log data structue
 type LogInfo struct {
 	UID     string `json:"SID"`
-	isEnter int    `json:"IsEnter"`
+	IsEnter int    `json:"IsEnter"`
 	Ext     string `json:"Ext"`
 }
 
@@ -47,7 +47,7 @@ func addLogHandler(w http.ResponseWriter, r *http.Request) {
 	json.Unmarshal(body, &logdat)
 
 	ts := time.Now()
-	db.AddLog(logdat.UID, (logdat.isEnter == 1), ts, logdat.Ext)
-
-	slack.SlackNotify(db.GetUserName(logdat.UID), logdat.UID, (logdat.isEnter == 1), ts, logdat.Ext)
+	db.AddLog(logdat.UID, (logdat.IsEnter == 1), ts, logdat.Ext)
+	name, _, _ := db.GetUserInfo(logdat.UID)
+	slack.SlackNotify(name, logdat.UID, (logdat.IsEnter == 1), ts, logdat.Ext)
 }
