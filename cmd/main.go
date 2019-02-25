@@ -12,6 +12,7 @@ func main() {
 	fmt.Println("Starting server...")
 
 	panic("TODO: Caution: DB structure is modifyed. Please reset Database.")
+	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("dist"))))
 
 	//API handler
 	http.Handle("/socket/readCard", websocket.Handler(handler.ReadCardHandler))
