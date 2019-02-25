@@ -1,6 +1,9 @@
 package db
 
-import "database/sql"
+import (
+	"database/sql"
+	"errors"
+)
 
 // GetUserInfo returns username the person is in the room or not.
 // If the person in the room, return true
@@ -52,6 +55,12 @@ func RegisterCard(CardID string, UID string) error {
 		panic(err)
 	}
 	defer db.Close()
+
+	// Check user is exist
+	gotuid, _, _ := GetUserInfo(UID)
+	if gotuid == "" {
+		return errors.New("ID \"" + UID + "\" is not found.")
+	}
 
 	// Check cardID is not registered
 	row := db.QueryRow(`SELECT sid FROM idcard WHERE idm=? AND sid=?`, CardID, UID)
