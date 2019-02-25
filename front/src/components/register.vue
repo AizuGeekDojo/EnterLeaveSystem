@@ -1,60 +1,47 @@
 <template>
-    <div id='snum' style="width: 100%;">
+    <div id="regist" style="width: 100%;">
       <div class="studentNUM">
         <h1 class="">Please Input Your Student Number</h1>
-        <h1 class="">Input: {{ snum }}</h1>
-        <input class="" v-on:keyup.enter="regist" v-model="snum" placeholder="s120000" style="border: 2px, #42b983, double;">
+        <h1 class="">Input: {{ sid }}</h1>
+        <input class="" v-on:keyup.enter="regist" v-model="sid" placeholder="s120000" style="border: 2px, #42b983, double;">
       </div>
     </div>
 </template>
 
 <script>
-import router from "../router";
+import util from "../util.js";
+
 export default {
-  name: "snum",
+  name: "regist",
   data() {
     return {
-      snum: "",
-      cardid: ""
+      sid: ""
     };
   },
   methods: {
     regist: function() {
       const self = this;
-      this.cardid = this.$route.params.cardid;
-      let date = new Date();
-      fetch("http://localhost:3000/api/createuser", {
-        mode: "cors",
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          SID: this.snum,
-          CardID: this.cardid,
-          timestamp: date.getTime()
-        })
-      })
-        .then(response => {
-          return response.json();
-        })
+      const cardid = this.$route.params.cardid;
+      util.registCardInfo(cardid,this.sid)
         .then(res => {
           console.log(res);
           if (res["Success"] !== true) {
             alert('The ID is not found.');
             console.log("Create failed");
           } else {
-            setTimeout(function() {
-              router.push({ name: "welcome", params: { sid: self.snum } });
-            }, 100);
+            util.getUserInfo(self.sid)
+              .then(res => {
+                if (res["IsEnter"]) {
+                  self.$router.push({ name: "question", params: { userinfo: res } });
+                } else {
+                  self.$router.push({ name: "welcome", params: { userinfo: res } });
+                }
+              })
           }
         })
         .catch(function(error) {
-          console.log(error);
-          setTimeout(function() {
-            router.push({ name: "top" });
-          }, 500);
+          console.error(error);
+          self.$router.push({ name: "top" });
         });
     }
   }

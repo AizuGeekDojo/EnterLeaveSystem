@@ -35,9 +35,6 @@ export default {
       })
     })
       .then(response => {
-        if (!response.ok) {
-          throw response
-        }
         return response.json();
       })
       .catch(function(error) {
