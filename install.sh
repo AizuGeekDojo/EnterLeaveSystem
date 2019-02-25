@@ -30,16 +30,20 @@ python3 -m pip install -r back/requirements.txt
 
 echo "Installing service..."
 echo "Copying files..."
-cp enterleavesystemd.service /etc/systemd/system/
-cp enterleavesystemhttpd.service /etc/systemd/system/
+# cp enterleavesystemd.service /etc/systemd/system/
+# cp enterleavesystemhttpd.service /etc/systemd/system/
+cp elsystemd.service /etc/systemd/system/
 
 echo "Enabling Services..."
 systemctl daemon-reload
-systemctl enable enterleavesystemd.service
-systemctl start enterleavesystemd.service
+# systemctl enable enterleavesystemd.service
+# systemctl start enterleavesystemd.service
 
-systemctl enable enterleavesystemhttpd.service
-systemctl start enterleavesystemhttpd.service
+# systemctl enable enterleavesystemhttpd.service
+# systemctl start enterleavesystemhttpd.service
+
+systemctl enable elsystemd.service
+systemctl start elsystemd.service
 
 echo "Configurating autostart"
 mv /home/pi/.config/lxsession/LXDE-pi/autostart /home/pi/.config/lxsession/LXDE-pi/autostart_old

@@ -1,0 +1,17 @@
+[Unit]
+Description=Enter Leave System Daemon
+After=network.target local-fs.target
+Requires=network.target local-fs.target
+
+[Service]
+User=root
+Group=root
+PIDFile=/run/elsystemd.pid
+WorkingDirectory=/home/pi/EnterLeaveSystem/
+ExecStart=/home/pi/EnterLeaveSystem/elsystem
+ExecStop=/bin/kill -SIGINT $MAINPID
+Restart=always
+Type=simple
+
+[Install]
+WantedBy = multi-user.target
