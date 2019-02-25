@@ -49,7 +49,7 @@ func ReadCard() {
 			break
 		}
 		cardtype := datstrspl[0]
-		cardid := datstrspl[1]
+		cardid := strings.Split(datstrspl[1], "\n")[0]
 		var resdat IDCardInfo
 		resdat.IsCard = true
 		resdat.CardID = cardid
