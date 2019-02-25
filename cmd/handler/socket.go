@@ -1,29 +1,67 @@
 package handler
 
 import (
-	"fmt"
-	"net/http"
+	"encoding/json"
+	"os/exec"
+	"strings"
+
+	"github.com/AizuGeekDojo/EnterLeaveSystem/cmd/db"
+	"golang.org/x/net/websocket"
 )
 
-//AccountAPIHandler handles http request for account
-func SocketHandler(w http.ResponseWriter, r *http.Request) {
-	//Cors Header
-	w.Header().Add("Access-Control-Allow-Origin", "*")
+var clients = []*websocket.Conn{}
 
-	//Cors Option check
-	if r.Method == "OPTIONS" {
-		w.Header().Set("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, HEAD, OPTIONS")
-		w.Header().Set("Access-Control-Allow-Headers", r.Header.Get("Access-Control-Request-Headers"))
-		w.WriteHeader(200)
-		return
+// ReadCardHandler handles Felica card reader.
+func ReadCardHandler(ws *websocket.Conn) {
+	clients = append(clients, ws)
+	dat := []byte{}
+	var err error
+	for err == nil {
+		_, err = ws.Read(dat)
 	}
+}
 
-	//Routing
-	switch r.URL.Path {
-	case "/socket/readcard":
-		// loginHandler(w, r)
-	default:
-		w.WriteHeader(404)
-		fmt.Fprintf(w, "Unknown API")
+type IDCardInfo struct {
+	IsCard bool   `json:"IsCard"`
+	CardID string `json:"CardID"`
+	SID    string `json:"SID"`
+	IsNew  bool   `json:"IsNew"`
+}
+
+func sendData(dat IDCardInfo) {
+	retbyte, _ := json.Marshal(dat)
+	for _, c := range clients {
+		c.Write(retbyte)
+		c.Close()
+	}
+	clients = nil
+}
+
+func ReadCard() {
+	for {
+		dat, err := exec.Command("./test").Output()
+		// dat, err := exec.Command("python2", "nfc_reader.py").Output()
+		if err != nil {
+			panic(err)
+		}
+		datstrspl := strings.Split(string(dat), " ")
+		if len(datstrspl) < 2 {
+			break
+		}
+		cardtype := datstrspl[0]
+		cardid := datstrspl[1]
+		var resdat IDCardInfo
+		resdat.IsCard = true
+		resdat.CardID = cardid
+		if cardtype == "student" {
+			resdat.SID = cardid
+			resdat.IsNew = false
+		} else if cardtype == "univ" || cardtype == "general" {
+			resdat.SID, _ = db.GetUIDByCardID(cardid)
+			resdat.IsNew = (resdat.SID == "")
+		} else {
+			continue
+		}
+		sendData(resdat)
 	}
 }
