@@ -39,8 +39,7 @@ func sendData(dat IDCardInfo) {
 
 func ReadCard() {
 	for {
-		dat, err := exec.Command("./test").Output()
-		// dat, err := exec.Command("python2", "nfc_reader.py").Output()
+		dat, err := exec.Command("python2.7", "nfc_reader.py").Output()
 		if err != nil {
 			panic(err)
 		}
