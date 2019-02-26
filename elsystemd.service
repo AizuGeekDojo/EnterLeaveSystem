@@ -7,6 +7,7 @@ Requires=network.target local-fs.target
 User=root
 Group=root
 PIDFile=/run/elsystemd.pid
+EnvironmentFile=/home/pi/EnterLeaveSystem/env
 WorkingDirectory=/home/pi/EnterLeaveSystem/
 ExecStart=/home/pi/EnterLeaveSystem/elsystem
 ExecStop=/bin/kill -SIGINT $MAINPID
