@@ -27,75 +27,58 @@ type Attachment struct {
 
 // SlackNotify sends slack notification.
 func SlackNotify(Name string, UID string, isEnter bool, Timestamp time.Time, Ext string) {
+	HookJSON := &WebHook{
+		Username:  "Logging Bot",
+		IconEmoji: ":robot_face:",
+		Channel:   "#enter_leave_log",
+	}
 
 	if isEnter {
-		HookJson := &WebHook{
-			Username:  "Logging Bot",
-			IconEmoji: ":robot_face:",
-			Channel:   "#enter_leave_log"}
-
-		HookJson.Text = fmt.Sprintf("%v : %v さんが %v に入室しました。", UID, Name, Timestamp)
-
-		err := PostEnterLeaveLog(HookJson)
-		if err != nil {
-			log.Println(err)
-			ErrOccuredSlackNotify()
-			return
-		}
-
+		HookJSON.Text = fmt.Sprintf("%v : %v さんが %v に入室しました。", UID, Name, Timestamp)
 	} else {
-		var RawJson = []byte(Ext)
+		HookJSON.Text = fmt.Sprintf("%v : %v さんが %v に退室しました。", UID, Name, Timestamp)
 
+		var RawJSON = []byte(Ext)
 		var ExtList = make(map[string]interface{})
-		err := json.Unmarshal(RawJson, &ExtList)
+
+		err := json.Unmarshal(RawJSON, &ExtList)
 		if err != nil {
 			log.Println(err)
 			log.Println("Error has occured in SlackNotify. User Ext is : ", Ext)
-			ErrOccuredSlackNotify()
+			errOccuredSlackNotify()
 			return
 		}
 
 		useage := ExtList["Use"].([]interface{})
 		mess := ExtList["message"].(string)
 
-		HookJson := &WebHook{
-			Username:  "Logging Bot",
-			IconEmoji: ":robot_face:",
-			Channel:   "#enter_leave_log"}
-
-		HookJson.Text = fmt.Sprintf("%v : %v さんが %v に退室しました。", UID, Name, Timestamp)
-
 		At := Attachment{
-			Title:   "アンケート結果",
-			Text:    fmt.Sprintf("目的 : %v \n 感想 : %v", useage, mess),
-			Pretext: HookJson.Text,
+			Title: "アンケート結果",
+			Text:  fmt.Sprintf("目的 : %v \n 感想 : %v", useage, mess),
 		}
 
-		HookJson.Attachments = append(HookJson.Attachments, At)
-
-		err = PostEnterLeaveLog(HookJson)
-		if err != nil {
-			log.Println(err)
-			ErrOccuredSlackNotify()
-			return
-		}
-
+		HookJSON.Attachments = append(HookJSON.Attachments, At)
 	}
-
+	err := postEnterLeaveLog(HookJSON)
+	if err != nil {
+		log.Println(err)
+		errOccuredSlackNotify()
+		return
+	}
 }
 
-func ErrOccuredSlackNotify() {
+func errOccuredSlackNotify() {
 	log.Println("error")
 }
 
-func PostEnterLeaveLog(ellog *WebHook) error {
+func postEnterLeaveLog(ellog *WebHook) error {
 
-	IncomingUrl := os.Getenv("SLACK_WEBHOOK_URL")
+	IncomingURL := os.Getenv("SLACK_WEBHOOK_URL")
 
 	params, _ := json.Marshal(ellog)
 
 	resp, _ := http.PostForm(
-		IncomingUrl,
+		IncomingURL,
 		url.Values{"payload": {string(params)}},
 	)
 
