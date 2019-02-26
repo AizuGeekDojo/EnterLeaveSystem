@@ -34,9 +34,9 @@ func SlackNotify(Name string, UID string, isEnter bool, Timestamp time.Time, Ext
 	}
 
 	if isEnter {
-		HookJSON.Text = fmt.Sprintf("%v : %v さんが %v に入室しました。", UID, Name, Timestamp)
+		HookJSON.Text = fmt.Sprintf("%v : %v さんが %v に入室しました。", UID, Name, Timestamp.Format("2006-01-02 15:04:05"))
 	} else {
-		HookJSON.Text = fmt.Sprintf("%v : %v さんが %v に退室しました。", UID, Name, Timestamp)
+		HookJSON.Text = fmt.Sprintf("%v : %v さんが %v に退室しました。", UID, Name, Timestamp.Format("2006-01-02 15:04:05"))
 
 		var RawJSON = []byte(Ext)
 		var ExtList = make(map[string]interface{})
