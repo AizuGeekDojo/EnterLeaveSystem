@@ -52,12 +52,15 @@ func GetUIDByCardID(CardID string) (string, error) {
 func RegisterCard(CardID string, UID string) error {
 	db, err := openDB()
 	if err != nil {
-		panic(err)
+		return err
 	}
 	defer db.Close()
 
 	// Check user is exist
-	gotuid, _, _ := GetUserInfo(UID)
+	gotuid, _, err := GetUserInfo(UID)
+	if err != nil {
+		return err
+	}
 	if gotuid == "" {
 		return errors.New("ID \"" + UID + "\" is not found.")
 	}
