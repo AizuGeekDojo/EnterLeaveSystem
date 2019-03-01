@@ -9,18 +9,7 @@ import (
 	"golang.org/x/net/websocket"
 )
 
-var clients = []*websocket.Conn{}
-
-// ReadCardHandler handles Felica card reader.
-func ReadCardHandler(ws *websocket.Conn) {
-	clients = append(clients, ws)
-	dat := []byte{}
-	var err error
-	for err == nil {
-		_, err = ws.Read(dat)
-	}
-}
-
+// IDCardInfo is structure for IDCard info
 type IDCardInfo struct {
 	IsCard bool   `json:"IsCard"`
 	CardID string `json:"CardID"`
@@ -28,18 +17,10 @@ type IDCardInfo struct {
 	IsNew  bool   `json:"IsNew"`
 }
 
-func sendData(dat IDCardInfo) {
-	retbyte, err := json.Marshal(dat)
-	if err != nil {
-		return
-	}
-	for _, c := range clients {
-		c.Write(retbyte)
-		c.Close()
-	}
-	clients = nil
-}
+// clients is websocket connections
+var clients = []*websocket.Conn{}
 
+// ReadCard runs card reader program, wait card data and send to clients.
 func ReadCard() {
 	for {
 		dat, err := exec.Command("python2.7", "nfc_reader.py").Output()
@@ -64,6 +45,24 @@ func ReadCard() {
 		} else {
 			continue
 		}
-		sendData(resdat)
+		retbyte, err := json.Marshal(resdat)
+		if err != nil {
+			return
+		}
+		for _, c := range clients {
+			c.Write(retbyte)
+			c.Close()
+		}
+		clients = nil
+	}
+}
+
+// ReadCardHandler handles Felica card reader.
+func ReadCardHandler(ws *websocket.Conn) {
+	clients = append(clients, ws)
+	dat := []byte{}
+	var err error
+	for err == nil {
+		_, err = ws.Read(dat)
 	}
 }
