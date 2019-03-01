@@ -2,6 +2,7 @@ package slack
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -25,8 +26,8 @@ type Attachment struct {
 	Text    string `json:"text"`
 }
 
-// SlackNotify sends slack notification.
-func SlackNotify(Name string, UID string, isEnter bool, Timestamp time.Time, Ext string) {
+// Notify sends slack notification.
+func Notify(Name string, UID string, isEnter bool, Timestamp time.Time, Ext string) error {
 	HookJSON := &WebHook{
 		Username:  "Logging Bot",
 		IconEmoji: ":robot_face:",
@@ -45,8 +46,7 @@ func SlackNotify(Name string, UID string, isEnter bool, Timestamp time.Time, Ext
 		if err != nil {
 			log.Println(err)
 			log.Println("Error has occured in SlackNotify. User Ext is : ", Ext)
-			errOccuredSlackNotify()
-			return
+			return err
 		}
 
 		useage := ExtList["Use"].([]interface{})
@@ -62,27 +62,34 @@ func SlackNotify(Name string, UID string, isEnter bool, Timestamp time.Time, Ext
 	err := postEnterLeaveLog(HookJSON)
 	if err != nil {
 		log.Println(err)
-		errOccuredSlackNotify()
-		return
+		return err
 	}
-}
-
-func errOccuredSlackNotify() {
-	log.Println("error")
+	return nil
 }
 
 func postEnterLeaveLog(ellog *WebHook) error {
-
 	IncomingURL := os.Getenv("SLACK_WEBHOOK_URL")
+	if IncomingURL == "" {
+		return errors.New("Slack URL is not defined")
+	}
 
-	params, _ := json.Marshal(ellog)
+	params, err := json.Marshal(ellog)
+	if err != nil {
+		return err
+	}
 
-	resp, _ := http.PostForm(
+	resp, err := http.PostForm(
 		IncomingURL,
 		url.Values{"payload": {string(params)}},
 	)
+	if err != nil {
+		return err
+	}
 
-	body, _ := ioutil.ReadAll(resp.Body)
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
 	defer resp.Body.Close()
 
 	println(string(body))
