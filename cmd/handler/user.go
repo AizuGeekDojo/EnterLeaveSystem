@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -54,6 +55,7 @@ func UserAPIHandler(w http.ResponseWriter, r *http.Request) {
 	default:
 		w.WriteHeader(405)
 		fmt.Fprintf(w, "Unexpected method")
+		log.Printf("%v %v: Unexpected method", r.Method, r.URL.Path)
 	}
 }
 
@@ -66,7 +68,8 @@ func getUserHandler(w http.ResponseWriter, r *http.Request) {
 
 	username, isenter, err := db.GetUserInfo(uid)
 	if err != nil {
-		w.WriteHeader(400)
+		w.WriteHeader(500)
+		log.Printf("%v %v: db.GetUserInfo error: %v", r.Method, r.URL.Path, err)
 	} else if username == "" {
 		w.WriteHeader(404)
 	}
@@ -76,6 +79,7 @@ func getUserHandler(w http.ResponseWriter, r *http.Request) {
 	retbyte, err := json.Marshal(userresdat)
 	if err != nil {
 		w.WriteHeader(500)
+		log.Printf("%v %v: json.Marshal error: %v", r.Method, r.URL.Path, err)
 		fmt.Fprintf(w, "{}", err)
 	}
 	w.Write(retbyte)
@@ -89,6 +93,7 @@ func createUserHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(400)
 		fmt.Fprintf(w, "Cannot get Content-Length: %v", err)
+		log.Printf("%v %v: Bad request: %v", r.Method, r.URL.Path, err)
 		return
 	}
 	body := make([]byte, reqlen)
@@ -97,6 +102,7 @@ func createUserHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(400)
 		fmt.Fprintf(w, "Failed to parse JSON: %v", err)
+		log.Printf("%v %v: Bad request: %v", r.Method, r.URL.Path, err)
 		return
 	}
 
@@ -106,13 +112,15 @@ func createUserHandler(w http.ResponseWriter, r *http.Request) {
 		userresdat.Reason = ""
 	} else {
 		userresdat.Success = false
-		userresdat.Reason = fmt.Sprintf("%#v\n", err)
+		userresdat.Reason = fmt.Sprintf("%v\n", err)
+		log.Printf("%v %v: Bad request: %v", r.Method, r.URL.Path, err)
 		w.WriteHeader(400)
 	}
 
 	retbyte, err := json.Marshal(userresdat)
 	if err != nil {
 		w.WriteHeader(500)
+		log.Printf("%v %v: json.Marshal error: %v", r.Method, r.URL.Path, err)
 		fmt.Fprintf(w, "{}", err)
 	}
 	w.Write(retbyte)

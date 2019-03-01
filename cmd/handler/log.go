@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -36,6 +37,7 @@ func LogAPIHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		w.WriteHeader(405)
 		fmt.Fprintf(w, "Unexpected method")
+		log.Printf("%v %v: Unexpected method", r.Method, r.URL.Path)
 	}
 }
 
@@ -45,6 +47,7 @@ func addLogHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(400)
 		fmt.Fprintf(w, "Cannot get Content-Length: %v", err)
+		log.Printf("%v %v: Bad request: %v", r.Method, r.URL.Path, err)
 		return
 	}
 	body := make([]byte, reqlen)
@@ -53,6 +56,7 @@ func addLogHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(400)
 		fmt.Fprintf(w, "Failed to parse JSON: %v", err)
+		log.Printf("%v %v: Bad request: %v", r.Method, r.URL.Path, err)
 		return
 	}
 
@@ -61,6 +65,7 @@ func addLogHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(500)
 		fmt.Fprintf(w, "Internal server error: %v", err)
+		log.Printf("%v %v: db.GetUserInfo error: %v", r.Method, r.URL.Path, err)
 		return
 	}
 	if name == "" {
@@ -73,6 +78,7 @@ func addLogHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(500)
 		fmt.Fprintf(w, "Internal server error: %v", err)
+		log.Printf("%v %v: db.AddLog error: %v", r.Method, r.URL.Path, err)
 		return
 	}
 
@@ -80,6 +86,7 @@ func addLogHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(500)
 		fmt.Fprintf(w, "Internal server error: %v", err)
+		log.Printf("%v %v: slack.Notify error: %v", r.Method, r.URL.Path, err)
 		return
 	}
 }

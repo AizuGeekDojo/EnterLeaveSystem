@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"log"
 	"os/exec"
 	"strings"
 
@@ -42,15 +43,18 @@ func ReadCard() {
 		} else if cardtype == "univ" || cardtype == "general" {
 			resdat.SID, err = db.GetUIDByCardID(cardid)
 			if err != nil {
+				log.Printf("socket: db.GetUserInfo error: %v", err)
 				continue
 			}
 			resdat.IsNew = (resdat.SID == "")
 		} else {
+			log.Printf("socket: unknown output: %v", cardtype)
 			continue
 		}
 
 		retbyte, err := json.Marshal(resdat)
 		if err != nil {
+			log.Printf("socket: json.Marshal error: %v", err)
 			continue
 		}
 		for _, c := range clients {
