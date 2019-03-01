@@ -44,10 +44,37 @@ func addLogHandler(w http.ResponseWriter, r *http.Request) {
 	reqlen, _ := strconv.Atoi(r.Header.Get("Content-Length"))
 	body := make([]byte, reqlen)
 	r.Body.Read(body)
-	json.Unmarshal(body, &logdat)
+	err := json.Unmarshal(body, &logdat)
+	if err != nil {
+		w.WriteHeader(400)
+		fmt.Fprintf(w, "Failed to parse JSON: %v", err)
+		return
+	}
 
 	ts := time.Now()
-	db.AddLog(logdat.UID, (logdat.IsEnter == 1), ts, logdat.Ext)
-	name, _, _ := db.GetUserInfo(logdat.UID)
-	slack.SlackNotify(name, logdat.UID, (logdat.IsEnter == 1), ts, logdat.Ext)
+	name, _, err := db.GetUserInfo(logdat.UID)
+	if err != nil {
+		w.WriteHeader(500)
+		fmt.Fprintf(w, "Internal server error: %v", err)
+		return
+	}
+	if name == "" {
+		w.WriteHeader(404)
+		fmt.Fprintf(w, "The ID is not found.")
+		return
+	}
+
+	err = db.AddLog(logdat.UID, (logdat.IsEnter == 1), ts, logdat.Ext)
+	if err != nil {
+		w.WriteHeader(500)
+		fmt.Fprintf(w, "Internal server error: %v", err)
+		return
+	}
+
+	err = slack.Notify(name, logdat.UID, (logdat.IsEnter == 1), ts, logdat.Ext)
+	if err != nil {
+		w.WriteHeader(500)
+		fmt.Fprintf(w, "Internal server error: %v", err)
+		return
+	}
 }

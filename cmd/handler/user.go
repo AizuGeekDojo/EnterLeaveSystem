@@ -58,28 +58,26 @@ func UserAPIHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func getUserHandler(w http.ResponseWriter, r *http.Request) {
-	//学番を確認して、ユーザーが存在するかチェック
-	//結果を返す
-	// var userreqdat UserInfoReq
 	var userresdat UserInfo
 	r.ParseForm()
 	var uid = r.Form["sid"][0]
-	// reqlen, _ := strconv.Atoi(r.Header.Get("Content-Length"))
-	// body := make([]byte, reqlen)
-	// r.Body.Read(body)
-	// json.Unmarshal(body, &userreqdat)
-
-	// ts := time.Now()
 
 	userresdat.UID = uid
+
 	username, isenter, err := db.GetUserInfo(uid)
 	if err != nil {
 		w.WriteHeader(400)
+	} else if username == "" {
+		w.WriteHeader(404)
 	}
 	userresdat.UserName = username
 	userresdat.IsEnter = isenter
 
-	retbyte, _ := json.Marshal(userresdat)
+	retbyte, err := json.Marshal(userresdat)
+	if err != nil {
+		w.WriteHeader(500)
+		fmt.Fprintf(w, "{}", err)
+	}
 	w.Write(retbyte)
 }
 
@@ -90,11 +88,14 @@ func createUserHandler(w http.ResponseWriter, r *http.Request) {
 	reqlen, _ := strconv.Atoi(r.Header.Get("Content-Length"))
 	body := make([]byte, reqlen)
 	r.Body.Read(body)
-	json.Unmarshal(body, &userdat)
+	err := json.Unmarshal(body, &userdat)
+	if err != nil {
+		w.WriteHeader(400)
+		fmt.Fprintf(w, "Failed to parse JSON: %v", err)
+		return
+	}
 
-	// ts := time.Now()
-
-	err := db.RegisterCard(userdat.CardID, userdat.UID)
+	err = db.RegisterCard(userdat.CardID, userdat.UID)
 	if err == nil {
 		userresdat.Success = true
 		userresdat.Reason = ""
@@ -104,6 +105,10 @@ func createUserHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(400)
 	}
 
-	retbyte, _ := json.Marshal(userresdat)
+	retbyte, err := json.Marshal(userresdat)
+	if err != nil {
+		w.WriteHeader(500)
+		fmt.Fprintf(w, "{}", err)
+	}
 	w.Write(retbyte)
 }

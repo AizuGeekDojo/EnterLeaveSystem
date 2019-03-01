@@ -29,7 +29,10 @@ type IDCardInfo struct {
 }
 
 func sendData(dat IDCardInfo) {
-	retbyte, _ := json.Marshal(dat)
+	retbyte, err := json.Marshal(dat)
+	if err != nil {
+		return
+	}
 	for _, c := range clients {
 		c.Write(retbyte)
 		c.Close()
