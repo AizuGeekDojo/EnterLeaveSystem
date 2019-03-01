@@ -85,10 +85,15 @@ func createUserHandler(w http.ResponseWriter, r *http.Request) {
 	var userdat RegistUserInfo
 	var userresdat RegistUserResInfo
 
-	reqlen, _ := strconv.Atoi(r.Header.Get("Content-Length"))
+	reqlen, err := strconv.Atoi(r.Header.Get("Content-Length"))
+	if err != nil {
+		w.WriteHeader(400)
+		fmt.Fprintf(w, "Cannot get Content-Length: %v", err)
+		return
+	}
 	body := make([]byte, reqlen)
 	r.Body.Read(body)
-	err := json.Unmarshal(body, &userdat)
+	err = json.Unmarshal(body, &userdat)
 	if err != nil {
 		w.WriteHeader(400)
 		fmt.Fprintf(w, "Failed to parse JSON: %v", err)

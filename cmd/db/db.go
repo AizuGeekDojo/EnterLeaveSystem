@@ -16,7 +16,13 @@ func openDB() (*sql.DB, error) {
 	}
 	//Create tables if not exists
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "users" (sid TEXT,name TEXT,isenter INTEGER)`)
+	if err != nil {
+		return nil, err
+	}
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "idcard" (idm TEXT,sid TEXT)`)
+	if err != nil {
+		return nil, err
+	}
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "log" (sid TEXT,isenter INTEGER,time INTEGER,ext TEXT)`)
 	return db, err
 }

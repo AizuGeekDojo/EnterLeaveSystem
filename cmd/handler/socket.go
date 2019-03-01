@@ -29,7 +29,7 @@ func ReadCard() {
 		}
 		datstrspl := strings.Split(string(dat), " ")
 		if len(datstrspl) < 2 {
-			break
+			continue
 		}
 		cardtype := datstrspl[0]
 		cardid := strings.Split(datstrspl[1], "\n")[0]
@@ -40,14 +40,18 @@ func ReadCard() {
 			resdat.SID = cardid
 			resdat.IsNew = false
 		} else if cardtype == "univ" || cardtype == "general" {
-			resdat.SID, _ = db.GetUIDByCardID(cardid)
+			resdat.SID, err = db.GetUIDByCardID(cardid)
+			if err != nil {
+				continue
+			}
 			resdat.IsNew = (resdat.SID == "")
 		} else {
 			continue
 		}
+
 		retbyte, err := json.Marshal(resdat)
 		if err != nil {
-			return
+			continue
 		}
 		for _, c := range clients {
 			c.Write(retbyte)

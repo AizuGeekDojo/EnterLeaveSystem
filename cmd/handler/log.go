@@ -41,10 +41,15 @@ func LogAPIHandler(w http.ResponseWriter, r *http.Request) {
 
 func addLogHandler(w http.ResponseWriter, r *http.Request) {
 	var logdat LogInfo
-	reqlen, _ := strconv.Atoi(r.Header.Get("Content-Length"))
+	reqlen, err := strconv.Atoi(r.Header.Get("Content-Length"))
+	if err != nil {
+		w.WriteHeader(400)
+		fmt.Fprintf(w, "Cannot get Content-Length: %v", err)
+		return
+	}
 	body := make([]byte, reqlen)
 	r.Body.Read(body)
-	err := json.Unmarshal(body, &logdat)
+	err = json.Unmarshal(body, &logdat)
 	if err != nil {
 		w.WriteHeader(400)
 		fmt.Fprintf(w, "Failed to parse JSON: %v", err)
