@@ -1,64 +1,47 @@
 <template>
   <div id='top' ref="message" class="container align-middle">
-    <h1 class="contents align-middle">{{ msg }}</h1>
+    <h1 class="contents align-middle">Please hold the card over the reader</h1>
   </div>
 </template>
 
 <script>
-import router from "../router";
+import util from '../util.js'
+
 export default {
-  name: "top",
-  data() {
-    return {
-      msg: "Please hold the card over the reader",
-      message: ""
-    };
+  name: 'top',
+  destroyed: function () {
+    this.ws.close()
   },
-  created: function() {
-    console.log("Created");
-  },
-  mounted: function() {
-    const self = this;
-    const ws = new WebSocket("ws://localhost:3000/socket/readCard");
-    ws.onopen = function(e) {
-      console.log(" Web socket onopen ");
-    };
-    ws.onmessage = function(e) {
-      console.log(" Web socket onmessage ", e.data);
-      self.message = JSON.parse(e.data);
-      console.log("Response = " + self.message);
-      if (self.message["IsNew"] === false) {
-        self.updateMsg("Now Reading ...");
-        self.getUser(self.message["SID"]);
+  mounted: function () {
+    const self = this
+    this.ws = new WebSocket('ws://localhost:3000/socket/readCard')
+    this.ws.onopen = function (e) {
+      console.log('Card reader standby')
+    }
+    this.ws.onmessage = function (e) {
+      var message = JSON.parse(e.data)
+      console.log('Read card data:', message)
+      if (message['IsNew'] === false) {
+        util.getUserInfo(message['SID'])
+          .then(res => {
+            if (res['IsEnter']) {
+              self.$router.push({ name: 'question', params: { userinfo: res } })
+            } else {
+              self.$router.push({ name: 'welcome', params: { userinfo: res } })
+            }
+          })
       } else {
-        self.createUser(self.message["CardID"]);
+        self.$router.push({ name: 'regist', params: { cardid: message['CardID'] } })
       }
-    };
-    ws.onerror = function(e) {
-      console.log(" Web socket error ");
-      console.log(e);
-    };
-    ws.onclose = function(e) {
-      console.log(" Web socket onclose " + e);
-    };
-  },
-  methods: {
-    updateMsg: function(text) {
-      const self = this;
-      self.msg = text;
-    },
-    getUser: function(SID) {
-      setTimeout(function() {
-        router.push({ name: "welcome", params: { sid: SID } });
-      }, 500);
-    },
-    createUser: function(CardID) {
-      setTimeout(function() {
-        router.push({ name: "regist", params: { cardid: CardID } });
-      }, 500);
+    }
+    this.ws.onerror = function (e) {
+      console.log('Card reader communication error', e)
+    }
+    this.ws.onclose = function (e) {
+      console.log('Card reader stopped')
     }
   }
-};
+}
 </script>
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
