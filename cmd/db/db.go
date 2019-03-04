@@ -8,12 +8,13 @@ import (
 
 const dbfilename string = "database.db"
 
-func openDB() (*sql.DB, error) {
+func OpenDB() (*sql.DB, error) {
 	//Open Database
 	db, err := sql.Open("sqlite3", dbfilename)
 	if err != nil {
 		return nil, err
 	}
+	defer db.Close()
 	//Create tables if not exists
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "users" (sid TEXT,name TEXT,isenter INTEGER)`)
 	if err != nil {

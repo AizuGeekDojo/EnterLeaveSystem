@@ -22,7 +22,7 @@ type IDCardInfo struct {
 var clients = []*websocket.Conn{}
 
 // ReadCard runs card reader program, wait card data and send to clients.
-func ReadCard() {
+func ReadCard(db *sql.DB) {
 	for {
 		dat, err := exec.Command("python2.7", "nfc_reader.py").Output()
 		if err != nil {
@@ -41,7 +41,7 @@ func ReadCard() {
 			resdat.SID = cardid
 			resdat.IsNew = false
 		} else if cardtype == "univ" || cardtype == "general" {
-			resdat.SID, err = db.GetUIDByCardID(cardid)
+			resdat.SID, err = db.GetUIDByCardID(cardid, h.DB)
 			if err != nil {
 				log.Printf("socket: db.GetUserInfo error: %v", err)
 				continue
@@ -66,7 +66,7 @@ func ReadCard() {
 }
 
 // ReadCardHandler handles Felica card reader.
-func ReadCardHandler(ws *websocket.Conn) {
+func (h *Handler) ReadCardHandler(ws *websocket.Conn) {
 	clients = append(clients, ws)
 	dat := []byte{}
 	var err error

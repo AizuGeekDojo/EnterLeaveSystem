@@ -20,7 +20,7 @@ type LogInfo struct {
 }
 
 //LogAPIHandler handles http request for logging
-func LogAPIHandler(w http.ResponseWriter, r *http.Request) {
+func(h *Handler) LogAPIHandler(w http.ResponseWriter, r *http.Request) {
 	//Cors Header
 	w.Header().Add("Access-Control-Allow-Origin", "*")
 
@@ -39,7 +39,6 @@ func LogAPIHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Unexpected method")
 		log.Printf("%v %v: Unexpected method", r.Method, r.URL.Path)
 	}
-}
 
 func addLogHandler(w http.ResponseWriter, r *http.Request) {
 	var logdat LogInfo
@@ -67,7 +66,7 @@ func addLogHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ts := time.Now()
-	name, _, err := db.GetUserInfo(logdat.UID)
+	name, _, err := db.GetUserInfo(logdat.UID, h.DB)
 	if err != nil {
 		w.WriteHeader(500)
 		fmt.Fprintf(w, "Internal server error: %v", err)
@@ -80,7 +79,7 @@ func addLogHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = db.AddLog(logdat.UID, (logdat.IsEnter == 1), ts, logdat.Ext)
+	err = db.AddLog(logdat.UID, (logdat.IsEnter == 1), ts, logdat.Ext, h.DB)
 	if err != nil {
 		w.WriteHeader(500)
 		fmt.Fprintf(w, "Internal server error: %v", err)

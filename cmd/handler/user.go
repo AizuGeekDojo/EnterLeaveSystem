@@ -35,7 +35,7 @@ type UserInfo struct {
 }
 
 //UserAPIHandler handles http request for user management
-func UserAPIHandler(w http.ResponseWriter, r *http.Request) {
+func (h *Handler)UserAPIHandler(w http.ResponseWriter, r *http.Request) {
 	//Cors Header
 	w.Header().Add("Access-Control-Allow-Origin", "*")
 
@@ -66,7 +66,7 @@ func getUserHandler(w http.ResponseWriter, r *http.Request) {
 
 	userresdat.UID = uid
 
-	username, isenter, err := db.GetUserInfo(uid)
+	username, isenter, err := db.GetUserInfo(uid, h.DB)
 	if err != nil {
 		w.WriteHeader(500)
 		log.Printf("%v %v: db.GetUserInfo error: %v", r.Method, r.URL.Path, err)
@@ -112,7 +112,7 @@ func createUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = db.RegisterCard(userdat.CardID, userdat.UID)
+	err = db.RegisterCard(userdat.CardID, userdat.UID, h.DB)
 	if err == nil {
 		userresdat.Success = true
 		userresdat.Reason = ""
