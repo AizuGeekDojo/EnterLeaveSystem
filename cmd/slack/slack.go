@@ -38,7 +38,8 @@ func Notify(Name string, UID string, isEnter bool, Timestamp time.Time, Ext stri
 		HookJSON.Text = fmt.Sprintf("%v : %v さんが %v に入室しました。", UID, Name, Timestamp.Format("2006-01-02 15:04:05"))
 	} else {
 		HookJSON.Text = fmt.Sprintf("%v : %v さんが %v に退室しました。", UID, Name, Timestamp.Format("2006-01-02 15:04:05"))
-
+	}
+	if Ext != "" {
 		var RawJSON = []byte(Ext)
 		var ExtList = make(map[string]interface{})
 
@@ -59,6 +60,7 @@ func Notify(Name string, UID string, isEnter bool, Timestamp time.Time, Ext stri
 
 		HookJSON.Attachments = append(HookJSON.Attachments, At)
 	}
+
 	err := postEnterLeaveLog(HookJSON)
 	if err != nil {
 		log.Println(err)
