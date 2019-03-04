@@ -43,6 +43,9 @@ func GetUIDByCardID(CardID string) (string, error) {
 	var sid string
 	err = row.Scan(&sid)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return "", nil
+		}
 		return "", err
 	}
 	return sid, nil
