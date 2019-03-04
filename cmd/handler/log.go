@@ -51,7 +51,13 @@ func addLogHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	body := make([]byte, reqlen)
-	r.Body.Read(body)
+	_, err = r.Body.Read(body)
+	if err != nil {
+		w.WriteHeader(400)
+		fmt.Fprintf(w, "Failed to read: %v", err)
+		log.Printf("%v %v: Bad request: %v", r.Method, r.URL.Path, err)
+		return
+	}
 	err = json.Unmarshal(body, &logdat)
 	if err != nil {
 		w.WriteHeader(400)
