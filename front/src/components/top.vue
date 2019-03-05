@@ -15,6 +15,7 @@ export default {
     }
   },
   destroyed: function () {
+    clearTimeout(this.reconnecttimer)
     this.closeflg = true
     this.ws.close()
   },
@@ -50,7 +51,7 @@ export default {
       this.ws.onclose = function (e) {
         console.log('Card reader stopped')
         if (!self.closeflg) {
-          setTimeout(() => {
+          self.reconnecttimer = setTimeout(() => {
             self.connectCardReader()
           }, 3000)
         }
