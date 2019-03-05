@@ -12,7 +12,7 @@ func GetUserInfo(UID string, db *sql.DB) (string, bool, error) {
 	row := db.QueryRow(`SELECT name,isenter FROM users WHERE sid=?`, UID)
 	var isenter int
 	var name string
-	err = row.Scan(&name, &isenter)
+	err := row.Scan(&name, &isenter)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return "", false, nil
@@ -29,7 +29,7 @@ func GetUIDByCardID(CardID string, db *sql.DB) (string, error) {
 	// Check cardID is not registered
 	row := db.QueryRow(`SELECT sid FROM idcard WHERE idm=?`, CardID)
 	var sid string
-	err = row.Scan(&sid)
+	err := row.Scan(&sid)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return "", nil
@@ -42,7 +42,7 @@ func GetUIDByCardID(CardID string, db *sql.DB) (string, error) {
 // RegisterCard regist cardid with UID
 func RegisterCard(CardID string, UID string, db *sql.DB) error {
 	// Check user is exist
-	gotuid, _, err := GetUserInfo(UID)
+	gotuid, _, err := GetUserInfo(UID, db)
 	if err != nil {
 		return err
 	}

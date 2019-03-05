@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -20,7 +21,7 @@ type LogInfo struct {
 }
 
 //LogAPIHandler handles http request for logging
-func(h *Handler) LogAPIHandler(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) LogAPIHandler(w http.ResponseWriter, r *http.Request) {
 	//Cors Header
 	w.Header().Add("Access-Control-Allow-Origin", "*")
 
@@ -33,14 +34,14 @@ func(h *Handler) LogAPIHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.Method == "POST" {
-		addLogHandler(w, r)
+		addLogHandler(w, r, h.DB)
 	} else {
 		w.WriteHeader(405)
 		fmt.Fprintf(w, "Unexpected method")
 		log.Printf("%v %v: Unexpected method", r.Method, r.URL.Path)
 	}
-
-func addLogHandler(w http.ResponseWriter, r *http.Request) {
+}
+func addLogHandler(w http.ResponseWriter, r *http.Request, d *sql.DB) {
 	var logdat LogInfo
 	reqlen, err := strconv.Atoi(r.Header.Get("Content-Length"))
 	if err != nil {
@@ -66,7 +67,7 @@ func addLogHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ts := time.Now()
-	name, _, err := db.GetUserInfo(logdat.UID, h.DB)
+	name, _, err := db.GetUserInfo(logdat.UID, d)
 	if err != nil {
 		w.WriteHeader(500)
 		fmt.Fprintf(w, "Internal server error: %v", err)
@@ -79,7 +80,7 @@ func addLogHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = db.AddLog(logdat.UID, (logdat.IsEnter == 1), ts, logdat.Ext, h.DB)
+	err = db.AddLog(logdat.UID, (logdat.IsEnter == 1), ts, logdat.Ext, d)
 	if err != nil {
 		w.WriteHeader(500)
 		fmt.Fprintf(w, "Internal server error: %v", err)

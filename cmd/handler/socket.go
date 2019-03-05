@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"database/sql"
 	"encoding/json"
 	"log"
 	"os/exec"
@@ -22,7 +23,7 @@ type IDCardInfo struct {
 var clients = []*websocket.Conn{}
 
 // ReadCard runs card reader program, wait card data and send to clients.
-func ReadCard(db *sql.DB) {
+func ReadCard(d *sql.DB) {
 	for {
 		dat, err := exec.Command("python2.7", "nfc_reader.py").Output()
 		if err != nil {
@@ -41,7 +42,7 @@ func ReadCard(db *sql.DB) {
 			resdat.SID = cardid
 			resdat.IsNew = false
 		} else if cardtype == "univ" || cardtype == "general" {
-			resdat.SID, err = db.GetUIDByCardID(cardid, h.DB)
+			resdat.SID, err = db.GetUIDByCardID(cardid, d)
 			if err != nil {
 				log.Printf("socket: db.GetUserInfo error: %v", err)
 				continue

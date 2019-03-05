@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -35,7 +36,7 @@ type UserInfo struct {
 }
 
 //UserAPIHandler handles http request for user management
-func (h *Handler)UserAPIHandler(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) UserAPIHandler(w http.ResponseWriter, r *http.Request) {
 	//Cors Header
 	w.Header().Add("Access-Control-Allow-Origin", "*")
 
@@ -49,9 +50,9 @@ func (h *Handler)UserAPIHandler(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case "GET":
-		getUserHandler(w, r)
+		getUserHandler(w, r, h.DB)
 	case "POST":
-		createUserHandler(w, r)
+		createUserHandler(w, r, h.DB)
 	default:
 		w.WriteHeader(405)
 		fmt.Fprintf(w, "Unexpected method")
@@ -59,14 +60,14 @@ func (h *Handler)UserAPIHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func getUserHandler(w http.ResponseWriter, r *http.Request) {
+func getUserHandler(w http.ResponseWriter, r *http.Request, d *sql.DB) {
 	var userresdat UserInfo
 	r.ParseForm()
 	var uid = r.Form["sid"][0]
 
 	userresdat.UID = uid
 
-	username, isenter, err := db.GetUserInfo(uid, h.DB)
+	username, isenter, err := db.GetUserInfo(uid, d)
 	if err != nil {
 		w.WriteHeader(500)
 		log.Printf("%v %v: db.GetUserInfo error: %v", r.Method, r.URL.Path, err)
@@ -85,7 +86,7 @@ func getUserHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(retbyte)
 }
 
-func createUserHandler(w http.ResponseWriter, r *http.Request) {
+func createUserHandler(w http.ResponseWriter, r *http.Request, d *sql.DB) {
 	var userdat RegistUserInfo
 	var userresdat RegistUserResInfo
 
@@ -112,7 +113,7 @@ func createUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = db.RegisterCard(userdat.CardID, userdat.UID, h.DB)
+	err = db.RegisterCard(userdat.CardID, userdat.UID, d)
 	if err == nil {
 		userresdat.Success = true
 		userresdat.Reason = ""
