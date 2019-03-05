@@ -98,11 +98,11 @@ func createUserHandler(w http.ResponseWriter, r *http.Request, d *sql.DB) {
 		return
 	}
 	body := make([]byte, reqlen)
-	_, err = r.Body.Read(body)
+	t, err = r.Body.Read(body)
 	if err != nil {
 		w.WriteHeader(400)
 		fmt.Fprintf(w, "Failed to read: %v", err)
-		log.Printf("%v %v: Bad request: %v", r.Method, r.URL.Path, body)
+		log.Printf("%v %v: Bad request: %v", r.Method, r.URL.Path, t)
 		return
 	}
 	err = json.Unmarshal(body, &userdat)
