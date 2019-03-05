@@ -9,36 +9,52 @@ import util from '../util.js'
 
 export default {
   name: 'top',
+  data: function () {
+    return {
+      closeflg: false
+    }
+  },
   destroyed: function () {
+    this.closeflg = true
     this.ws.close()
   },
   mounted: function () {
-    const self = this
-    this.ws = new WebSocket('ws://localhost:3000/socket/readCard')
-    this.ws.onopen = function (e) {
-      console.log('Card reader standby')
-    }
-    this.ws.onmessage = function (e) {
-      var message = JSON.parse(e.data)
-      console.log('Read card data:', message)
-      if (message['IsNew'] === false) {
-        util.getUserInfo(message['SID'])
-          .then(res => {
-            if (res['IsEnter']) {
-              self.$router.push({ name: 'question', params: { userinfo: res } })
-            } else {
-              self.$router.push({ name: 'welcome', params: { userinfo: res } })
-            }
-          })
-      } else {
-        self.$router.push({ name: 'regist', params: { cardid: message['CardID'] } })
+    this.connectCardReader()
+  },
+  methods: {
+    connectCardReader: function () {
+      const self = this
+      this.ws = new WebSocket('ws://localhost:3000/socket/readCard')
+      this.ws.onopen = function (e) {
+        console.log('Card reader standby')
       }
-    }
-    this.ws.onerror = function (e) {
-      console.log('Card reader communication error', e)
-    }
-    this.ws.onclose = function (e) {
-      console.log('Card reader stopped')
+      this.ws.onmessage = function (e) {
+        var message = JSON.parse(e.data)
+        console.log('Read card data:', message)
+        if (message['IsNew'] === false) {
+          util.getUserInfo(message['SID'])
+            .then(res => {
+              if (res['IsEnter']) {
+                self.$router.push({ name: 'question', params: { userinfo: res } })
+              } else {
+                self.$router.push({ name: 'welcome', params: { userinfo: res } })
+              }
+            })
+        } else {
+          self.$router.push({ name: 'regist', params: { cardid: message['CardID'] } })
+        }
+      }
+      this.ws.onerror = function (e) {
+        console.log('Card reader communication error', e)
+      }
+      this.ws.onclose = function (e) {
+        console.log('Card reader stopped')
+        if (!self.closeflg) {
+          setTimeout(() => {
+            self.connectCardReader()
+          }, 3000)
+        }
+      }
     }
   }
 }
