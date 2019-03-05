@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"strconv"
@@ -98,12 +99,14 @@ func createUserHandler(w http.ResponseWriter, r *http.Request, d *sql.DB) {
 		return
 	}
 	body := make([]byte, reqlen)
-	t, err := r.Body.Read(body)
+	n, err := r.Body.Read(body)
 	if err != nil {
-		w.WriteHeader(400)
-		fmt.Fprintf(w, "Failed to read: %v", err)
-		log.Printf("%v %v: Bad request: %v", r.Method, r.URL.Path, t)
-		return
+		if err != io.EOF || n == 0 {
+			w.WriteHeader(400)
+			fmt.Fprintf(w, "Failed to read: %v", err)
+			log.Printf("%v %v: Bad request: %v", r.Method, r.URL.Path, err)
+			return
+		}
 	}
 	err = json.Unmarshal(body, &userdat)
 	if err != nil {
