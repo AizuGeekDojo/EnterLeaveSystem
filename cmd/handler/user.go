@@ -102,7 +102,7 @@ func createUserHandler(w http.ResponseWriter, r *http.Request, d *sql.DB) {
 	if err != nil {
 		w.WriteHeader(400)
 		fmt.Fprintf(w, "Failed to read: %v", err)
-		log.Printf("%v %v: Bad request: %v", r.Method, r.URL.Path, err)
+		log.Printf("%v %v: Bad request: %v", r.Method, r.URL.Path, body)
 		return
 	}
 	err = json.Unmarshal(body, &userdat)
