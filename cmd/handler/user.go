@@ -98,7 +98,7 @@ func createUserHandler(w http.ResponseWriter, r *http.Request, d *sql.DB) {
 		return
 	}
 	body := make([]byte, reqlen)
-	t, err = r.Body.Read(body)
+	t, err := r.Body.Read(body)
 	if err != nil {
 		w.WriteHeader(400)
 		fmt.Fprintf(w, "Failed to read: %v", err)
