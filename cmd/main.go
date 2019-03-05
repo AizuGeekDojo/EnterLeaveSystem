@@ -14,6 +14,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	defer d.Close()
 	h := handler.NewHandler(d)
 
 	fmt.Println("Starting server...")

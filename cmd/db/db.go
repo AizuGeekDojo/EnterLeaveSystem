@@ -14,7 +14,6 @@ func OpenDB() (*sql.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer db.Close()
 	//Create tables if not exists
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "users" (sid TEXT,name TEXT,isenter INTEGER)`)
 	if err != nil {
