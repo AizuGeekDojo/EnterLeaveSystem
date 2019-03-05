@@ -67,17 +67,6 @@ h1, h2 {
   width: 100%;
   font-weight: normal;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
 input {
   font-size: 26px;
 }

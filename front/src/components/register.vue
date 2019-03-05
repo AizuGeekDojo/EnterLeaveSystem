@@ -1,9 +1,9 @@
 <template>
     <div id="regist" style="width: 100%;">
       <div class="studentNUM">
-        <h1 class="">Please Input Your Student Number</h1>
-        <h1 class="">Input: {{ sid }}</h1>
-        <input class="" v-on:keyup.enter="regist" v-model="sid" placeholder="s120000" style="border: 2px, #42b983, double;">
+        <h1>Please Input Your Student Number</h1>
+        <h2>Input: {{ sid }}</h2>
+        <input v-on:keyup.enter="regist" v-model="sid" placeholder="s120000">
       </div>
     </div>
 </template>
@@ -48,27 +48,21 @@ export default {
 </script>
 
 <style scoped>
-h1,
-h2 {
+h1 {
   font-size: 72px;
   width: 100%;
   font-weight: normal;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+h2 {
+  font-size: 50px;
+  width: 100%;
+  font-weight: normal;
 }
 input {
   width: 300px;
   height: 100px;
   font-size: 26px;
+  border: 2px, #42b983, double;
 }
 div .studentNUM {
   width: 100%;
