@@ -1,8 +1,10 @@
 package handler
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"strconv"
@@ -35,7 +37,7 @@ type UserInfo struct {
 }
 
 //UserAPIHandler handles http request for user management
-func UserAPIHandler(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) UserAPIHandler(w http.ResponseWriter, r *http.Request) {
 	//Cors Header
 	w.Header().Add("Access-Control-Allow-Origin", "*")
 
@@ -48,9 +50,9 @@ func UserAPIHandler(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case "GET":
-		getUserHandler(w, r)
+		getUserHandler(w, r, h.DB)
 	case "POST":
-		createUserHandler(w, r)
+		createUserHandler(w, r, h.DB)
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		fmt.Fprintf(w, "Unexpected method")
@@ -58,14 +60,14 @@ func UserAPIHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func getUserHandler(w http.ResponseWriter, r *http.Request) {
+func getUserHandler(w http.ResponseWriter, r *http.Request, d *sql.DB) {
 	var userresdat UserInfo
 	r.ParseForm()
 	var uid = r.Form["sid"][0]
 
 	userresdat.UID = uid
 
-	username, isenter, err := db.GetUserInfo(uid)
+	username, isenter, err := db.GetUserInfo(uid, d)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		log.Printf("%v %v: db.GetUserInfo error: %v", r.Method, r.URL.Path, err)
@@ -84,7 +86,7 @@ func getUserHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(retbyte)
 }
 
-func createUserHandler(w http.ResponseWriter, r *http.Request) {
+func createUserHandler(w http.ResponseWriter, r *http.Request, d *sql.DB) {
 	var userdat RegistUserInfo
 	var userresdat RegistUserResInfo
 
@@ -96,12 +98,14 @@ func createUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	body := make([]byte, reqlen)
-	_, err = r.Body.Read(body)
+	n, err := r.Body.Read(body)
 	if err != nil {
+		if err != io.EOF || n == 0 {
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintf(w, "Failed to read: %v", err)
-		log.Printf("%v %v: Bad request: %v", r.Method, r.URL.Path, err)
-		return
+			fmt.Fprintf(w, "Failed to read: %v", err)
+			log.Printf("%v %v: Bad request: %v", r.Method, r.URL.Path, err)
+			return
+		}
 	}
 	err = json.Unmarshal(body, &userdat)
 	if err != nil {
@@ -111,7 +115,7 @@ func createUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = db.RegisterCard(userdat.CardID, userdat.UID)
+	err = db.RegisterCard(userdat.CardID, userdat.UID, d)
 	if err == nil {
 		userresdat.Success = true
 		userresdat.Reason = ""

@@ -1,8 +1,10 @@
 package handler
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"strconv"
@@ -20,7 +22,7 @@ type LogInfo struct {
 }
 
 //LogAPIHandler handles http request for logging
-func LogAPIHandler(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) LogAPIHandler(w http.ResponseWriter, r *http.Request) {
 	//Cors Header
 	w.Header().Add("Access-Control-Allow-Origin", "*")
 
@@ -32,15 +34,14 @@ func LogAPIHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.Method == "POST" {
-		addLogHandler(w, r)
+		addLogHandler(w, r, h.DB)
 	} else {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		fmt.Fprintf(w, "Unexpected method")
 		log.Printf("%v %v: Unexpected method", r.Method, r.URL.Path)
 	}
 }
-
-func addLogHandler(w http.ResponseWriter, r *http.Request) {
+func addLogHandler(w http.ResponseWriter, r *http.Request, d *sql.DB) {
 	var logdat LogInfo
 	reqlen, err := strconv.Atoi(r.Header.Get("Content-Length"))
 	if err != nil {
@@ -50,12 +51,14 @@ func addLogHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	body := make([]byte, reqlen)
-	_, err = r.Body.Read(body)
+	n, err := r.Body.Read(body)
 	if err != nil {
+		if err != io.EOF || n == 0 {
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintf(w, "Failed to read: %v", err)
-		log.Printf("%v %v: Bad request: %v", r.Method, r.URL.Path, err)
-		return
+			fmt.Fprintf(w, "Failed to read: %v", err)
+			log.Printf("%v %v: Bad request: %v", r.Method, r.URL.Path, err)
+			return
+		}
 	}
 	err = json.Unmarshal(body, &logdat)
 	if err != nil {
@@ -66,7 +69,7 @@ func addLogHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ts := time.Now()
-	name, _, err := db.GetUserInfo(logdat.UID)
+	name, _, err := db.GetUserInfo(logdat.UID, d)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintf(w, "Internal server error: %v", err)
@@ -79,7 +82,7 @@ func addLogHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = db.AddLog(logdat.UID, (logdat.IsEnter == 1), ts, logdat.Ext)
+	err = db.AddLog(logdat.UID, (logdat.IsEnter == 1), ts, logdat.Ext, d)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintf(w, "Internal server error: %v", err)

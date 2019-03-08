@@ -7,18 +7,12 @@ import (
 
 // GetUserInfo returns username the person is in the room or not.
 // If the person in the room, return true
-func GetUserInfo(UID string) (string, bool, error) {
-	db, err := openDB()
-	if err != nil {
-		return "", false, err
-	}
-	defer db.Close()
-
+func GetUserInfo(UID string, db *sql.DB) (string, bool, error) {
 	// Check cardID is not registered
 	row := db.QueryRow(`SELECT name,isenter FROM users WHERE sid=?`, UID)
 	var isenter int
 	var name string
-	err = row.Scan(&name, &isenter)
+	err := row.Scan(&name, &isenter)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return "", false, nil
@@ -31,17 +25,11 @@ func GetUserInfo(UID string) (string, bool, error) {
 // GetUIDByCardID is return UID by felica's IDm or ID code
 // This is prepared for not student person
 // If UID is not found, return nil
-func GetUIDByCardID(CardID string) (string, error) {
-	db, err := openDB()
-	if err != nil {
-		return "", err
-	}
-	defer db.Close()
-
+func GetUIDByCardID(CardID string, db *sql.DB) (string, error) {
 	// Check cardID is not registered
 	row := db.QueryRow(`SELECT sid FROM idcard WHERE idm=?`, CardID)
 	var sid string
-	err = row.Scan(&sid)
+	err := row.Scan(&sid)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return "", nil
@@ -52,15 +40,9 @@ func GetUIDByCardID(CardID string) (string, error) {
 }
 
 // RegisterCard regist cardid with UID
-func RegisterCard(CardID string, UID string) error {
-	db, err := openDB()
-	if err != nil {
-		return err
-	}
-	defer db.Close()
-
+func RegisterCard(CardID string, UID string, db *sql.DB) error {
 	// Check user is exist
-	gotuid, _, err := GetUserInfo(UID)
+	gotuid, _, err := GetUserInfo(UID, db)
 	if err != nil {
 		return err
 	}

@@ -8,7 +8,7 @@ import (
 
 const dbfilename string = "database.db"
 
-func openDB() (*sql.DB, error) {
+func OpenDB() (*sql.DB, error) {
 	//Open Database
 	db, err := sql.Open("sqlite3", dbfilename)
 	if err != nil {
