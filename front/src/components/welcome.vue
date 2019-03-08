@@ -1,6 +1,6 @@
 <template>
-    <div id='welcome' class="container align-middle">
-        <h1 class="contents align-middle"> Welcome To Geek Dojo {{ username }} </h1>
+    <div id='welcome'>
+        <h1> Welcome To Geek Dojo {{ username }} </h1>
     </div>
 </template>
 
@@ -28,30 +28,18 @@ export default {
 </script>
 
 <style scoped>
-h1,
-h2 {
+h1{
   font-size: 72px;
-  display: table-cell;
-  height: 100%;
-  width: 100%;
-  font-weight: normal;
-  text-align: center;
-  vertical-align: middle;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
 }
 div #welcome {
-  display: table;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  width: 80%;
+  height: 200px;
   text-align: center;
-  vertical-align: middle;
 }
 </style>

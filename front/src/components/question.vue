@@ -24,7 +24,7 @@
         <br>
         <textarea v-model="message" placeholder=""></textarea>
         <br>
-        <button class="btn btn-info" v-on:click="send">send</button>
+        <button ref="sendbtn" class="btn btn-info" v-on:click="send">send</button>
       </div>
     </div>
 </template>
@@ -42,11 +42,16 @@ export default {
   },
   methods: {
     send: function () {
+      this.$refs.sendbtn.disabled = true
       var userinfo = this.$route.params.userinfo
       var answer = JSON.stringify({
         'Use': this.checkedUse,
         'message': this.message
       })
+      if (userinfo === undefined) {
+        this.$router.push({ name: 'top' })
+        return
+      }
       util.addLog(userinfo['SID'], false, answer)
         .then(res => {
           this.$router.push({ name: 'goodbye' })
@@ -61,17 +66,6 @@ h1, h2 {
   font-size: 60px;
   width: 100%;
   font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
 }
 input {
   font-size: 26px;
