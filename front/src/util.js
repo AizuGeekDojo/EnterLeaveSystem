@@ -76,7 +76,10 @@ export default {
     return roomname
   },
   isShowQuestion(){
-    var roomname = process.env.VUE_APP_SHOWQUESTION
-    return roomname === "true"
+    var isshow = process.env.VUE_APP_SHOWQUESTION
+    if (isshow === undefined) {
+      isshow = 'false'
+    }
+    return isshow === "true"
   }
 }

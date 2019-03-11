@@ -41,11 +41,10 @@ export default {
     }
   },
   mounted: function () {
-    if (util.isShowQuestion()){
+    if (!util.isShowQuestion()){
+      var userinfo = this.$route.params.userinfo
       util.addLog(userinfo['SID'], false, '')
-      .then(res => {
         this.$router.push({ name: 'goodbye' })
-      })
     }
   },
   methods: {
