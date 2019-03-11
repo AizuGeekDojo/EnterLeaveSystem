@@ -1,6 +1,6 @@
 <template>
     <div id='welcome'>
-        <h1> Welcome To Geek Dojo {{ username }} </h1>
+        <h1> Welcome To {{roomname}} {{ username }} </h1>
     </div>
 </template>
 
@@ -11,10 +11,12 @@ export default {
   name: 'welcome',
   data () {
     return {
-      username: ''
+      username: '',
+      roomname: ''
     }
   },
   mounted: function () {
+    this.roomname = util.roomName()
     var userinfo = this.$route.params.userinfo
     this.username = userinfo['UserName']
     var sid = userinfo['SID']
