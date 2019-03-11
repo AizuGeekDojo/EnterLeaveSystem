@@ -40,6 +40,14 @@ export default {
       message: ''
     }
   },
+  mounted: function () {
+    if (util.isShowQuestion()){
+      util.addLog(userinfo['SID'], false, '')
+      .then(res => {
+        this.$router.push({ name: 'goodbye' })
+      })
+    }
+  },
   methods: {
     send: function () {
       this.$refs.sendbtn.disabled = true
