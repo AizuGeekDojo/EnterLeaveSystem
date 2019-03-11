@@ -16,7 +16,6 @@ export default {
       })
       .catch(response => {
         console.error(response)
-        return response.json()
       })
   },
   registCardInfo (cardid, sid) {
