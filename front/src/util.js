@@ -67,5 +67,12 @@ export default {
         console.error(error)
         return null
       })
+  },
+  roomName () {
+    var roomname = process.env.VUE_APP_ROOMNAME
+    if (roomname === undefined) {
+      roomname = 'University of Aizu'
+    }
+    return roomname
   }
 }
