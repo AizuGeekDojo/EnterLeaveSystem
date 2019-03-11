@@ -74,5 +74,9 @@ export default {
       roomname = 'University of Aizu'
     }
     return roomname
+  },
+  isShowQuestion(){
+    var roomname = process.env.VUE_APP_SHOWQUESTION
+    return roomname === "true"
   }
 }
