@@ -24,7 +24,7 @@ export default {
       util.getUserInfo(self.sid)
         .then(res => {
           console.log(res)
-          if (res['UserName'] !== '') {
+          if (res['UserName'] === '') {
             console.log('The ID is not found.')
             alert('The ID is not found.')
           } else {
