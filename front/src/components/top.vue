@@ -5,6 +5,7 @@
       <h1>Please hold the card over the reader<br/></h1>
       <h2>Or <router-link to="/forgot">forgot your card</router-link></h2>
     </div>
+    <h4 style="position:fixed;bottom:0;">{{roomname}}</h4>
   </div>
 </template>
 
@@ -16,7 +17,8 @@ export default {
   data: function () {
     return {
       closeflg: false,
-      clocktext: '----/--/--  --:--:--'
+      clocktext: '----/--/--  --:--:--',
+      roomname: ''
     }
   },
   destroyed: function () {
@@ -26,6 +28,7 @@ export default {
     this.ws.close()
   },
   mounted: function () {
+    this.roomname = util.roomName()
     this.connectCardReader()
     const self = this
     setInterval(() => {
