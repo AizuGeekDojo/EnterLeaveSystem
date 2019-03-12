@@ -33,7 +33,6 @@ export default {
             } else {
               self.$router.push({ name: 'welcome', params: { userinfo: res } })
             }
-            self.$router.push({ name: 'question', params: { userinfo: res } })
           }
         })
         .catch(function (error) {
