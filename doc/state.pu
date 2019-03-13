@@ -1,0 +1,43 @@
+@startuml state
+
+Top : This is top page.
+Top : "Please hold the card over the reader"
+
+Register : This is card register page.
+Register : which is not student ID card.
+Register : "Please Input Your Student Number"
+
+Forgot : This is forgot card page.
+Forgot : "Please Input Your Student Number"
+
+Welcome : This is welcome page.
+Welcome : "Welcome to ROOMNAME, USERNAME"
+
+
+Question : This is leaving question page.
+Question : It may not shown if it's GL system.
+Question : "What is your purpose? ..."
+
+Goodbye : This is goodbye page.
+Goodbye : "Good bye"
+
+
+[*] --> Top : Browser open
+Top -> Register : Detect new card
+Top -left-> Forgot : Clicks forgot link
+Top --> Welcome : Entering
+Top --> Question : Leaving
+
+
+Welcome -up-> Top : After few seconds
+Question -> Goodbye : After question
+Question -> Goodbye : Skip question
+Goodbye -up-> Top : After few seconds
+
+
+Register --> Welcome : Entering
+Register --> Question : Leaving
+Forgot --> Welcome : Entering
+Forgot --> Question : Leaving
+
+@enduml
