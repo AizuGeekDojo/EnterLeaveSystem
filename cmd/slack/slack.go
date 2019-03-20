@@ -8,8 +8,9 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-	"os"
 	"time"
+
+	"github.com/AizuGeekDojo/EnterLeaveSystem/config"
 )
 
 type WebHook struct {
@@ -26,19 +27,29 @@ type Attachment struct {
 	Text    string `json:"text"`
 }
 
+func WebHookInit(cfg *config.SlackInfo) *WebHook {
+	return &WebHook{
+		Username:  cfg.UserName,
+		IconEmoji: cfg.IconEmoji,
+		Channel:   cfg.Channel,
+	}
+}
+
 // Notify sends slack notification.
 func Notify(Name string, UID string, isEnter bool, Timestamp time.Time, Ext string) error {
-	HookJSON := &WebHook{
-		Username:  "Logging Bot",
-		IconEmoji: ":robot_face:",
-		Channel:   "#enter_leave_log",
+
+	cfg := config.GetSlackInfo()
+	HookJSON := WebHookInit(&cfg)
+
+	var io string
+	if isEnter {
+		io = "入室"
+	} else {
+		io = "退室"
 	}
 
-	if isEnter {
-		HookJSON.Text = fmt.Sprintf("%v : %v さんが %v に入室しました。", UID, Name, Timestamp.Format("2006-01-02 15:04:05"))
-	} else {
-		HookJSON.Text = fmt.Sprintf("%v : %v さんが %v に退室しました。", UID, Name, Timestamp.Format("2006-01-02 15:04:05"))
-	}
+	HookJSON.Text = fmt.Sprintf("%v : %v さんが %v に%vしました。", UID, Name, Timestamp.Format("2006-01-02 15:04:05"), io)
+
 	if Ext != "" {
 		var RawJSON = []byte(Ext)
 		var ExtList = make(map[string]interface{})
@@ -53,12 +64,10 @@ func Notify(Name string, UID string, isEnter bool, Timestamp time.Time, Ext stri
 		useage := ExtList["Use"].([]interface{})
 		mess := ExtList["message"].(string)
 
-		At := Attachment{
+		HookJSON.Attachments = append(HookJSON.Attachments, Attachment{
 			Title: "アンケート結果",
 			Text:  fmt.Sprintf("目的 : %v \n 感想 : %v", useage, mess),
-		}
-
-		HookJSON.Attachments = append(HookJSON.Attachments, At)
+		})
 	}
 
 	err := postEnterLeaveLog(HookJSON)
@@ -70,7 +79,7 @@ func Notify(Name string, UID string, isEnter bool, Timestamp time.Time, Ext stri
 }
 
 func postEnterLeaveLog(ellog *WebHook) error {
-	IncomingURL := os.Getenv("SLACK_WEBHOOK_URL")
+	IncomingURL := config.GetSlackInfo().WEBHOOKURL
 	if IncomingURL == "" {
 		return errors.New("Slack URL is not defined")
 	}
