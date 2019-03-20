@@ -72,7 +72,7 @@ func getUserHandler(w http.ResponseWriter, r *http.Request, d *sql.DB) {
 		w.WriteHeader(http.StatusInternalServerError)
 		log.Printf("%v %v: db.GetUserInfo error: %v", r.Method, r.URL.Path, err)
 	} else if username == "" {
-		w.WriteHeader(http.StatusNotFound)
+		w.WriteHeader(http.StatusNoContent)
 	}
 	userresdat.UserName = username
 	userresdat.IsEnter = isenter
@@ -81,7 +81,8 @@ func getUserHandler(w http.ResponseWriter, r *http.Request, d *sql.DB) {
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		log.Printf("%v %v: json.Marshal error: %v", r.Method, r.URL.Path, err)
-		fmt.Fprintf(w, "{}", err)
+		fmt.Fprintf(w, "{}")
+		return
 	}
 	w.Write(retbyte)
 }
@@ -101,7 +102,7 @@ func createUserHandler(w http.ResponseWriter, r *http.Request, d *sql.DB) {
 	n, err := r.Body.Read(body)
 	if err != nil {
 		if err != io.EOF || n == 0 {
-		w.WriteHeader(http.StatusBadRequest)
+			w.WriteHeader(http.StatusBadRequest)
 			fmt.Fprintf(w, "Failed to read: %v", err)
 			log.Printf("%v %v: Bad request: %v", r.Method, r.URL.Path, err)
 			return

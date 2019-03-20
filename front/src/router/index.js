@@ -5,6 +5,7 @@ import regist from '@/components/register'
 import welcome from '@/components/welcome'
 import goodbye from '@/components/goodbye'
 import question from '@/components/question'
+import forgot from '@/components/forgot'
 
 Vue.use(Router)
 
@@ -34,6 +35,11 @@ export default new Router({
       path: '/question',
       name: 'question',
       component: question
+    },
+    {
+      path: '/forgot',
+      name: 'forgot',
+      component: forgot
     }
   ]
 })

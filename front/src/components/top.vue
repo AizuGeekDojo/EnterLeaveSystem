@@ -2,7 +2,8 @@
   <div id='top' ref="message">
     <h2>{{clocktext}}</h2>
     <div id="message">
-      <h1>Please hold the card over the reader</h1>
+      <h1>Please hold the card over the reader<br/></h1>
+      <h2>Or <router-link to="/forgot">forgot your card</router-link></h2>
     </div>
     <h4 style="position:fixed;bottom:0;">{{roomname}}</h4>
   </div>

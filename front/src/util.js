@@ -12,10 +12,17 @@ export default {
         if (!response.ok) {
           throw response
         }
+        if (response.status === 204) {
+          return {
+            'SID': sid,
+            'UserName': '',
+            'IsEnter': true
+          }
+        }
         return response.json()
       })
-      .catch(function (error) {
-        console.error(error)
+      .catch(response => {
+        console.error(response)
       })
   },
   registCardInfo (cardid, sid) {
