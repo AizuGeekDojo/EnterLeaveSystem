@@ -1,5 +1,6 @@
 <template>
   <div id="app" class="container">
+    <router-link to="/">Back to top</router-link>
     <router-view/>
   </div>
 </template>
