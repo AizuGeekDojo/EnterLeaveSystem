@@ -79,7 +79,7 @@ func Notify(Name string, UID string, isEnter bool, Timestamp time.Time, Ext stri
 }
 
 func postEnterLeaveLog(ellog *WebHook) error {
-	IncomingURL := config.GetSlackInfo().WEBHOOKURL
+	IncomingURL := config.GetSlackInfo().GetWebHookURL()
 	if IncomingURL == "" {
 		return errors.New("Slack URL is not defined")
 	}
