@@ -1,0 +1,24 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+click = "==6.7"
+gevent = "==1.2.2"
+gevent-websocket = "==0.10.1"
+greenlet = "==0.4.13"
+itsdangerous = "==0.24"
+six = "==1.11.0"
+Flask = "==1.0"
+Flask-Cors = "==3.0.4"
+"Jinja2" = "==2.10"
+MarkupSafe = "==1.0"
+Werkzeug = "==0.14.1"
+python-dotenv = "*"
+slackweb = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.6"

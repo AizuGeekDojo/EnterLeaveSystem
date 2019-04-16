@@ -1,0 +1,9 @@
+--Drop all tables
+drop table idcard;
+drop table users;
+drop table log;
+
+--Create tables
+create table idcard (idm text,sid text);
+create table users (sid text,name text,isenter integer);
+create table log (sid text,isenter integer,time integer,ext text);
