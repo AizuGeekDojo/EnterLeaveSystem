@@ -22,7 +22,7 @@
         </div>
         <h3>If you have any request please fill in.</h3>
         <br>
-        <textarea v-model="message" placeholder=""></textarea>
+        <textarea v-model="message" placeholder="" @keyup.control.enter="send"></textarea>
         <br>
         <button ref="sendbtn" class="btn btn-info" v-on:click="send">send</button>
       </div>
@@ -45,12 +45,6 @@ export default {
       var userinfo = this.$route.params.userinfo
       util.addLog(userinfo['SID'], false, '')
       this.$router.push({ name: 'goodbye' })
-      document.onkeydown = e => {
-        if (e.key == 'Enter' && e.metaKey) {
-          this.send()
-          return false
-        }
-      }
     }
   },
   methods: {
