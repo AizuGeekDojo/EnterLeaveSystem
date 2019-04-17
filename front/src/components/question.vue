@@ -45,6 +45,12 @@ export default {
       var userinfo = this.$route.params.userinfo
       util.addLog(userinfo['SID'], false, '')
       this.$router.push({ name: 'goodbye' })
+      document.onkeydown = e => {
+        if (e.key == 'Enter' && e.metaKey) {
+          this.send()
+          return false
+        }
+      }
     }
   },
   methods: {
