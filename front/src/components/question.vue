@@ -25,6 +25,8 @@
         <textarea v-model="message" placeholder="" @keyup.control.enter="send"></textarea>
         <br>
         <button ref="sendbtn" class="btn btn-info" v-on:click="send">send</button>
+        <br>
+        <h5>You can also use Control+Enter to submit your request.</h5>
       </div>
     </div>
 </template>
