@@ -4,6 +4,7 @@
         <h1>Please Input Your Student Number</h1>
         <h2>Input: {{ sid }}</h2>
         <input v-on:keyup.enter="regist" v-model="sid" placeholder="s120000">
+        <h5><br>Push enter key after inputting your student number</h5>
       </div>
     </div>
 </template>
