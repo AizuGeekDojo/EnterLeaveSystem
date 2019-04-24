@@ -6,6 +6,7 @@ import (
 
 	"github.com/AizuGeekDojo/EnterLeaveSystem/cmd/db"
 	"github.com/AizuGeekDojo/EnterLeaveSystem/cmd/handler"
+	"github.com/AizuGeekDojo/EnterLeaveSystem/cmd/utils"
 	"golang.org/x/net/websocket"
 )
 
@@ -28,6 +29,9 @@ func main() {
 
 	//Standby NFC card reader
 	go handler.ReadCard(d)
+
+	//Start cron
+	utils.CronInit()
 
 	//Start web server
 	fmt.Println("Start server")
