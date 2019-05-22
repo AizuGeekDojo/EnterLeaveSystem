@@ -64,3 +64,12 @@ func RegisterCard(CardID string, UID string, db *sql.DB) error {
 	_, err = db.Exec(`insert into idcard values(?,?)`, CardID, UID)
 	return err
 }
+
+// ForceLeave sets all users leave status
+func ForceLeave(db *sql.DB) error {
+	_, err := db.Exec(`update users set isenter=0`)
+	if err != nil {
+		return err
+	}
+	return nil
+}
