@@ -31,7 +31,10 @@ func main() {
 	go handler.ReadCard(d)
 
 	//Start cron
-	utils.CronInit(d)
+	err = utils.CronInit(d)
+	if err != nil {
+		panic(err)
+	}
 
 	//Start web server
 	fmt.Println("Start server")
