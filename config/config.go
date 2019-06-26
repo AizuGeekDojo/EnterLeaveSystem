@@ -5,10 +5,12 @@ import (
 )
 
 type SlackInfo struct {
-	WEBHOOKURL string `default:"https://hooks.slack.com/services/"`
-	UserName   string `default:"Logging Bot"`
-	IconEmoji  string `default:":robot_face:"`
-	Channel    string `default:"#enter_leave_log"`
+	WEBHOOKURL  string `default:"https://hooks.slack.com/services/"`
+	UserName    string `default:"Logging Bot"`
+	IconEmoji   string `default:":robot_face:"`
+	Channel     string `default:"#enter_leave_log"`
+	CSVLOGTOKEN string `default:""`
+	CSVLOGCHID  string `default:""`
 }
 
 func (sl SlackInfo) GetWebHookURL() string {
