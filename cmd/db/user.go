@@ -89,11 +89,11 @@ func ForceLeave(d *sql.DB) error {
 
 		tsint64 := ts.UnixNano() / int64(time.Millisecond)
 
-		_, err := d.Exec(`insert into log values(?,?,?,?)`, sid, 0, tsint64, "")
+		_, err := tx.Exec(`insert into log values(?,?,?,?)`, sid, 0, tsint64, "")
 		if err != nil {
 			return err
 		}
-		_, err = d.Exec(`update users set isenter=? where sid=?`, 0, sid)
+		_, err = tx.Exec(`update users set isenter=? where sid=?`, 0, sid)
 		if err != nil {
 			return err
 		}
