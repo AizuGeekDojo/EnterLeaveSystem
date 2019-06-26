@@ -12,7 +12,7 @@ func CronInit(d *sql.DB) {
 	c := cron.New()
 	// sec min hour date month week
 	// 0 0 * * * * -> 0:0:* */* (*) Every month, day, hour and 0min, 0sec == Every hour
-	c.AddFunc("0 5 13 * * *", func() {
+	c.AddFunc("0 15 13 * * *", func() {
 		err := db.ForceLeave(d)
 		if err != nil {
 			log.Printf("Cron: db.ForceLeave error: %v", err)
