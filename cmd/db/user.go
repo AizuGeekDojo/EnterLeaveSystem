@@ -73,7 +73,6 @@ func ForceLeave(d *sql.DB) error {
 	if err != nil {
 		return err
 	}
-	defer rows.Close()
 	ts := time.Now()
 
 	tx, err := d.Begin()
@@ -99,7 +98,13 @@ func ForceLeave(d *sql.DB) error {
 		}
 		log.Printf("Force left: %v(%v)", sid, name)
 	}
-	rows.Close()
-	tx.Commit()
+	err = rows.Close()
+	if err != nil {
+		return err
+	}
+	err = tx.Commit()
+	if err != nil {
+		return err
+	}
 	return nil
 }
