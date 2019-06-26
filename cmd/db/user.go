@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 	"errors"
+	"log"
 	"time"
 )
 
@@ -75,6 +76,7 @@ func ForceLeave(d *sql.DB) error {
 	defer rows.Close()
 	ts := time.Now()
 
+	tx, err := d.Begin()
 	for rows.Next() {
 		var (
 			sid     string
@@ -84,10 +86,20 @@ func ForceLeave(d *sql.DB) error {
 		if err := rows.Scan(&sid, &name, &isenter); err != nil {
 			return err
 		}
-		err = AddLog(sid, (isenter == 1), ts, "", d)
+
+		tsint64 := ts.UnixNano() / int64(time.Millisecond)
+
+		_, err := d.Exec(`insert into log values(?,?,?,?)`, sid, 0, tsint64, "")
 		if err != nil {
 			return err
 		}
+		_, err = d.Exec(`update users set isenter=? where sid=?`, 0, sid)
+		if err != nil {
+			return err
+		}
+		log.Printf("Force left: %v(%v)", sid, name)
 	}
+	rows.Close()
+	tx.Commit()
 	return nil
 }
