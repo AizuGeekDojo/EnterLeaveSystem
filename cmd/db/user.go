@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 	"errors"
+	"time"
 )
 
 // GetUserInfo returns username the person is in the room or not.
@@ -66,10 +67,27 @@ func RegisterCard(CardID string, UID string, db *sql.DB) error {
 }
 
 // ForceLeave sets all users leave status
-func ForceLeave(db *sql.DB) error {
-	_, err := db.Exec(`update users set isenter=0`)
+func ForceLeave(d *sql.DB) error {
+	rows, err := d.Query(`SELECT * FROM users where isenter=1`)
 	if err != nil {
 		return err
+	}
+	defer rows.Close()
+	ts := time.Now()
+
+	for rows.Next() {
+		var (
+			sid     string
+			name    string
+			isenter int64
+		)
+		if err := rows.Scan(&sid, &name, &isenter); err != nil {
+			return err
+		}
+		err = AddLog(sid, (isenter == 1), ts, "", d)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
