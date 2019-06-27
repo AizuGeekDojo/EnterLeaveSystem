@@ -8,6 +8,7 @@ import (
 	"gopkg.in/robfig/cron.v2"
 )
 
+// CronInit setups gocron and starts cron
 func CronInit(d *sql.DB) error {
 	c := cron.New()
 	// sec min hour date month week
