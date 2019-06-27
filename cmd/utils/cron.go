@@ -21,7 +21,8 @@ func CronInit(d *sql.DB) error {
 	if err != nil {
 		return err
 	}
-	_, err = c.AddFunc("0 0 0 1 * *", func() {
+	// _, err = c.AddFunc("0 0 0 1 * *", func() {
+	_, err = c.AddFunc("0 17 9 * * *", func() {
 		err := SendMonthlyLog(d)
 		if err != nil {
 			log.Printf("Cron: db.ForceLeave error: %v\n", err)
