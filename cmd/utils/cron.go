@@ -15,7 +15,7 @@ func CronInit(d *sql.DB) error {
 	_, err := c.AddFunc("0 0 0 * * *", func() {
 		err := db.ForceLeave(d)
 		if err != nil {
-			log.Printf("Cron: db.ForceLeave error: %v", err)
+			log.Printf("Cron: db.ForceLeave error: %v\n", err)
 		}
 	})
 	if err != nil {
@@ -24,7 +24,9 @@ func CronInit(d *sql.DB) error {
 	_, err = c.AddFunc("0 0 0 1 * *", func() {
 		err := SendMonthlyLog(d)
 		if err != nil {
-			log.Printf("Cron: db.ForceLeave error: %v", err)
+			log.Printf("Cron: db.ForceLeave error: %v\n", err)
+		} else {
+			log.Printf("Monthly log exported successfully!\n")
 		}
 	})
 	if err != nil {
