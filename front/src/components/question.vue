@@ -39,7 +39,8 @@ export default {
   data () {
     return {
       checkedUse: [],
-      message: ''
+      message: '',
+      sending: false
     }
   },
   mounted: function () {
@@ -51,6 +52,10 @@ export default {
   },
   methods: {
     send: function () {
+      if (this.sending) {
+        return
+      }
+      this.sending = true
       this.$refs.sendbtn.disabled = true
       var userinfo = this.$route.params.userinfo
       var answer = JSON.stringify({
