@@ -48,7 +48,7 @@ export default {
   addLog (sid, isenter, ext) {
     console.log({
       SID: sid,
-      IsEnter: (isenter ? 1 : 0),
+      IsEnter: isenter,
       Ext: ext
     })
     return fetch('http://localhost:3000/api/log', {
@@ -60,7 +60,7 @@ export default {
       },
       body: JSON.stringify({
         SID: sid,
-        IsEnter: (isenter ? 1 : 0),
+        IsEnter: isenter,
         Ext: ext
       })
     })
