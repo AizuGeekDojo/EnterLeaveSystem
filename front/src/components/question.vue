@@ -22,7 +22,7 @@
         </div>
         <h3>If you have any request please fill in.</h3>
         <br>
-        <textarea v-model="message" placeholder="" @keyup.control.enter="send"></textarea>
+        <textarea v-model="message" placeholder="" @keyup.ctrl.enter="send"></textarea>
         <br>
         <button ref="sendbtn" class="btn btn-info" v-on:click="send">send</button>
         <br>
