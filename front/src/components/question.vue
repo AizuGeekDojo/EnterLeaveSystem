@@ -67,9 +67,7 @@ export default {
         return
       }
       util.addLog(userinfo['SID'], false, answer)
-        .then(res => {
-          this.$router.push({ name: 'goodbye' })
-        })
+      this.$router.push({ name: 'goodbye' })
     }
   }
 }
