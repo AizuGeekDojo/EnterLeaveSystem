@@ -17,7 +17,7 @@ import (
 // LogInfo is log data structue
 type LogInfo struct {
 	UID     string `json:"SID"`
-	IsEnter int    `json:"IsEnter"`
+	IsEnter bool   `json:"IsEnter"`
 	Ext     string `json:"Ext"`
 }
 
@@ -54,7 +54,7 @@ func addLogHandler(w http.ResponseWriter, r *http.Request, d *sql.DB) {
 	n, err := r.Body.Read(body)
 	if err != nil {
 		if err != io.EOF || n == 0 {
-		w.WriteHeader(http.StatusBadRequest)
+			w.WriteHeader(http.StatusBadRequest)
 			fmt.Fprintf(w, "Failed to read: %v", err)
 			log.Printf("%v %v: Bad request: %v", r.Method, r.URL.Path, err)
 			return
@@ -82,7 +82,7 @@ func addLogHandler(w http.ResponseWriter, r *http.Request, d *sql.DB) {
 		return
 	}
 
-	err = db.AddLog(logdat.UID, (logdat.IsEnter == 1), ts, logdat.Ext, d)
+	err = db.AddLog(logdat.UID, logdat.IsEnter, ts, logdat.Ext, d)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintf(w, "Internal server error: %v", err)
@@ -90,7 +90,7 @@ func addLogHandler(w http.ResponseWriter, r *http.Request, d *sql.DB) {
 		return
 	}
 
-	err = slack.Notify(name, logdat.UID, (logdat.IsEnter == 1), ts, logdat.Ext)
+	err = slack.Notify(name, logdat.UID, logdat.IsEnter, ts, logdat.Ext)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintf(w, "Internal server error: %v", err)
