@@ -13,8 +13,8 @@ import (
 	"github.com/AizuGeekDojo/EnterLeaveSystem/config"
 )
 
-// CSVExport exports log data as CSV text
-func CSVExport(d *sql.DB) (string, error) {
+// csvExport exports log data as CSV text
+func csvExport(d *sql.DB) (string, error) {
 	rows, err := d.Query(`select time,log.sid,name,log.isenter,ext from log,users where log.sid=users.sid`)
 	if err != nil {
 		return "", err
@@ -63,14 +63,14 @@ func CSVExport(d *sql.DB) (string, error) {
 	return csv, nil
 }
 
-// SendMonthlyLog sends csv log file via slack
-func SendMonthlyLog(d *sql.DB) error {
+// sendMonthlyLog sends csv log file via slack
+func sendMonthlyLog(d *sql.DB) error {
 	cfg := config.GetSlackInfo()
 	UPLOADURL := "https://slack.com/api/files.upload"
 	TOKEN := cfg.CSVLOGTOKEN
 	CHANNEL := cfg.CSVLOGCHID
 
-	csv, err := CSVExport(d)
+	csv, err := csvExport(d)
 	if err != nil {
 		return err
 	}

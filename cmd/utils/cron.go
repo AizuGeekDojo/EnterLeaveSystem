@@ -36,7 +36,7 @@ func cronForceLeave(d *sql.DB) func() {
 
 func cronSendMonthlyLog(d *sql.DB) func() {
 	return func() {
-		err := SendMonthlyLog(d)
+		err := sendMonthlyLog(d)
 		if err != nil {
 			log.Printf("Cron: db.ForceLeave error: %v\n", err)
 		} else {
