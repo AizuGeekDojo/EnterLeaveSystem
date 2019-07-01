@@ -30,7 +30,6 @@ func ReadCard(d *sql.DB) {
 		if err != nil {
 			time.Sleep(60 * time.Second)
 			continue
-
 		}
 		datstrspl := strings.Split(string(dat), " ")
 		if len(datstrspl) < 2 {
