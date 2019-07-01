@@ -22,7 +22,7 @@
         </div>
         <h3>If you have any request please fill in.</h3>
         <br>
-        <textarea v-model="message" placeholder="" @keyup.control.enter="send"></textarea>
+        <textarea v-model="message" placeholder="" @keyup.ctrl.enter="send"></textarea>
         <br>
         <button ref="sendbtn" class="btn btn-info" v-on:click="send">send</button>
         <br>
@@ -39,7 +39,8 @@ export default {
   data () {
     return {
       checkedUse: [],
-      message: ''
+      message: '',
+      sending: false
     }
   },
   mounted: function () {
@@ -51,6 +52,10 @@ export default {
   },
   methods: {
     send: function () {
+      if (this.sending) {
+        return
+      }
+      this.sending = true
       this.$refs.sendbtn.disabled = true
       var userinfo = this.$route.params.userinfo
       var answer = JSON.stringify({
@@ -62,9 +67,7 @@ export default {
         return
       }
       util.addLog(userinfo['SID'], false, answer)
-        .then(res => {
-          this.$router.push({ name: 'goodbye' })
-        })
+      this.$router.push({ name: 'goodbye' })
     }
   }
 }
