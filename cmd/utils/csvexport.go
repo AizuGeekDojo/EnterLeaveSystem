@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
 
 	"github.com/AizuGeekDojo/EnterLeaveSystem/config"
@@ -50,6 +51,8 @@ func csvExport(d *sql.DB) (string, error) {
 
 			useage := ExtList["Use"].([]interface{})
 			mess := ExtList["message"].(string)
+			mess = strings.Replace(mess, "\"", "\"\"", -1)
+
 			csv += fmt.Sprintf("%v,%v,%v,%v,%v,\"%v\"\n", datefmted, sid, name, entstr, useage, mess)
 		} else {
 			csv += fmt.Sprintf("%v,%v,%v,%v,,\n", datefmted, sid, name, entstr)
