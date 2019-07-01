@@ -1,2 +1,4 @@
 # Enter Leave System Environment file
-#SLACK_WEBHOOK_URL="https://hooks.slack.com/services/"
+#AGD_WEBHOOKURL="https://hooks.slack.com/services/"
+#AGD_CSVLOGTOKEN=""
+#AGD_CSVLOGCHID=""
