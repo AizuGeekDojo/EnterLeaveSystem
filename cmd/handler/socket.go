@@ -6,6 +6,7 @@ import (
 	"log"
 	"os/exec"
 	"strings"
+	"time"
 
 	"github.com/AizuGeekDojo/EnterLeaveSystem/cmd/db"
 	"golang.org/x/net/websocket"
@@ -27,7 +28,9 @@ func ReadCard(d *sql.DB) {
 	for {
 		dat, err := exec.Command("python2.7", "nfc_reader.py").Output()
 		if err != nil {
-			panic(err)
+			time.Sleep(60 * time.Second)
+			continue
+
 		}
 		datstrspl := strings.Split(string(dat), " ")
 		if len(datstrspl) < 2 {
