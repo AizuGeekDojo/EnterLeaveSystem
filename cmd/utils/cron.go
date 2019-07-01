@@ -17,7 +17,7 @@ func CronInit(d *sql.DB) error {
 	if err != nil {
 		return err
 	}
-	_, err = c.AddFunc("0 0 0 1 * *", cronSendMonthlyLog(d))
+	_, err = c.AddFunc("0 0 1 1 * *", cronSendMonthlyLog(d))
 	if err != nil {
 		return err
 	}
