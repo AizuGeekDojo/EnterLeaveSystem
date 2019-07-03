@@ -18,6 +18,8 @@ type IDCardInfo struct {
 	CardID string `json:"CardID"`
 	SID    string `json:"SID"`
 	IsNew  bool   `json:"IsNew"`
+
+	ReaderErr string `json:"ReaderErr"`
 }
 
 // clients is websocket connections
@@ -26,20 +28,37 @@ var clients = []*websocket.Conn{}
 // ReadCard runs card reader program, wait card data and send to clients.
 func ReadCard(d *sql.DB) {
 	for {
+		var resdat IDCardInfo
 		dat, err := exec.Command("python2.7", "nfc_reader.py").Output()
 		if err != nil {
+			log.Printf("socket: nfc reader error : %v\n", err)
+
+			resdat.ReaderErr = err.Error()
+			retbyte, err := json.Marshal(resdat)
+			if err != nil {
+				log.Printf("socket: json.Marshal error: %v", err)
+				continue
+			}
+
+			for _, c := range clients {
+				c.Write(retbyte)
+				c.Close()
+			}
 			time.Sleep(60 * time.Second)
 			continue
 		}
+
 		datstrspl := strings.Split(string(dat), " ")
 		if len(datstrspl) < 2 {
 			continue
 		}
+
 		cardtype := datstrspl[0]
 		cardid := strings.Split(datstrspl[1], "\n")[0]
-		var resdat IDCardInfo
+
 		resdat.IsCard = true
 		resdat.CardID = cardid
+
 		if cardtype == "student" {
 			resdat.SID = cardid
 			resdat.IsNew = false
@@ -56,10 +75,12 @@ func ReadCard(d *sql.DB) {
 		}
 
 		retbyte, err := json.Marshal(resdat)
+
 		if err != nil {
 			log.Printf("socket: json.Marshal error: %v", err)
 			continue
 		}
+
 		for _, c := range clients {
 			c.Write(retbyte)
 			c.Close()
