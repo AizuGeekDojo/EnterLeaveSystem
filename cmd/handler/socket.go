@@ -34,6 +34,7 @@ func ReadCard(d *sql.DB) {
 			log.Printf("socket: nfc reader error : %v\n", err)
 
 			resdat.ReaderErr = err.Error()
+			resdat.IsCard = false
 			retbyte, err := json.Marshal(resdat)
 			if err != nil {
 				log.Printf("socket: json.Marshal error: %v", err)
