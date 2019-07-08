@@ -43,7 +43,6 @@ func ReadCard(d *sql.DB) {
 
 			for _, c := range clients {
 				c.Write(retbyte)
-				c.Close()
 			}
 			time.Sleep(60 * time.Second)
 			continue
