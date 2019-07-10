@@ -1,4 +1,4 @@
-package slack
+package utils
 
 import (
 	"encoding/json"
@@ -39,7 +39,7 @@ func WebHookInit(cfg *config.SlackInfo) *WebHook {
 }
 
 // Notify sends slack notification.
-func Notify(Name string, UID string, isEnter bool, Timestamp time.Time, Ext string) error {
+func slackNotify(Name string, UID string, isEnter bool, Timestamp time.Time, Ext string) error {
 
 	cfg := config.GetSlackInfo()
 	HookJSON := WebHookInit(&cfg)
