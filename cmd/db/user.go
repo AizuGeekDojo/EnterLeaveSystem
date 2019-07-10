@@ -68,7 +68,7 @@ func RegisterCard(CardID string, UID string, db *sql.DB) error {
 }
 
 // ForceLeave sets all users leave status
-func ForceLeave(d *sql.DB) error {
+func ForceLeave(d *sql.DB, LEAVE bool) error {
 	rows, err := d.Query(`SELECT * FROM users where isenter=1`)
 	if err != nil {
 		return err
@@ -88,11 +88,11 @@ func ForceLeave(d *sql.DB) error {
 
 		tsint64 := ts.UnixNano() / int64(time.Millisecond)
 
-		_, err := tx.Exec(`insert into log values(?,?,?,?)`, sid, 0, tsint64, "")
+		_, err := tx.Exec(`insert into log values(?,?,?,?)`, LEAVE, tsint64, "")
 		if err != nil {
 			return err
 		}
-		_, err = tx.Exec(`update users set isenter=? where sid=?`, 0, sid)
+		_, err = tx.Exec(`update users set isenter=? where sid=?`, LEAVE, sid)
 		if err != nil {
 			return err
 		}

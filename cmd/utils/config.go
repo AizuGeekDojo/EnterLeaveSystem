@@ -12,6 +12,9 @@ type SlackInfo struct {
 	Channel     string `default:"#enter_leave_log"`
 	CSVLOGTOKEN string `default:""`
 	CSVLOGCHID  string `default:""`
+
+	LEAVE bool `default:false`
+	ENTER bool `default:true`
 }
 
 // GetWebHookURL returns slack webhook URL
