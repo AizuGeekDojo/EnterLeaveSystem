@@ -37,7 +37,7 @@ func WebHookInit(cfg *SlackInfo) *WebHook {
 }
 
 // Notify sends slack notification.
-func slackNotify(Name string, UID string, isEnter bool, Timestamp time.Time, Ext string) error {
+func SlackNotify(Name string, UID string, isEnter bool, Timestamp time.Time, Ext string) error {
 
 	cfg := GetSlackInfo()
 	HookJSON := WebHookInit(&cfg)

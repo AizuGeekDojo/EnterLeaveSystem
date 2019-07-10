@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/AizuGeekDojo/EnterLeaveSystem/cmd/db"
-	"github.com/AizuGeekDojo/EnterLeaveSystem/cmd/slack"
+	"github.com/AizuGeekDojo/EnterLeaveSystem/cmd/utils"
 )
 
 // LogInfo is log data structue
@@ -90,7 +90,7 @@ func addLogHandler(w http.ResponseWriter, r *http.Request, d *sql.DB) {
 		return
 	}
 
-	err = slack.Notify(name, logdat.UID, logdat.IsEnter, ts, logdat.Ext)
+	err = utils.SlackNotify(name, logdat.UID, logdat.IsEnter, ts, logdat.Ext)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintf(w, "Internal server error: %v", err)
