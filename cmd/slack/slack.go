@@ -10,7 +10,7 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/AizuGeekDojo/EnterLeaveSystem/config"
+	"github.com/AizuGeekDojo/EnterLeaveSystem/cmd/config"
 )
 
 // WebHook is structure for slack notify

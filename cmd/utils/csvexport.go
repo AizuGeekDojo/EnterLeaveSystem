@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/AizuGeekDojo/EnterLeaveSystem/config"
+	"github.com/AizuGeekDojo/EnterLeaveSystem/cmd/config"
 )
 
 // csvExport exports log data as CSV text
