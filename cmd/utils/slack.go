@@ -1,4 +1,4 @@
-package slack
+package utils
 
 import (
 	"encoding/json"
@@ -9,10 +9,9 @@ import (
 	"net/http"
 	"net/url"
 	"time"
-
-	"github.com/AizuGeekDojo/EnterLeaveSystem/config"
 )
 
+// WebHook is structure for slack notify
 type WebHook struct {
 	Channel     string       `json:"channel"`
 	Username    string       `json:"username"`
@@ -21,13 +20,15 @@ type WebHook struct {
 	Attachments []Attachment `json:"attachments"`
 }
 
+// Attachment is structure for slack notify data
 type Attachment struct {
 	Title   string `json:"title"`
 	Pretext string `json:"pretext"`
 	Text    string `json:"text"`
 }
 
-func WebHookInit(cfg *config.SlackInfo) *WebHook {
+// WebHookInit returns new WebHook data
+func WebHookInit(cfg *SlackInfo) *WebHook {
 	return &WebHook{
 		Username:  cfg.UserName,
 		IconEmoji: cfg.IconEmoji,
@@ -36,9 +37,9 @@ func WebHookInit(cfg *config.SlackInfo) *WebHook {
 }
 
 // Notify sends slack notification.
-func Notify(Name string, UID string, isEnter bool, Timestamp time.Time, Ext string) error {
+func SlackNotify(Name string, UID string, isEnter bool, Timestamp time.Time, Ext string) error {
 
-	cfg := config.GetSlackInfo()
+	cfg := GetSlackInfo()
 	HookJSON := WebHookInit(&cfg)
 
 	var io string
@@ -79,7 +80,7 @@ func Notify(Name string, UID string, isEnter bool, Timestamp time.Time, Ext stri
 }
 
 func postEnterLeaveLog(ellog *WebHook) error {
-	IncomingURL := config.GetSlackInfo().GetWebHookURL()
+	IncomingURL := GetSlackInfo().GetWebHookURL()
 	if IncomingURL == "" {
 		return errors.New("Slack URL is not defined")
 	}
@@ -89,7 +90,11 @@ func postEnterLeaveLog(ellog *WebHook) error {
 		return err
 	}
 
-	resp, err := http.PostForm(
+	client := http.Client{
+		Timeout: time.Duration(5 * time.Second),
+	}
+
+	resp, err := client.PostForm(
 		IncomingURL,
 		url.Values{"payload": {string(params)}},
 	)
