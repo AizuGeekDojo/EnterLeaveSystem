@@ -9,8 +9,6 @@ import (
 	"net/http"
 	"net/url"
 	"time"
-
-	"github.com/AizuGeekDojo/EnterLeaveSystem/cmd/config"
 )
 
 // WebHook is structure for slack notify
@@ -30,7 +28,7 @@ type Attachment struct {
 }
 
 // WebHookInit returns new WebHook data
-func WebHookInit(cfg *config.SlackInfo) *WebHook {
+func WebHookInit(cfg *SlackInfo) *WebHook {
 	return &WebHook{
 		Username:  cfg.UserName,
 		IconEmoji: cfg.IconEmoji,
@@ -41,7 +39,7 @@ func WebHookInit(cfg *config.SlackInfo) *WebHook {
 // Notify sends slack notification.
 func slackNotify(Name string, UID string, isEnter bool, Timestamp time.Time, Ext string) error {
 
-	cfg := config.GetSlackInfo()
+	cfg := GetSlackInfo()
 	HookJSON := WebHookInit(&cfg)
 
 	var io string
@@ -82,7 +80,7 @@ func slackNotify(Name string, UID string, isEnter bool, Timestamp time.Time, Ext
 }
 
 func postEnterLeaveLog(ellog *WebHook) error {
-	IncomingURL := config.GetSlackInfo().GetWebHookURL()
+	IncomingURL := GetSlackInfo().GetWebHookURL()
 	if IncomingURL == "" {
 		return errors.New("Slack URL is not defined")
 	}

@@ -10,8 +10,6 @@ import (
 	"net/url"
 	"strings"
 	"time"
-
-	"github.com/AizuGeekDojo/EnterLeaveSystem/cmd/config"
 )
 
 // csvExport exports log data as CSV text
@@ -68,7 +66,7 @@ func csvExport(d *sql.DB) (string, error) {
 
 // sendMonthlyLog sends csv log file via slack
 func sendMonthlyLog(d *sql.DB) error {
-	cfg := config.GetSlackInfo()
+	cfg := GetSlackInfo()
 	UPLOADURL := "https://slack.com/api/files.upload"
 	TOKEN := cfg.CSVLOGTOKEN
 	CHANNEL := cfg.CSVLOGCHID
