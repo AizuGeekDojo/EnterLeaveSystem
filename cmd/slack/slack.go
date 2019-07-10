@@ -13,6 +13,7 @@ import (
 	"github.com/AizuGeekDojo/EnterLeaveSystem/config"
 )
 
+// WebHook is structure for slack notify
 type WebHook struct {
 	Channel     string       `json:"channel"`
 	Username    string       `json:"username"`
@@ -21,12 +22,14 @@ type WebHook struct {
 	Attachments []Attachment `json:"attachments"`
 }
 
+// Attachment is structure for slack notify data
 type Attachment struct {
 	Title   string `json:"title"`
 	Pretext string `json:"pretext"`
 	Text    string `json:"text"`
 }
 
+// WebHookInit returns new WebHook data
 func WebHookInit(cfg *config.SlackInfo) *WebHook {
 	return &WebHook{
 		Username:  cfg.UserName,
