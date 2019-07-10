@@ -4,6 +4,7 @@ import (
 	"github.com/kelseyhightower/envconfig"
 )
 
+// SlackInfo is structure for slack info in env
 type SlackInfo struct {
 	WEBHOOKURL  string `default:"https://hooks.slack.com/services/"`
 	UserName    string `default:"Logging Bot"`
@@ -13,6 +14,7 @@ type SlackInfo struct {
 	CSVLOGCHID  string `default:""`
 }
 
+// GetWebHookURL returns slack webhook URL
 func (sl SlackInfo) GetWebHookURL() string {
 	return sl.WEBHOOKURL
 }
@@ -20,17 +22,13 @@ func (sl SlackInfo) GetWebHookURL() string {
 var slackinfo SlackInfo
 
 func init() {
-	slackinfo, _ = Init()
-}
-
-func Init() (SlackInfo, error) {
 	err := envconfig.Process("AGD", &slackinfo)
 	if err != nil {
-		return SlackInfo{}, err
+		panic(err)
 	}
-	return slackinfo, nil
 }
 
+// GetSlackInfo returns slack config info
 func GetSlackInfo() SlackInfo {
 	return slackinfo
 }
