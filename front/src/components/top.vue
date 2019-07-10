@@ -73,17 +73,19 @@ export default {
       this.ws.onmessage = function (e) {
         var message = JSON.parse(e.data)
         console.log('Read card data:', message)
-        if (message['IsNew'] === false) {
-          util.getUserInfo(message['SID'])
-            .then(res => {
-              if (res['IsEnter']) {
-                self.$router.push({ name: 'question', params: { userinfo: res } })
-              } else {
-                self.$router.push({ name: 'welcome', params: { userinfo: res } })
-              }
-            })
-        } else {
-          self.$router.push({ name: 'regist', params: { cardid: message['CardID'] } })
+        if (message['IsCard'] === true) {
+          if (message['IsNew'] === false) {
+            util.getUserInfo(message['SID'])
+              .then(res => {
+                if (res['IsEnter']) {
+                  self.$router.push({ name: 'question', params: { userinfo: res } })
+                } else {
+                  self.$router.push({ name: 'welcome', params: { userinfo: res } })
+                }
+              })
+          } else {
+            self.$router.push({ name: 'regist', params: { cardid: message['CardID'] } })
+          }
         }
       }
       this.ws.onerror = function (e) {

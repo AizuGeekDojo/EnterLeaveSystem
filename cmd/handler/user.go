@@ -131,7 +131,7 @@ func createUserHandler(w http.ResponseWriter, r *http.Request, d *sql.DB) {
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		log.Printf("%v %v: json.Marshal error: %v", r.Method, r.URL.Path, err)
-		fmt.Fprintf(w, "{}", err)
+		fmt.Fprintf(w, "{}")
 	}
 	w.Write(retbyte)
 }
