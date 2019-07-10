@@ -89,7 +89,11 @@ func postEnterLeaveLog(ellog *WebHook) error {
 		return err
 	}
 
-	resp, err := http.PostForm(
+	client := http.Client{
+		Timeout: time.Duration(5 * time.Second),
+	}
+
+	resp, err := client.PostForm(
 		IncomingURL,
 		url.Values{"payload": {string(params)}},
 	)
