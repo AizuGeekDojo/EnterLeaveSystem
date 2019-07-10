@@ -88,7 +88,7 @@ func ForceLeave(d *sql.DB, LEAVE bool) error {
 
 		tsint64 := ts.UnixNano() / int64(time.Millisecond)
 
-		_, err := tx.Exec(`insert into log values(?,?,?,?)`, LEAVE, tsint64, "")
+		_, err := tx.Exec(`insert into log values(?,?,?,?)`, sid, LEAVE, tsint64, "")
 		if err != nil {
 			return err
 		}
