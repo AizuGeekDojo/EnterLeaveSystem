@@ -1,4 +1,4 @@
-run: main.go
+run: main.go test/dist
 	export GO111MODULE=on && cd test && go run ../main.go
 
 build: main.go
@@ -7,3 +7,7 @@ build: main.go
 
 initdb:
 	cd test && rm -f database.db && sqlite3 database.db < init.sql
+
+test/dist:
+	cd ../front && npm run build
+	cp -r ../front/dist test/
