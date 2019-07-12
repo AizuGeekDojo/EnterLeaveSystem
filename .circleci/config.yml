@@ -38,7 +38,7 @@ jobs:
           at: ~/
       - run:
           name: Build server
-          command: GO111MODULE=on go build -o ../build/elsystem main.go
+          command: GO111MODULE=on go build -o ../build/agd/elsystem main.go
       - persist_to_workspace:
           root: /root
           paths:
@@ -51,6 +51,9 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/
+      - run:
+          name: Copy other install files
+          command: cp bin/* build/agd/
       - run:
           name: Archive binary
           command: tar cvfz build.tar.gz build/
