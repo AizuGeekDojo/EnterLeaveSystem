@@ -35,7 +35,7 @@ jobs:
     working_directory: /root/workspace/server
     steps:
       - attach_workspace:
-          at: /root
+          at: ~/
       - run:
           name: Build server
           command: GO111MODULE=on go build -o ../build/elsystem main.go
@@ -47,7 +47,7 @@ jobs:
   release:
     docker:
       - image: circleci/node:latest
-    working_directory: /root/workspace
+    working_directory: ~/workspace
     steps:
       - attach_workspace:
           at: /root
