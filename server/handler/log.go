@@ -10,8 +10,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/AizuGeekDojo/EnterLeaveSystem/cmd/db"
-	"github.com/AizuGeekDojo/EnterLeaveSystem/cmd/utils"
+	"github.com/AizuGeekDojo/EnterLeaveSystem/server/db"
+	"github.com/AizuGeekDojo/EnterLeaveSystem/server/utils"
 )
 
 // LogInfo is log data structue

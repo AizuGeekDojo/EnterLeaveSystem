@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/AizuGeekDojo/EnterLeaveSystem/cmd/db"
+	"github.com/AizuGeekDojo/EnterLeaveSystem/server/db"
 )
 
 // RegistUserInfo is user register data structue for request

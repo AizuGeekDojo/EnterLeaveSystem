@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/AizuGeekDojo/EnterLeaveSystem/cmd/db"
+	"github.com/AizuGeekDojo/EnterLeaveSystem/server/db"
 	"golang.org/x/net/websocket"
 )
 

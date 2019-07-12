@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/AizuGeekDojo/EnterLeaveSystem/cmd/db"
-	"github.com/AizuGeekDojo/EnterLeaveSystem/cmd/handler"
-	"github.com/AizuGeekDojo/EnterLeaveSystem/cmd/utils"
+	"github.com/AizuGeekDojo/EnterLeaveSystem/server/db"
+	"github.com/AizuGeekDojo/EnterLeaveSystem/server/handler"
+	"github.com/AizuGeekDojo/EnterLeaveSystem/server/utils"
 	"golang.org/x/net/websocket"
 )
 
