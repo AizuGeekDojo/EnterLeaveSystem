@@ -1,0 +1,65 @@
+version: 2.1
+jobs:
+  buildfront:
+    docker:
+      - image: circleci/node:latest
+    working_directory: ~/workspace
+    steps:
+      - checkout
+      - run:
+          name: Make build directory
+          command: mkdir -p build/agd
+      - restore_cache:
+          keys:
+            - npm-{{ checksum "front/package-lock.json" }}
+            - npm-
+      - run:
+          name: Install Dependency
+          command: cd front && npm install
+      - save_cache:
+          key: npm-{{ checksum "front/package-lock.json" }}
+          paths:
+            - ~/workspace/front/node_modules
+          force: yes
+      - run:
+          name: Build
+          command: cd front && npm run build && mv dist ../build/agd/
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - workspace
+
+  buildserver:
+    docker:
+      - image: aizugeekdojo/cgo-arm:latest
+    working_directory: /root/workspace/server
+    steps:
+      - attach_workspace:
+          at: /root
+
+      - run:
+          name: Build server
+          command: GO111MODULE=on go build -o ../build/elsystem main.go
+
+
+ 
+workflows:
+  version: 2
+  build_release:
+    jobs:
+      - buildfront:
+          filters:
+            branches:
+              only: add_cd
+      - buildserver:
+          requires:
+            - buildfront
+          filters:
+            branches:
+              only: add_cd
+      # - release:
+      #     requires:
+      #       - buildserver
+      #     filters:
+      #       branches:
+      #         only: add_cd
