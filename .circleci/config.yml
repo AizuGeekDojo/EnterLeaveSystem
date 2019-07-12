@@ -58,7 +58,7 @@ jobs:
           name: Archive binary
           command: tar cvfz build.tar.gz build/
       - store_artifacts:
-          path: ~/workspace/build.tar.gz
+          path: build.tar.gz
 
 workflows:
   version: 2
