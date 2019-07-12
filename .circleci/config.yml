@@ -50,12 +50,12 @@ jobs:
     working_directory: ~/workspace
     steps:
       - attach_workspace:
-          at: /root
+          at: ~/
       - run:
           name: Archive binary
           command: tar cvfz build.tar.gz build/
       - store_artifacts:
-          path: /root/workspace/build.tar.gz
+          path: ~/workspace/build.tar.gz
 
 workflows:
   version: 2
