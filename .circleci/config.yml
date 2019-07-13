@@ -55,6 +55,9 @@ jobs:
       - image: aizugeekdojo/cgo-arm:latest
     working_directory: /root/workspace
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "2c:17:d2:cb:b6:96:76:cc:76:20:b9:9b:bd:75:bf:3f"
       - attach_workspace:
           at: /root
       - run:
@@ -69,6 +72,12 @@ jobs:
       - store_artifacts:
           path: gl.tar.gz
           destination: gl.tar.gz
+      - run:
+          name: Add tag
+          command: ./build.sh
+
+
+
 workflows:
   version: 2
   build_release:
