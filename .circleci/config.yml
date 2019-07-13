@@ -64,8 +64,11 @@ jobs:
           name: Copy other install files
           command: cp bin/* build/agd/EnterLeaveSystem/ && cp bin/* build/gl/EnterLeaveSystem/
       - run:
-          name: Archive binary
-          command: tar cvfz agd.tar.gz build/agd/EnterLeaveSystem/ && tar cvfz gl.tar.gz build/gl/EnterLeaveSystem/
+          name: Archive binary for AGD
+          command: cd build/agd && tar cvfz ../../agd.tar.gz EnterLeaveSystem/
+      - run:
+          name: Archive binary for AGD
+          command: cd build/gl && tar cvfz ../../gl.tar.gz EnterLeaveSystem/
       - store_artifacts:
           path: agd.tar.gz
           destination: agd.tar.gz
