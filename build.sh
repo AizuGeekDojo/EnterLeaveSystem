@@ -18,5 +18,6 @@ git tag ${ELS_NVER}
 git push --tags
 export GOARCH="amd64"
 export GOOS="linux"
+export CGO_ENABLED="0"
 go env
 go run release.go ${CIRCLE_BRANCH} ${ELS_NVER}

@@ -36,23 +36,21 @@ func main() {
 		panic(err)
 	}
 	relinforaw, err := HttpGet("https://api.github.com/repos/" + RepoLocation + "/releases")
-	if err != nil {
-		panic(err)
-	}
-	println(string(relinforaw))
-	var relinfo = make(map[string]interface{})
+	if err == nil {
+		println(string(relinforaw))
+		var relinfo = make(map[string]interface{})
 
-	err = json.Unmarshal(relinforaw, &relinfo)
-	if err != nil {
-		panic(err)
-	}
+		err = json.Unmarshal(relinforaw, &relinfo)
+		if err != nil {
+			panic(err)
+		}
 
-	delrelinfo, err := HttpDelete("https://api.github.com/repos/" + RepoLocation + "/releases/" + relinfo["id"].(string))
-	if err != nil {
-		panic(err)
+		delrelinfo, err := HttpDelete("https://api.github.com/repos/" + RepoLocation + "/releases/" + relinfo["id"].(string))
+		if err != nil {
+			panic(err)
+		}
+		println(string(delrelinfo))
 	}
-	println(string(delrelinfo))
-
 	relinforaw, err = HttpPost("https://api.github.com/repos/"+RepoLocation+"/releases", "application/json", bytes.NewBuffer(params))
 	if err != nil {
 		panic(err)
@@ -152,8 +150,7 @@ func HttpGet(url string) ([]byte, error) {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		println(err)
-		// return nil, err
+		return nil, err
 	}
 	defer resp.Body.Close()
 	content, err := ioutil.ReadAll(resp.Body)
