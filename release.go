@@ -20,7 +20,7 @@ type CreateReleaseReq struct {
 }
 
 func main() {
-	var RepoLocation = "wancom/sandbox"
+	var RepoLocation = "AizuGeekDojo/EnterLeaveSystem"
 	var Branch = os.Args[1]
 	var Tag = os.Args[2]
 
@@ -35,32 +35,48 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	a, err := HttpPost("https://api.github.com/repos/"+RepoLocation+"/releases", "application/json", bytes.NewBuffer(params))
+	relinforaw, err := HttpGet("https://api.github.com/repos/" + RepoLocation + "/releases")
 	if err != nil {
 		panic(err)
 	}
-	println(string(a))
-	var ExtList = make(map[string]interface{})
+	println(string(relinforaw))
+	var relinfo = make(map[string]interface{})
 
-	err = json.Unmarshal(a, &ExtList)
-	if err != nil {
-		panic(err)
-	}
-	url := strings.Replace(ExtList["upload_url"].(string), "{?name,label}", "?name=agd.tar.gz", 1)
-	url2 := strings.Replace(ExtList["upload_url"].(string), "{?name,label}", "?name=gl.tar.gz", 1)
-	file, err := os.Open("agd.tar.gz")
+	err = json.Unmarshal(relinforaw, &relinfo)
 	if err != nil {
 		panic(err)
 	}
 
-	b, err := HttpPost(url, "application/octet-stream", file)
-	println(string(b))
-	file2, err := os.Open("gl.tar.gz")
+	delrelinfo, err := HttpDelete("https://api.github.com/repos/" + RepoLocation + "/releases/" + relinfo["id"].(string))
 	if err != nil {
 		panic(err)
 	}
-	c, err := HttpPost(url2, "application/octet-stream", file2)
-	println(string(c))
+	println(string(delrelinfo))
+
+	relinforaw, err = HttpPost("https://api.github.com/repos/"+RepoLocation+"/releases", "application/json", bytes.NewBuffer(params))
+	if err != nil {
+		panic(err)
+	}
+	println(string(relinforaw))
+	// var ExtList = make(map[string]interface{})
+
+	err = json.Unmarshal(relinforaw, &relinfo)
+	if err != nil {
+		panic(err)
+	}
+	agdfile, err := os.Open("agd.tar.gz")
+	if err != nil {
+		panic(err)
+	}
+
+	upagdres, err := HttpPost(strings.Replace(relinfo["upload_url"].(string), "{?name,label}", "?name=agd.tar.gz", 1), "application/octet-stream", agdfile)
+	println(string(upagdres))
+	glfile, err := os.Open("gl.tar.gz")
+	if err != nil {
+		panic(err)
+	}
+	upglres, err := HttpPost(strings.Replace(relinfo["upload_url"].(string), "{?name,label}", "?name=gl.tar.gz", 1), "application/octet-stream", glfile)
+	println(string(upglres))
 }
 
 func HttpPost(url string, ctype string, dat io.Reader) ([]byte, error) {
@@ -88,6 +104,56 @@ func HttpPost(url string, ctype string, dat io.Reader) ([]byte, error) {
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
+	}
+	defer resp.Body.Close()
+	content, err := ioutil.ReadAll(resp.Body)
+	return content, err
+}
+
+func HttpDelete(url string) ([]byte, error) {
+	token := os.Getenv("GITHUB_API_KEY")
+	req, err := http.NewRequest(
+		"DELETE",
+		url,
+		nil,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	// Content-Type 設定
+	req.Header.Set("Authorization", "token "+token)
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		println(err)
+		// return nil, err
+	}
+	defer resp.Body.Close()
+	content, err := ioutil.ReadAll(resp.Body)
+	return content, err
+}
+
+func HttpGet(url string) ([]byte, error) {
+	token := os.Getenv("GITHUB_API_KEY")
+	req, err := http.NewRequest(
+		"GET",
+		url,
+		nil,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	// Content-Type 設定
+	req.Header.Set("Authorization", "token "+token)
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		println(err)
+		// return nil, err
 	}
 	defer resp.Body.Close()
 	content, err := ioutil.ReadAll(resp.Body)
