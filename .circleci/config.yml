@@ -57,7 +57,7 @@ jobs:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "2c:17:d2:cb:b6:96:76:cc:76:20:b9:9b:bd:75:bf:3f"
+            - "8c:01:bd:92:c1:18:fb:93:b8:c6:50:cf:17:ba:e4:be"
       - attach_workspace:
           at: /root
       - run:
