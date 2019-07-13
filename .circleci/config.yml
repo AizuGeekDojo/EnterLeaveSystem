@@ -8,7 +8,7 @@ jobs:
       - checkout
       - run:
           name: Make build directory
-          command: mkdir -p build/agd && mkdir -p build/gl
+          command: mkdir -p build/agd/EnterLeaveSystem && mkdir -p build/gl/EnterLeaveSystem
       - restore_cache:
           keys:
             - npm-{{ checksum "front/package-lock.json" }}
@@ -23,10 +23,10 @@ jobs:
           force: yes
       - run:
           name: Build front for AizuGeekDojo version
-          command: cd front && cp .env.agd .env.production && npm run build && mv dist ../build/agd/
+          command: cd front && cp .env.agd .env.production && npm run build && mv dist ../build/agd/EnterLeaveSystem/
       - run:
           name: Build front for GlobalLounge version
-          command: cd front && cp .env.gl .env.production && npm run build && mv dist ../build/gl/
+          command: cd front && cp .env.gl .env.production && npm run build && mv dist ../build/gl/EnterLeaveSystem/
       - persist_to_workspace:
           root: ~/
           paths:
@@ -44,7 +44,7 @@ jobs:
           command: GO111MODULE=on go build -o ../build/elsystem main.go
       - run:
           name: Copy binary
-          command: cp ../build/elsystem ../build/agd/ && cp ../build/elsystem ../build/gl/
+          command: cp ../build/elsystem ../build/agd/EnterLeaveSystem/ && cp ../build/elsystem ../build/gl/EnterLeaveSystem/
       - persist_to_workspace:
           root: /root
           paths:
@@ -59,10 +59,10 @@ jobs:
           at: /root
       - run:
           name: Copy other install files
-          command: cp bin/* build/agd/ && cp bin/* build/gl/
+          command: cp bin/* build/agd/EnterLeaveSystem/ && cp bin/* build/gl/EnterLeaveSystem/
       - run:
           name: Archive binary
-          command: tar cvfz agd.tar.gz build/agd && tar cvfz gl.tar.gz build/gl
+          command: tar cvfz agd.tar.gz build/agd/EnterLeaveSystem/ && tar cvfz gl.tar.gz build/gl/EnterLeaveSystem/
       - store_artifacts:
           path: agd.tar.gz
           destination: agd.tar.gz
