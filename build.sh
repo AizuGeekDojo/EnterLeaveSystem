@@ -15,4 +15,4 @@ fi
 echo "${ELS_VER} -> ${ELS_NVER}"
 git tag ${ELS_NVER}
 git push --tags
-go run release.go ${CIRCLE_BRANCH} ${ELS_NVER}
+GOARCH="amd64" GOOS="linux" go run release.go ${CIRCLE_BRANCH} ${ELS_NVER}
