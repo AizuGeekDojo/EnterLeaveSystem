@@ -8,7 +8,7 @@ jobs:
       - checkout
       - run:
           name: Make build directory
-          command: mkdir -p build/agd
+          command: mkdir -p build/agd && mkdir -p build/gl
       - restore_cache:
           keys:
             - npm-{{ checksum "front/package-lock.json" }}
@@ -22,8 +22,11 @@ jobs:
             - ~/workspace/front/node_modules
           force: yes
       - run:
-          name: Build
-          command: cd front && npm run build && mv dist ../build/agd/
+          name: Build front for AizuGeekDojo version
+          command: cd front && cp .env.agd .env.production && npm run build && mv dist ../build/agd/
+      - run:
+          name: Build front for GlobalLounge version
+          command: cd front && cp .env.gl .env.production && npm run build && mv dist ../build/gl/
       - persist_to_workspace:
           root: ~/
           paths:
@@ -38,7 +41,10 @@ jobs:
           at: /root
       - run:
           name: Build server
-          command: GO111MODULE=on go build -o ../build/agd/elsystem main.go
+          command: GO111MODULE=on go build -o ../build/elsystem main.go
+      - run:
+          name: Copy binary
+          command: cp ../build/elsystem ../build/agd/ && cp ../build/elsystem ../build/gl/
       - persist_to_workspace:
           root: /root
           paths:
@@ -53,13 +59,16 @@ jobs:
           at: /root
       - run:
           name: Copy other install files
-          command: cp bin/* build/agd/
+          command: cp bin/* build/agd/ && cp bin/* build/gl/
       - run:
           name: Archive binary
-          command: tar cvfz build.tar.gz build/
+          command: tar cvfz agd.tar.gz build/agd && tar cvfz gl.tar.gz build/gl
       - store_artifacts:
-          path: build.tar.gz
-
+          path: agd.tar.gz
+          destination: agd.tar.gz
+      - store_artifacts:
+          path: gl.tar.gz
+          destination: gl.tar.gz
 workflows:
   version: 2
   build_release:
