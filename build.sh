@@ -1,5 +1,6 @@
 #!/bin/bash
 
+ssh -T git@github.com -o StrictHostKeyChecking=no
 if [ "${CIRCLE_BRANCH}" = "master" ]; then
   ELS_VER=`git describe --tags  --abbrev=0`
   ELS_NVER="${ELS_VER%.*}.`expr ${ELS_VER##*.} + 1`"
