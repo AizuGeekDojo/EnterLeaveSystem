@@ -35,7 +35,7 @@ jobs:
     working_directory: /root/workspace/server
     steps:
       - attach_workspace:
-          at: ~/
+          at: /root
       - run:
           name: Build server
           command: GO111MODULE=on go build -o ../build/agd/elsystem main.go
@@ -46,11 +46,11 @@ jobs:
 
   release:
     docker:
-      - image: circleci/node:latest
-    working_directory: ~/workspace
+      - image: aizugeekdojo/cgo-arm:latest
+    working_directory: /root/workspace
     steps:
       - attach_workspace:
-          at: ~/
+          at: /root
       - run:
           name: Copy other install files
           command: cp bin/* build/agd/
