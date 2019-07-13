@@ -36,9 +36,9 @@ func main() {
 		panic(err)
 	}
 	relinforaw, err := HttpGet("https://api.github.com/repos/" + RepoLocation + "/releases")
+	var relinfo = make(map[string]interface{})
 	if err == nil {
 		println(string(relinforaw))
-		var relinfo = make(map[string]interface{})
 
 		err = json.Unmarshal(relinforaw, &relinfo)
 		if err != nil {
