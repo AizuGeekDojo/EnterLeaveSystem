@@ -47,7 +47,7 @@ func main() {
 	}
 	for _, relinfo := range relinfos {
 		if relinfo["id"] != nil && relinfo["name"] == Tag {
-			delrelinfo, err := HttpDelete("https://api.github.com/repos/" + RepoLocation + "/releases/" + fmt.Sprintf("%.0f", relinfo["id"].(float64)))
+			_, err = HttpDelete("https://api.github.com/repos/" + RepoLocation + "/releases/" + fmt.Sprintf("%.0f", relinfo["id"].(float64)))
 			if err != nil {
 				panic(err)
 			}
@@ -69,12 +69,12 @@ func main() {
 		panic(err)
 	}
 
-	upagdres, err := HttpPost(strings.Replace(relinfo["upload_url"].(string), "{?name,label}", "?name=agd.tar.gz", 1), "application/octet-stream", agdfile)
+	_, err = HttpPost(strings.Replace(relinfo["upload_url"].(string), "{?name,label}", "?name=agd.tar.gz", 1), "application/octet-stream", agdfile)
 	glfile, err := os.Open("gl.tar.gz")
 	if err != nil {
 		panic(err)
 	}
-	upglres, err := HttpPost(strings.Replace(relinfo["upload_url"].(string), "{?name,label}", "?name=gl.tar.gz", 1), "application/octet-stream", glfile)
+	_, err = HttpPost(strings.Replace(relinfo["upload_url"].(string), "{?name,label}", "?name=gl.tar.gz", 1), "application/octet-stream", glfile)
 }
 
 func HttpPost(url string, ctype string, dat io.Reader) ([]byte, error) {
