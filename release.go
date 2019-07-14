@@ -29,7 +29,7 @@ func main() {
 		TagName:         Tag,
 		TargetCommitish: Branch,
 		Name:            Tag,
-		Prerelease:      true,
+		Prerelease:      Branch != "master",
 	}
 	params, err := json.Marshal(crreqdat)
 	if err != nil {
