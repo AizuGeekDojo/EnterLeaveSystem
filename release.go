@@ -40,20 +40,17 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	println(string(relinforaw))
 
 	err = json.Unmarshal(relinforaw, &relinfos)
 	if err != nil {
 		panic(err)
 	}
 	for _, relinfo := range relinfos {
-		print(relinfo)
 		if relinfo["id"] != nil && relinfo["name"] == Tag {
 			delrelinfo, err := HttpDelete("https://api.github.com/repos/" + RepoLocation + "/releases/" + fmt.Sprintf("%.0f", relinfo["id"].(float64)))
 			if err != nil {
 				panic(err)
 			}
-			println(string(delrelinfo))
 		}
 	}
 
@@ -61,7 +58,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	println(string(relinforaw))
 	var relinfo = make(map[string]interface{})
 
 	err = json.Unmarshal(relinforaw, &relinfo)
@@ -74,13 +70,11 @@ func main() {
 	}
 
 	upagdres, err := HttpPost(strings.Replace(relinfo["upload_url"].(string), "{?name,label}", "?name=agd.tar.gz", 1), "application/octet-stream", agdfile)
-	println(string(upagdres))
 	glfile, err := os.Open("gl.tar.gz")
 	if err != nil {
 		panic(err)
 	}
 	upglres, err := HttpPost(strings.Replace(relinfo["upload_url"].(string), "{?name,label}", "?name=gl.tar.gz", 1), "application/octet-stream", glfile)
-	println(string(upglres))
 }
 
 func HttpPost(url string, ctype string, dat io.Reader) ([]byte, error) {
@@ -88,7 +82,7 @@ func HttpPost(url string, ctype string, dat io.Reader) ([]byte, error) {
 	buf := &bytes.Buffer{}
 	nRead, err := io.Copy(buf, dat)
 	if err != nil {
-		fmt.Println(err)
+		return nil, err
 	}
 	req, err := http.NewRequest(
 		"POST",
@@ -131,8 +125,7 @@ func HttpDelete(url string) ([]byte, error) {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		println(err)
-		// return nil, err
+		return nil, err
 	}
 	defer resp.Body.Close()
 	content, err := ioutil.ReadAll(resp.Body)
