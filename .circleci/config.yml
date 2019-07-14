@@ -85,7 +85,7 @@ workflows:
   version: 2
   build_release:
     jobs:
-      - buildfront:
+      - buildfront
       - buildserver:
           requires:
             - buildfront
