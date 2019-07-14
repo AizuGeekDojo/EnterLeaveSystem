@@ -41,7 +41,6 @@ func main() {
 		panic(err)
 	}
 	println(string(relinforaw))
-	panic(nil)
 
 	err = json.Unmarshal(relinforaw, &relinfos)
 	if err != nil {

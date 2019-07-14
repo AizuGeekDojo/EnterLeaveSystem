@@ -13,7 +13,7 @@ else
   if [[ ${ELS_VER} == *-* ]]; then
   # If the version is already used, delete that.
     git tag -d ${ELS_VER}
-    git push origin　${ELS_VER}
+    git push origin :${ELS_VER}
   fi
   # Set version
   ELS_VER=`git describe --tags  --abbrev=0`
