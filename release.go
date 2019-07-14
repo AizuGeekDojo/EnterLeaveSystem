@@ -36,27 +36,34 @@ func main() {
 		panic(err)
 	}
 	relinforaw, err := HttpGet("https://api.github.com/repos/" + RepoLocation + "/releases")
-	var relinfo = make(map[string]interface{})
-	if err == nil {
-		println(string(relinforaw))
-
-		err = json.Unmarshal(relinforaw, &relinfo)
-		if err != nil {
-			panic(err)
-		}
-
-		delrelinfo, err := HttpDelete("https://api.github.com/repos/" + RepoLocation + "/releases/" + relinfo["id"].(string))
-		if err != nil {
-			panic(err)
-		}
-		println(string(delrelinfo))
+	var relinfos = make([]map[string]interface{}, 0)
+	if err != nil {
+		panic(err)
 	}
+	println(string(relinforaw))
+	panic(nil)
+
+	err = json.Unmarshal(relinforaw, &relinfos)
+	if err != nil {
+		panic(err)
+	}
+	for _, relinfo := range relinfos {
+		print(relinfo)
+		if relinfo["id"] != nil && relinfo["name"] == Tag {
+			delrelinfo, err := HttpDelete("https://api.github.com/repos/" + RepoLocation + "/releases/" + fmt.Sprintf("%.0f", relinfo["id"].(float64)))
+			if err != nil {
+				panic(err)
+			}
+			println(string(delrelinfo))
+		}
+	}
+
 	relinforaw, err = HttpPost("https://api.github.com/repos/"+RepoLocation+"/releases", "application/json", bytes.NewBuffer(params))
 	if err != nil {
 		panic(err)
 	}
 	println(string(relinforaw))
-	// var ExtList = make(map[string]interface{})
+	var relinfo = make(map[string]interface{})
 
 	err = json.Unmarshal(relinforaw, &relinfo)
 	if err != nil {
