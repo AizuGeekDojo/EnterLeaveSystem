@@ -86,18 +86,9 @@ workflows:
   build_release:
     jobs:
       - buildfront:
-          filters:
-            branches:
-              only: add_cd
       - buildserver:
           requires:
             - buildfront
-          filters:
-            branches:
-              only: add_cd
       - release:
           requires:
             - buildserver
-          filters:
-            branches:
-              only: add_cd
