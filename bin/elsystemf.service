@@ -1,0 +1,13 @@
+[Unit]
+Description=Enter Leave System Front
+After=elsystemd
+
+[Service]
+User=pi
+ExecStart=/home/pi/EnterLeaveSystem/frontstart
+ExecStop=/bin/true
+Type=simple
+RemainAfterExit=yes
+
+[Install]
+WantedBy = multi-user.target
