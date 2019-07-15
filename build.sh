@@ -6,6 +6,11 @@ ssh -T git@github.com -o StrictHostKeyChecking=no
 if [ "${CIRCLE_BRANCH}" = "master" ]; then
 # If branch is master, version up normally.
   ELS_VER=`git describe --tags  --abbrev=0`
+  while [[ ${ELS_VER} == *-* ]]; do
+    git tag -d ${ELS_VER}
+    git push origin :${ELS_VER}
+    ELS_VER=`git describe --tags  --abbrev=0`
+  done
   ELS_NVER="${ELS_VER%.*}.`expr ${ELS_VER##*.} + 1`"
 else
 # If branch is not master(pull req), use same version
