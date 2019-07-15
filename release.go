@@ -46,7 +46,7 @@ func main() {
 		panic(err)
 	}
 	for _, relinfo := range relinfos {
-		if relinfo["id"] != nil && relinfo["name"] == Tag {
+		if relinfo["id"] != nil && relinfo["draft"] == true {
 			_, err = HttpDelete("https://api.github.com/repos/" + RepoLocation + "/releases/" + fmt.Sprintf("%.0f", relinfo["id"].(float64)))
 			if err != nil {
 				panic(err)
