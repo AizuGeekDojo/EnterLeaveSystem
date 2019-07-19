@@ -23,7 +23,7 @@ func OpenDB() (*sql.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "log" (sid TEXT,isenter INTEGER,time INTEGER,ext TEXT)`)
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS "log" (sid TEXT,isenter INTEGER,time INTEGER,ext TEXT, FOREIGN KEY (isenter) REFERENCES io_status(id)))`)
 	if err != nil {
 		return nil, err
 	}
