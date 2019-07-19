@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"log"
 
-	"github.com/AizuGeekDojo/EnterLeaveSystem/cmd/db"
+	"github.com/AizuGeekDojo/EnterLeaveSystem/server/db"
 	"gopkg.in/robfig/cron.v2"
 )
 

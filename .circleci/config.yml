@@ -1,0 +1,94 @@
+version: 2.1
+jobs:
+  buildfront:
+    docker:
+      - image: circleci/node:latest
+    working_directory: ~/workspace
+    steps:
+      - checkout
+      - run:
+          name: Make build directory
+          command: mkdir -p build/agd/EnterLeaveSystem && mkdir -p build/gl/EnterLeaveSystem
+      - restore_cache:
+          keys:
+            - npm-{{ checksum "front/package-lock.json" }}
+            - npm-
+      - run:
+          name: Install Dependency
+          command: cd front && npm install
+      - save_cache:
+          key: npm-{{ checksum "front/package-lock.json" }}
+          paths:
+            - ~/workspace/front/node_modules
+          force: yes
+      - run:
+          name: Build front for AizuGeekDojo version
+          command: cd front && cp .env.agd .env.production && npm run build && mv dist ../build/agd/EnterLeaveSystem/
+      - run:
+          name: Build front for GlobalLounge version
+          command: cd front && cp .env.gl .env.production && npm run build && mv dist ../build/gl/EnterLeaveSystem/
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - workspace
+
+  buildserver:
+    docker:
+      - image: aizugeekdojo/cgo-arm:latest
+    working_directory: /root/workspace/server
+    steps:
+      - attach_workspace:
+          at: /root
+      - run:
+          name: Build server
+          command: GO111MODULE=on go build -o ../build/elsystem main.go
+      - run:
+          name: Copy binary
+          command: cp ../build/elsystem ../build/agd/EnterLeaveSystem/ && cp ../build/elsystem ../build/gl/EnterLeaveSystem/
+      - persist_to_workspace:
+          root: /root
+          paths:
+            - workspace
+
+  release:
+    docker:
+      - image: aizugeekdojo/cgo-arm:latest
+    working_directory: /root/workspace
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "b2:30:87:a0:42:70:4e:ce:53:7a:e9:93:be:01:1d:7f"
+      - attach_workspace:
+          at: /root
+      - run:
+          name: Copy other install files
+          command: cp bin/* build/agd/EnterLeaveSystem/ && cp bin/* build/gl/EnterLeaveSystem/
+      - run:
+          name: Archive binary for AGD
+          command: cd build/agd && tar cvfz ../../agd.tar.gz EnterLeaveSystem/
+      - run:
+          name: Archive binary for AGD
+          command: cd build/gl && tar cvfz ../../gl.tar.gz EnterLeaveSystem/
+      - store_artifacts:
+          path: agd.tar.gz
+          destination: agd.tar.gz
+      - store_artifacts:
+          path: gl.tar.gz
+          destination: gl.tar.gz
+      - run:
+          name: Add tag
+          command: ./build.sh
+
+
+
+workflows:
+  version: 2
+  build_release:
+    jobs:
+      - buildfront
+      - buildserver:
+          requires:
+            - buildfront
+      - release:
+          requires:
+            - buildserver

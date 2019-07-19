@@ -1,2 +1,3 @@
-back/.env
 .vscode/
+server/test/database.db
+server/test/dist
