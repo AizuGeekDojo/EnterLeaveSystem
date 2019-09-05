@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
 )
 
@@ -24,6 +25,7 @@ type WebHook struct {
 type Attachment struct {
 	Title   string `json:"title"`
 	Pretext string `json:"pretext"`
+	Color   string `json:"color"`
 	Text    string `json:"text"`
 }
 
@@ -65,9 +67,16 @@ func SlackNotify(Name string, UID string, isEnter bool, Timestamp time.Time, Ext
 		useage := ExtList["Use"].([]interface{})
 		mess := ExtList["message"].(string)
 
+		var purpose string
+		for _, w := range useage {
+			purpose += fmt.Sprintf("%v, ", w)
+		}
+		purpose = strings.TrimSuffix(purpose, ", ")
+
 		HookJSON.Attachments = append(HookJSON.Attachments, Attachment{
 			Title: "アンケート結果",
-			Text:  fmt.Sprintf("目的 : %v \n 感想 : %v", useage, mess),
+			Text:  fmt.Sprintf("目的 : %v \n 感想 : %v", purpose, mess),
+			Color: "#FF9500",
 		})
 	}
 
@@ -102,12 +111,11 @@ func postEnterLeaveLog(ellog *WebHook) error {
 		return err
 	}
 
-	body, err := ioutil.ReadAll(resp.Body)
+	_, err = ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return err
 	}
 	defer resp.Body.Close()
 
-	println(string(body))
 	return nil
 }
