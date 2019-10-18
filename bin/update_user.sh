@@ -1,4 +1,5 @@
-SERVER=""
+printf "Input server hostname(including u-aizu.ac.jp):"
+read SERVER
 printf "Input your ID: "
 read USERID
 
