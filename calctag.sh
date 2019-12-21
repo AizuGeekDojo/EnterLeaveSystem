@@ -17,7 +17,9 @@ if [ "${BRANCHNAME}" = "master" ]; then
 else
 # If branch is not master(pull req), use same version
   ELS_VER=`git describe --tags  --abbrev=0`
+  echo ${ELS_VER}
   if [[ ${ELS_VER} == *-* ]]; then
+  echo test
   # If the version is already used, delete that.
     git tag -d ${ELS_VER}
     git push origin :${ELS_VER}
@@ -32,8 +34,5 @@ printf ${ELS_NVER} > tagver
 git tag ${ELS_NVER}
 git push --tags
 # Release binary
-export GOARCH="amd64"
-export GOOS="linux"
-export CGO_ENABLED="0"
 go env
 go run release.go ${BRANCHNAME} ${ELS_NVER}
