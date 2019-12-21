@@ -1,7 +1,7 @@
 #!/bin/bash
 
 git remote set-url origin https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
-
+git branch
 BRANCHNAME=${GITHUB_REF##*/}
 echo ${GITHUB_REF}
 echo ${BRANCHNAME}
