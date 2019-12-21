@@ -49,13 +49,13 @@ jobs:
 
   buildserver:
     runs-on: ubuntu-latest
-    container: aizugeekdojo/cgo-arm:latest
+    #container: aizugeekdojo/cgo-arm:latest
     steps:
     - name: test
       run: echo hoge
       id: hello
     - name: test
-      run: echo ${{steps.hello.outputs}}
+      run: echo ${{steps.hello}}
     - name: test
       run: false
     - name: Checkout
