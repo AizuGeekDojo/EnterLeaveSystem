@@ -13,9 +13,8 @@ import (
 )
 
 const (
-	// repoLocation = "wancom/EnterLeaveSystem"
 	githubAPIURL = "https://api.github.com/repos/"
-	githubAPIKEY = "GITHUB_API_KEY"
+	githubAPIKEY = "GITHUB_TOKEN"
 )
 
 // CreateReleaseReq is CreateReleaseReq's struct
