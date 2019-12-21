@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	repoLocation = "wancom/EnterLeaveSystem"
+	// repoLocation = "wancom/EnterLeaveSystem"
 	githubAPIURL = "https://api.github.com/repos/"
 	githubAPIKEY = "GITHUB_API_KEY"
 )
@@ -31,8 +31,9 @@ func main() {
 		panic("args must be need")
 	}
 	var (
-		branch = os.Args[1]
-		tag    = os.Args[2]
+		repoLocation = os.Args[1]
+		branch       = os.Args[2]
+		tag          = os.Args[3]
 	)
 
 	// CreateRelease Request Data

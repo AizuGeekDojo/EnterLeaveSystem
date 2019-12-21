@@ -35,4 +35,4 @@ git tag ${ELS_NVER}
 git push --tags
 # Release binary
 go env
-go run release.go ${BRANCHNAME} ${ELS_NVER}
+go run release.go ${GITHUB_REPOSITORY} ${BRANCHNAME} ${ELS_NVER}
