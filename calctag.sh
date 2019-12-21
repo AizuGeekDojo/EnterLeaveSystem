@@ -1,9 +1,7 @@
-GITHUB_REPOSITORY
-GITHUB_REF
 #!/bin/bash
 
 git remote set-url origin https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
-BRANCHNAME = ${GITHUB_REF##*/}
+BRANCHNAME=${GITHUB_REF##*/}
 
 
 if [ "${BRANCHNAME}" = "master" ]; then
@@ -27,4 +25,5 @@ else
   ELS_VER=`git describe --tags  --abbrev=0`
   ELS_NVER="${ELS_VER%.*}.`expr ${ELS_VER##*.} + 1`-${BRANCHNAME}"
 fi
+echo "${ELS_VER} -> ${ELS_NVER}"
 printf ${ELS_NVER} > tagver
