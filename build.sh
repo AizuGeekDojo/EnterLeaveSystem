@@ -15,7 +15,9 @@ if [ "${CIRCLE_BRANCH}" = "master" ]; then
 else
 # If branch is not master(pull req), use same version
   ELS_VER=`git describe --tags  --abbrev=0`
+  echo ${ELS_VER}
   if [[ ${ELS_VER} == *-* ]]; then
+  echo test
   # If the version is already used, delete that.
     git tag -d ${ELS_VER}
     git push origin :${ELS_VER}
