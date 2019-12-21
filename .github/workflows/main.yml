@@ -17,7 +17,7 @@ jobs:
     - name: Restore cache
       uses: actions/cache@v1
       with:
-        path: ~/.npm
+        path: ./front/.npm
         key: npm-${{ hashFiles('**/package-lock.json') }}
         restore-keys: npm-
     
