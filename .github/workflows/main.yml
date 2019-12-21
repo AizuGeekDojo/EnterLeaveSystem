@@ -53,6 +53,12 @@ jobs:
       uses: actions/checkout@v1
     - name: Make server build directory
       run: mkdir sbuild
+    - name: Restore cache
+      uses: actions/cache@v1
+      with:
+        path: $GOPATH/pkg/mod
+        key: gomod-${{ hashFiles('go.sum') }}
+        restore-keys: gomod-
     - name: Build server
       run: GO111MODULE=on go build -o sbuild/elsystem server/main.go
     - name: Persist front builds
