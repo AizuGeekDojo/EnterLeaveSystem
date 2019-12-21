@@ -29,4 +29,4 @@ echo "${ELS_VER} -> ${ELS_NVER}"
 git tag ${ELS_NVER}
 git push --tags
 # Release binary
-go run release.go ${GITHUB_REPOSITORY} ${BRANCHNAME} ${ELS_NVER}
+GO111MODULE=off go run release.go ${GITHUB_REPOSITORY} ${BRANCHNAME} ${ELS_NVER}
