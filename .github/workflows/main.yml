@@ -54,7 +54,7 @@ jobs:
     - name: Make server build directory
       run: mkdir sbuild
     - name: Build server
-      run: GO111MODULE=on go build -o sbuild/elsystem main.go
+      run: GO111MODULE=on go build -o sbuild/elsystem server/main.go
     - name: Persist front builds
       uses: actions/upload-artifact@v1
       with:
