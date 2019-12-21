@@ -1,10 +1,8 @@
 #!/bin/bash
 
 git remote set-url origin https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
-git branch
 BRANCHNAME=${GITHUB_REF##*/}
-echo ${GITHUB_REF}
-echo ${BRANCHNAME}
+
 if [ "${BRANCHNAME}" = "master" ]; then
 # If branch is master, version up normally.
   ELS_VER=`git describe --tags  --abbrev=0`
@@ -27,7 +25,6 @@ else
   ELS_NVER="${ELS_VER%.*}.`expr ${ELS_VER##*.} + 1`-${BRANCHNAME}"
 fi
 echo "${ELS_VER} -> ${ELS_NVER}"
-printf ${ELS_NVER} > tagver
 # Set version tag
 git tag ${ELS_NVER}
 git push --tags
