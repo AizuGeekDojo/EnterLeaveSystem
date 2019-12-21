@@ -115,6 +115,7 @@ jobs:
         name: Release ${{ steps.tagname.outputs.data }}
         body: Release ${{ steps.tagname.outputs.data }}
         prerelease: ${{ !endsWith( github.ref, '/master' ) }}
+        gzip: false
         files: >
           ./build/agd.tar.gz
           ./build/gl.tar.gz
