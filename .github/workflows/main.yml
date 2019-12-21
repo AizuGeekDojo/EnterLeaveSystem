@@ -102,6 +102,6 @@ jobs:
     - name: Archive binary for AGD
       run: cd build/gl && tar cvfz ../../gl.tar.gz EnterLeaveSystem/
     - name: Calculate version for tag
-      run: ./calctag.sh
+      run: ./build.sh
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
