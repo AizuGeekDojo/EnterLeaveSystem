@@ -90,8 +90,8 @@ jobs:
         mkdir -p build/gl/EnterLeaveSystem
     - name: Copy front build files
       run: |
-        cp fbuild/agd/dist build/agd/EnterLeaveSystem/ 
-        cp fbuild/gl/dist build/gl/EnterLeaveSystem/
+        cp -r fbuild/agd/dist build/agd/EnterLeaveSystem/ 
+        cp -r fbuild/gl/dist build/gl/EnterLeaveSystem/
     - name: Copy server build file
       run: |
         cp sbuild/elsystem build/agd/EnterLeaveSystem/
