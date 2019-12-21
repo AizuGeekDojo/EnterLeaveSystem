@@ -53,7 +53,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	print(string(relinforaw))
+
 	err = json.Unmarshal(relinforaw, &relinfos)
 	if err != nil {
 		panic(err)
