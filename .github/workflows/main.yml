@@ -104,6 +104,8 @@ jobs:
       run: ./calctag.sh
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: test
+      run: false
     # - name: Get tag name from file
     #   uses: GenesisSam/get-simple-file-action@v1.0.4
     #   id: tagname
