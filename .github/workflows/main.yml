@@ -108,33 +108,45 @@ jobs:
       with:
         file-name: tagver
     - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      uses: meeDamian/github-release@1.0
       with:
-        tag_name: ${{ steps.tagname.outputs.data }}
-        release_name: Release ${{ steps.tagname.outputs.data }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tag: ${{ steps.tagname.outputs.data }}
+        name: Release ${{ steps.tagname.outputs.data }}
         body: Release ${{ steps.tagname.outputs.data }}
-        draft: false
         prerelease: ${{ !endsWith( github.ref, '/master' ) }}
-    - name: Upload AGD Release
-      id: upload-release-agd 
-      uses: actions/upload-release-asset@v1.0.1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-        asset_path: ./build/agd.tar.gz
-        asset_name: agd.tar.gz
-        asset_content_type: application/gzip
-    - name: Upload GL Release
-      id: upload-release-gl 
-      uses: actions/upload-release-asset@v1.0.1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-        asset_path: ./build/gl.tar.gz
-        asset_name: gl.tar.gz
-        asset_content_type: application/gzip
+        files: >
+          ./build/agd.tar.gz
+          ./build/gl.tar.gz
+        allow_override: true
+    # - name: Create Release
+    #   id: create_release
+    #   uses: actions/create-release@v1
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+    #   with:
+    #     tag_name: ${{ steps.tagname.outputs.data }}
+    #     release_name: Release ${{ steps.tagname.outputs.data }}
+    #     body: Release ${{ steps.tagname.outputs.data }}
+    #     draft: false
+    #     prerelease: ${{ !endsWith( github.ref, '/master' ) }}
+    # - name: Upload AGD Release
+    #   id: upload-release-agd 
+    #   uses: actions/upload-release-asset@v1.0.1
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+    #     asset_path: ./build/agd.tar.gz
+    #     asset_name: agd.tar.gz
+    #     asset_content_type: application/gzip
+    # - name: Upload GL Release
+    #   id: upload-release-gl 
+    #   uses: actions/upload-release-asset@v1.0.1
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+    #     asset_path: ./build/gl.tar.gz
+    #     asset_name: gl.tar.gz
+    #     asset_content_type: application/gzip
