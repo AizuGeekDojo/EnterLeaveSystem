@@ -113,16 +113,20 @@ jobs:
       run: cd build/agd && tar cvfz ../agd.tar.gz EnterLeaveSystem/
     - name: Archive binary for AGD
       run: cd build/gl && tar cvfz ../gl.tar.gz EnterLeaveSystem/
-
+    - name: Calculate version for tag
+      run: ./calctag.sh
+    - uses: GenesisSam/get-simple-file-action@v1.0.4
+      with:
+        file-name: tagver
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        body: Release ${{ github.ref }}
+        tag_name: ${{ steps.openFile.outputs.data }}
+        release_name: Release ${{ steps.openFile.outputs.data }}
+        body: Release ${{ steps.openFile.outputs.data }}
         draft: false
         prerelease: false
     - name: Upload AGD Release
