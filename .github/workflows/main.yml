@@ -42,7 +42,7 @@ jobs:
     - name: Persist front builds
       uses: actions/upload-artifact@v1
       with:
-        name: front
+        name: fbuild
         path: ./fbuild
 
   buildserver:
@@ -58,7 +58,7 @@ jobs:
     - name: Persist front builds
       uses: actions/upload-artifact@v1
       with:
-        name: server
+        name: sbuild
         path: ./sbuild
 
 
@@ -73,11 +73,11 @@ jobs:
     - name: Restore front build
       uses: actions/download-artifact@v1
       with:
-        name: front
+        name: fbuild
     - name: Restore server build
       uses: actions/download-artifact@v1
       with:
-        name: server
+        name: sbuild
     - name: Make build directory
       run: |
         mkdir -p build/agd/EnterLeaveSystem
