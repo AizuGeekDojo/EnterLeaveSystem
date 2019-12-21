@@ -102,6 +102,8 @@ jobs:
   #     run: cd build/gl && tar cvfz ../../gl.tar.gz EnterLeaveSystem/
     - name: Calculate version for tag
       run: ./calctag.sh
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     # - name: Get tag name from file
     #   uses: GenesisSam/get-simple-file-action@v1.0.4
     #   id: tagname
