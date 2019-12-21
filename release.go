@@ -53,7 +53,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	print(string(relinforaw))
+
 	err = json.Unmarshal(relinforaw, &relinfos)
 	if err != nil {
 		panic(err)
@@ -157,7 +157,6 @@ func httpDelete(url string) ([]byte, error) {
 
 func httpGet(url string) ([]byte, error) {
 	token := os.Getenv(githubAPIKEY)
-	print(string(token))
 
 	req, err := http.NewRequest(
 		"GET",
