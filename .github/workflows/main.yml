@@ -121,7 +121,7 @@ jobs:
         release_name: Release ${{ steps.tagname.outputs.data }}
         body: Release ${{ steps.tagname.outputs.data }}
         draft: false
-        prerelease: ! ${{ endsWith( github.ref, '/master' ) }}
+        prerelease: ${{ !endsWith( github.ref, '/master' ) }}
     - name: Upload AGD Release
       id: upload-release-agd 
       uses: actions/upload-release-asset@v1.0.1
