@@ -1,4 +1,3 @@
-
 name: CI
 
 on: [push]
@@ -45,6 +44,7 @@ jobs:
   buildserver:
     runs-on: ubuntu-latest
     container: aizugeekdojo/cgo-arm:latest
+
     steps:
     - name: Checkout
       uses: actions/checkout@v1
@@ -69,6 +69,7 @@ jobs:
     - buildfront
     - buildserver
     runs-on: ubuntu-latest
+
     steps:
     - name: Checkout
       uses: actions/checkout@v1
