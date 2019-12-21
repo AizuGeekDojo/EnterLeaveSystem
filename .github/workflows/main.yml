@@ -106,7 +106,9 @@ jobs:
       run: cd build/gl && tar cvfz ../gl.tar.gz EnterLeaveSystem/
     - name: Calculate version for tag
       run: ./calctag.sh
-    - uses: GenesisSam/get-simple-file-action@v1.0.4
+    - name: Get tag name from file
+      uses: GenesisSam/get-simple-file-action@v1.0.4
+      id: tagname
       with:
         file-name: tagver
     - name: Create Release
@@ -115,9 +117,9 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
-        tag_name: ${{ steps.openFile.outputs.data }}
-        release_name: Release ${{ steps.openFile.outputs.data }}
-        body: Release ${{ steps.openFile.outputs.data }}
+        tag_name: ${{ steps.tagname.outputs.data }}
+        release_name: Release ${{ steps.tagname.outputs.data }}
+        body: Release ${{ steps.tagname.outputs.data }}
         draft: false
         prerelease: false
     - name: Upload AGD Release
