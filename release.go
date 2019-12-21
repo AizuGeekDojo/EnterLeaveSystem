@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	repoLocation = "AizuGeekDojo/EnterLeaveSystem"
+	repoLocation = "wancom/EnterLeaveSystem"
 	githubAPIURL = "https://api.github.com/repos/"
 	githubAPIKEY = "GITHUB_API_KEY"
 )
