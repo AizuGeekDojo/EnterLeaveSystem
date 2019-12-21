@@ -3,7 +3,8 @@
 git remote set-url origin https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
 
 BRANCHNAME=${GITHUB_REF##*/}
-
+echo ${GITHUB_REF}
+echo ${BRANCHNAME}
 if [ "${BRANCHNAME}" = "master" ]; then
 # If branch is master, version up normally.
   ELS_VER=`git describe --tags  --abbrev=0`
