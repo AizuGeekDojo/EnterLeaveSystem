@@ -35,4 +35,4 @@ export GOARCH="amd64"
 export GOOS="linux"
 export CGO_ENABLED="0"
 go env
-go run release.go ${CIRCLE_BRANCH} ${ELS_NVER}
+go run release.go ${BRANCHNAME} ${ELS_NVER}
