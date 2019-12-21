@@ -20,12 +20,10 @@ jobs:
         path: ./front/.npm
         key: npm-${{ hashFiles('**/package-lock.json') }}
         restore-keys: npm-
-    
     - name: Install dependency
       run: |
         cd front
         npm install
-
     - name: Build front for AGD version
       run: |
         cd front
@@ -38,7 +36,6 @@ jobs:
         cp .env.gl .env.production
         npm run build
         mv dist ../fbuild/gl/
-
     - name: Persist front builds
       uses: actions/upload-artifact@v1
       with:
@@ -66,7 +63,6 @@ jobs:
       with:
         name: sbuild
         path: ./sbuild
-
 
   release:
     needs:
@@ -132,7 +128,6 @@ jobs:
         asset_path: ./build/agd.tar.gz
         asset_name: agd.tar.gz
         asset_content_type: application/gzip
-
     - name: Upload GL Release
       id: upload-release-gl 
       uses: actions/upload-release-asset@v1.0.1
