@@ -1,0 +1,112 @@
+
+name: CI
+
+on: [push]
+
+jobs:
+  buildfront:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Make front build directory
+      run: |
+        mkdir -p fbuild/agd
+        mkdir -p fbuild/gl
+    - name: Restore cache
+      uses: actions/cache@v1
+      with:
+        path: ~/.npm
+        key: npm-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: npm-
+    
+    - name: Install dependency
+      run: |
+        cd front
+        npm install
+
+    - name: Build front for AGD version
+      run: |
+        cd front
+        cp .env.agd .env.production
+        npm run build
+        mv dist ../fbuild/agd/
+    - name: Build front for GL version
+      run: |
+        cd front
+        cp .env.gl .env.production
+        npm run build
+        mv dist ../fbuild/gl/
+
+    - name: Persist front builds
+      uses: actions/upload-artifact@v1
+      with:
+        name: front
+        path: ./fbuild
+
+  buildserver:
+    runs-on: ubuntu-latest
+    container: aizugeekdojo/cgo-arm:latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Make server build directory
+      run: mkdir sbuild
+    - name: Build server
+      run: GO111MODULE=on go build -o sbuild/elsystem main.go
+    - name: Persist front builds
+      uses: actions/upload-artifact@v1
+      with:
+        name: server
+        path: ./sbuild
+
+
+  release:
+    needs:
+    - buildfront
+    - buildserver
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Restore front build
+      uses: actions/download-artifact@v1
+      with:
+        name: front
+    - name: Restore server build
+      uses: actions/download-artifact@v1
+      with:
+        name: server
+    - name: Make build directory
+      run: |
+        mkdir -p build/agd/EnterLeaveSystem
+        mkdir -p build/gl/EnterLeaveSystem
+    - name: Copy front build files
+      run: |
+        cp fbuild/agd/dist build/agd/EnterLeaveSystem/ 
+        cp fbuild/gl/dist build/gl/EnterLeaveSystem/
+    - name: Copy server build file
+      run: |
+        cp sbuild/elsystem build/agd/EnterLeaveSystem/
+        cp sbuild/elsystem build/gl/EnterLeaveSystem/
+    - name: Copy other install files
+      run: |
+        cp bin/* build/agd/EnterLeaveSystem/
+        cp bin/* build/gl/EnterLeaveSystem/
+    - name: Archive binary for AGD
+      run: cd build/agd && tar cvfz ../agd.tar.gz EnterLeaveSystem/
+    - name: Archive binary for AGD
+      run: cd build/gl && tar cvfz ../gl.tar.gz EnterLeaveSystem/
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
