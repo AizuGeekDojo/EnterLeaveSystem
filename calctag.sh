@@ -4,7 +4,7 @@ git remote set-url origin https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${G
 echo https://:xxx@github.com/${GITHUB_REPOSITORY}.git
 echo ${GITHUB_ACTOR}
 BRANCHNAME=${GITHUB_REF##*/}
-GITHUB_API_KEY=${GITHUB_TOKEN}
+export GITHUB_API_KEY=${GITHUB_TOKEN}
 
 if [ "${BRANCHNAME}" = "master" ]; then
 # If branch is master, version up normally.
