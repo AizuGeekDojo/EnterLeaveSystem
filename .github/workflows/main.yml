@@ -97,29 +97,29 @@ jobs:
         cp bin/* build/agd/EnterLeaveSystem/
         cp bin/* build/gl/EnterLeaveSystem/
     - name: Archive binary for AGD
-      run: cd build/agd && tar cvfz ../agd.tar.gz EnterLeaveSystem/
+      run: cd build/agd && tar cvfz ../../agd.tar.gz EnterLeaveSystem/
     - name: Archive binary for AGD
-      run: cd build/gl && tar cvfz ../gl.tar.gz EnterLeaveSystem/
+      run: cd build/gl && tar cvfz ../../gl.tar.gz EnterLeaveSystem/
     - name: Calculate version for tag
       run: ./calctag.sh
-    - name: Get tag name from file
-      uses: GenesisSam/get-simple-file-action@v1.0.4
-      id: tagname
-      with:
-        file-name: tagver
-    - name: Create Release
-      uses: meeDamian/github-release@1.0
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        tag: ${{ steps.tagname.outputs.data }}
-        name: Release ${{ steps.tagname.outputs.data }}
-        body: Release ${{ steps.tagname.outputs.data }}
-        prerelease: ${{ !endsWith( github.ref, '/master' ) }}
-        gzip: false
-        files: >
-          ./build/agd.tar.gz
-          ./build/gl.tar.gz
-        allow_override: true
+    # - name: Get tag name from file
+    #   uses: GenesisSam/get-simple-file-action@v1.0.4
+    #   id: tagname
+    #   with:
+    #     file-name: tagver
+    # - name: Create Release
+    #   uses: meeDamian/github-release@1.0
+    #   with:
+    #     token: ${{ secrets.GITHUB_TOKEN }}
+    #     tag: ${{ steps.tagname.outputs.data }}
+    #     name: Release ${{ steps.tagname.outputs.data }}
+    #     body: Release ${{ steps.tagname.outputs.data }}
+    #     prerelease: ${{ !endsWith( github.ref, '/master' ) }}
+    #     gzip: false
+    #     files: >
+    #       ./build/agd.tar.gz
+    #       ./build/gl.tar.gz
+    #     allow_override: true
     # - name: Create Release
     #   id: create_release
     #   uses: actions/create-release@v1

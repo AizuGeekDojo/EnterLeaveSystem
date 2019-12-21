@@ -27,3 +27,12 @@ else
 fi
 echo "${ELS_VER} -> ${ELS_NVER}"
 printf ${ELS_NVER} > tagver
+# Set version tag
+git tag ${ELS_NVER}
+git push --tags
+# Release binary
+export GOARCH="amd64"
+export GOOS="linux"
+export CGO_ENABLED="0"
+go env
+go run release.go ${CIRCLE_BRANCH} ${ELS_NVER}
