@@ -4,7 +4,7 @@ echo 1
 git remote set-url origin https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
 echo 2
 echo https://:xxx@github.com/${GITHUB_REPOSITORY}.git
-echo 3
+echo ${GITHUB_ACTOR}
 BRANCHNAME=${GITHUB_REF##*/}
 echo 4
 
