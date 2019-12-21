@@ -157,6 +157,8 @@ func httpDelete(url string) ([]byte, error) {
 
 func httpGet(url string) ([]byte, error) {
 	token := os.Getenv(githubAPIKEY)
+	print(string(token))
+
 	req, err := http.NewRequest(
 		"GET",
 		url,
