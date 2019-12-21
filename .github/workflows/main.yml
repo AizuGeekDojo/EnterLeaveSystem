@@ -8,6 +8,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: test
+      run: false
     - name: Checkout
       uses: actions/checkout@v1
     - name: Make front build directory
@@ -49,6 +51,8 @@ jobs:
     runs-on: ubuntu-latest
     container: aizugeekdojo/cgo-arm:latest
     steps:
+    - name: test
+      run: echo $GOPATH/pkg/mod && false
     - name: Checkout
       uses: actions/checkout@v1
     - name: Make server build directory
