@@ -60,12 +60,6 @@ jobs:
       run: ${CC} bin/nfc_reader.c -o sbuild/nfc_reader -I /usr/include/libusb-1.0/ -lusb-1.0
     - name: Build server
       run: GO111MODULE=on go build -o sbuild/elsystem server/main.go
-    - name: test
-      run: ls -la sbuild
-    - name: test
-      run: chmod +x sbuild/*
-    - name: test
-      run: ls -la sbuild
     - name: Persist front builds
       uses: actions/upload-artifact@v1
       with:
@@ -99,10 +93,9 @@ jobs:
         cp -r fbuild/gl/dist build/gl/EnterLeaveSystem/
     - name: Copy server build file
       run: |
-        cp sbuild/elsystem build/agd/EnterLeaveSystem/
-        cp sbuild/nfc_reader build/agd/EnterLeaveSystem/
-        cp sbuild/elsystem build/gl/EnterLeaveSystem/
-        cp sbuild/nfc_reader build/gl/EnterLeaveSystem/
+        chmod +x sbuild/*
+        cp sbuild/* build/agd/EnterLeaveSystem/
+        cp sbuild/* build/gl/EnterLeaveSystem/
     - name: Copy other install files
       run: |
         cp bin/* build/agd/EnterLeaveSystem/
