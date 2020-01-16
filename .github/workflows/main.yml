@@ -60,6 +60,12 @@ jobs:
       run: ${CC} bin/nfc_reader.c -o sbuild/nfc_reader -I /usr/include/libusb-1.0/ -lusb-1.0
     - name: Build server
       run: GO111MODULE=on go build -o sbuild/elsystem server/main.go
+    - name: test
+      run: ls -la sbuild
+    - name: test
+      run: chmod +x sbuild/*
+    - name: test
+      run: ls -la sbuild
     - name: Persist front builds
       uses: actions/upload-artifact@v1
       with:
