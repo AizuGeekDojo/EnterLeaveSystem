@@ -13,9 +13,8 @@ import (
 )
 
 const (
-	repoLocation = "AizuGeekDojo/EnterLeaveSystem"
 	githubAPIURL = "https://api.github.com/repos/"
-	githubAPIKEY = "GITHUB_API_KEY"
+	githubAPIKEY = "GITHUB_TOKEN"
 )
 
 // CreateReleaseReq is CreateReleaseReq's struct
@@ -31,8 +30,9 @@ func main() {
 		panic("args must be need")
 	}
 	var (
-		branch = os.Args[1]
-		tag    = os.Args[2]
+		repoLocation = os.Args[1]
+		branch       = os.Args[2]
+		tag          = os.Args[3]
 	)
 
 	// CreateRelease Request Data
@@ -157,6 +157,7 @@ func httpDelete(url string) ([]byte, error) {
 
 func httpGet(url string) ([]byte, error) {
 	token := os.Getenv(githubAPIKEY)
+
 	req, err := http.NewRequest(
 		"GET",
 		url,

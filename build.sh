@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Add github.com into known_hosts
-ssh -T git@github.com -o StrictHostKeyChecking=no
+git remote set-url origin https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+BRANCHNAME=${GITHUB_REF##*/}
 
-if [ "${CIRCLE_BRANCH}" = "master" ]; then
+if [ "${BRANCHNAME}" = "master" ]; then
 # If branch is master, version up normally.
   ELS_VER=`git describe --tags  --abbrev=0`
   while [[ ${ELS_VER} == *-* ]]; do
@@ -22,15 +22,11 @@ else
   fi
   # Set version
   ELS_VER=`git describe --tags  --abbrev=0`
-  ELS_NVER="${ELS_VER%.*}.`expr ${ELS_VER##*.} + 1`-${CIRCLE_BRANCH}"
+  ELS_NVER="${ELS_VER%.*}.`expr ${ELS_VER##*.} + 1`-${BRANCHNAME}"
 fi
 echo "${ELS_VER} -> ${ELS_NVER}"
 # Set version tag
 git tag ${ELS_NVER}
 git push --tags
 # Release binary
-export GOARCH="amd64"
-export GOOS="linux"
-export CGO_ENABLED="0"
-go env
-go run release.go ${CIRCLE_BRANCH} ${ELS_NVER}
+GO111MODULE=off go run release.go ${GITHUB_REPOSITORY} ${BRANCHNAME} ${ELS_NVER}

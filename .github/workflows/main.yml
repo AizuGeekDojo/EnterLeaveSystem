@@ -1,0 +1,107 @@
+name: CI
+
+on: push
+
+jobs:
+  buildfront:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Make front build directory
+      run: |
+        mkdir -p fbuild/agd
+        mkdir -p fbuild/gl
+    - name: Restore cache
+      uses: actions/cache@v1
+      with:
+        path: ./front/.npm
+        key: npm-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: npm-
+    - name: Install dependency
+      run: |
+        cd front
+        npm install
+    - name: Build front for AGD version
+      run: |
+        cd front
+        cp .env.agd .env.production
+        npm run build
+        mv dist ../fbuild/agd/
+    - name: Build front for GL version
+      run: |
+        cd front
+        cp .env.gl .env.production
+        npm run build
+        mv dist ../fbuild/gl/
+    - name: Persist front builds
+      uses: actions/upload-artifact@v1
+      with:
+        name: fbuild
+        path: ./fbuild
+
+  buildserver:
+    runs-on: ubuntu-latest
+    container: aizugeekdojo/cgo-arm:latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Make server build directory
+      run: mkdir sbuild
+    - name: Restore cache
+      uses: actions/cache@v1
+      with:
+        path: /go/pkg/mod
+        key: gomod-${{ hashFiles('go.sum') }}
+        restore-keys: gomod-
+    - name: Build server
+      run: GO111MODULE=on go build -o sbuild/elsystem server/main.go
+    - name: Persist front builds
+      uses: actions/upload-artifact@v1
+      with:
+        name: sbuild
+        path: ./sbuild
+
+  release:
+    needs:
+    - buildfront
+    - buildserver
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Restore front build
+      uses: actions/download-artifact@v1
+      with:
+        name: fbuild
+    - name: Restore server build
+      uses: actions/download-artifact@v1
+      with:
+        name: sbuild
+    - name: Make build directory
+      run: |
+        mkdir -p build/agd/EnterLeaveSystem
+        mkdir -p build/gl/EnterLeaveSystem
+    - name: Copy front build files
+      run: |
+        cp -r fbuild/agd/dist build/agd/EnterLeaveSystem/ 
+        cp -r fbuild/gl/dist build/gl/EnterLeaveSystem/
+    - name: Copy server build file
+      run: |
+        cp sbuild/elsystem build/agd/EnterLeaveSystem/
+        cp sbuild/elsystem build/gl/EnterLeaveSystem/
+    - name: Copy other install files
+      run: |
+        cp bin/* build/agd/EnterLeaveSystem/
+        cp bin/* build/gl/EnterLeaveSystem/
+    - name: Archive binary for AGD
+      run: cd build/agd && tar cvfz ../../agd.tar.gz EnterLeaveSystem/
+    - name: Archive binary for AGD
+      run: cd build/gl && tar cvfz ../../gl.tar.gz EnterLeaveSystem/
+    - name: Calculate version for tag
+      run: ./build.sh
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
