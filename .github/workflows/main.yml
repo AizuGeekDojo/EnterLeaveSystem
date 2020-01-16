@@ -16,7 +16,7 @@ jobs:
     - name: Restore cache
       uses: actions/cache@v1
       with:
-        path: ./front/.npm
+        path: ./front/node_modules
         key: npm-${{ hashFiles('**/package-lock.json') }}
         restore-keys: npm-
     - name: Install dependency
