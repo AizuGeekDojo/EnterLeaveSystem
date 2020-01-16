@@ -29,7 +29,7 @@ var clients = []*websocket.Conn{}
 func ReadCard(d *sql.DB) {
 	for {
 		var resdat IDCardInfo
-		dat, err := exec.Command("nfc_reader").Output()
+		dat, err := exec.Command("./nfc_reader").Output()
 		if err != nil {
 			log.Printf("socket: nfc reader error : %v\n", err)
 
