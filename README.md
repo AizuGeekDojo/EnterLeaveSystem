@@ -1,6 +1,6 @@
 # EnterLeaveSystem
 
-## How to install (obsolete)
+## How to install
 ``` shell
 git clone https://github.com/AizuGeekDojo/EnterLeaveSystem.git
 cd EnterLeaveSystem
