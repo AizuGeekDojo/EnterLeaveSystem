@@ -84,7 +84,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	print(relinforaw)
+	fmt.Printf("%v\n%v\n", string(relinforaw), relinfo)
 	_, err = httpPost(strings.Replace(relinfo["upload_url"].(string), "{?name,label}", "?name=agd.tar.gz", 1), "application/octet-stream", agdfile)
 	if err != nil {
 		panic(err)
