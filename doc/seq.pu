@@ -95,7 +95,7 @@ DB -> Server : Return OK
 deactivate DB
 Server -> Front : Return OK
 deactivate Server
-...A few seconds latter...
+...A few seconds later...
 Front -> User : Show top page
 Front -> Server : Watch card reader
 activate Server
@@ -116,7 +116,7 @@ deactivate DB
 Server -> Front : Return OK
 deactivate Server
 Front -> User : Show goodbye page
-...A few seconds latter...
+...A few seconds later...
 Front -> User : Show top page
 Front -> Server : Watch card reader
 activate Server
