@@ -111,11 +111,16 @@ func postEnterLeaveLog(ellog *WebHook) error {
 		return err
 	}
 
-	_, err = ioutil.ReadAll(resp.Body)
+	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return err
 	}
 	defer resp.Body.Close()
+
+	if string(body) != "ok" {
+		log.Printf("postEnterLeaveLog error : %v", string(body))
+		return errors.New("Unexpected responce, error occured!")
+	}
 
 	return nil
 }
