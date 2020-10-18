@@ -5,7 +5,6 @@
         <input v-on:keyup.enter="regist" v-model="sid" placeholder="s12xxxxx">
         <h4 style="color:#aaaaaa;"><br><span style="color:#88aace;">Enter</span> key to continue -></h4>
       </div>
-
     </div>
 </template>
 
@@ -82,4 +81,3 @@ div .studentNUM {
   align-items: center;
 }
 </style>
-

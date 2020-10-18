@@ -15,7 +15,7 @@ export default {
   name: 'App',
   data: function () {
   return {
-    clocktext: '----/--/--  --:--:--'
+    clocktext: '0000/00/00  00:00:00'
   }
   },
   mounted: function () {
