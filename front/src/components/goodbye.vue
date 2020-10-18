@@ -1,6 +1,6 @@
 <template>
     <div id='goodbye'>
-        <h1>Good bye</h1>
+        <h1>bye!</h1>
     </div>
 </template>
 
@@ -18,7 +18,9 @@ export default {
 
 <style scoped>
 h1{
-  font-size: 72px;
+  font-size: 5rem;
+  font-weight: normal;
+  letter-spacing: 0.05rem;
 }
 div #goodbye {
   position: absolute;

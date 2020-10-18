@@ -13,3 +13,5 @@ new Vue({
   router,
   render: h => h(App)
 }).$mount('#app')
+
+//<h2 id='clockPos'>{{ clocktext }}</h2>
