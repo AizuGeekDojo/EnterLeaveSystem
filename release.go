@@ -75,6 +75,8 @@ func main() {
 
 	var relinfo = make(map[string]interface{})
 
+	fmt.Print(relinforaw)
+
 	err = json.Unmarshal(relinforaw, &relinfo)
 	if err != nil {
 		panic(err)
