@@ -43,7 +43,7 @@ func main() {
 		Prerelease:      branch != "master",
 	}
 
-	fmt.Print(repoLocation, branch, tag)
+	fmt.Println(repoLocation, branch, tag)
 
 	params, err := json.Marshal(crreqdat)
 	if err != nil {
@@ -56,7 +56,7 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Print(relinforaw)
+	fmt.Println(string(relinforaw))
 
 	err = json.Unmarshal(relinforaw, &relinfos)
 	if err != nil {
@@ -79,14 +79,14 @@ func main() {
 
 	var relinfo = make(map[string]interface{})
 
-	fmt.Print(relinforaw)
+	fmt.Println(string(relinforaw))
 
 	err = json.Unmarshal(relinforaw, &relinfo)
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Print(relinfo)
+	fmt.Println(relinfo)
 
 	agdfile, err := os.Open("agd.tar.gz")
 	if err != nil {
