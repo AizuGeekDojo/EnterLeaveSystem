@@ -1,7 +1,7 @@
 #!/bin/bash
 
 git remote set-url origin https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
-BRANCHNAME=${GITHUB_REF##*/}
+BRANCHNAME=${GITHUB_REF#refs/heads/}
 
 if [ "${BRANCHNAME}" = "master" ]; then
 # If branch is master, version up normally.
