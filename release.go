@@ -75,12 +75,12 @@ func main() {
 
 	var relinfo = make(map[string]interface{})
 
-	fmt.Print(relinfo)
-
 	err = json.Unmarshal(relinforaw, &relinfo)
 	if err != nil {
 		panic(err)
 	}
+
+	fmt.Print(relinfo)
 
 	agdfile, err := os.Open("agd.tar.gz")
 	if err != nil {
