@@ -43,6 +43,8 @@ func main() {
 		Prerelease:      branch != "master",
 	}
 
+	fmt.Print(repoLocation, branch, tag)
+
 	params, err := json.Marshal(crreqdat)
 	if err != nil {
 		panic(err)
@@ -53,6 +55,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	fmt.Print(relinforaw)
 
 	err = json.Unmarshal(relinforaw, &relinfos)
 	if err != nil {
