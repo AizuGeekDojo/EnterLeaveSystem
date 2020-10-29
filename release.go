@@ -44,6 +44,7 @@ func main() {
 	}
 
 	fmt.Println(repoLocation, branch, tag)
+	fmt.Println(crreqdat)
 
 	params, err := json.Marshal(crreqdat)
 	if err != nil {
