@@ -73,6 +73,8 @@ func main() {
 		}
 	}
 
+	fmt.Println(string(params))
+
 	relinforaw, err = httpPost(githubAPIURL+repoLocation+"/releases", "application/json", bytes.NewBuffer(params))
 	if err != nil {
 		panic(err)
