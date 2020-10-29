@@ -16,7 +16,7 @@ jobs:
     - name: Restore cache
       uses: actions/cache@v1
       with:
-        path: ./front/.npm
+        path: ./front/node_modules
         key: npm-${{ hashFiles('**/package-lock.json') }}
         restore-keys: npm-
     - name: Install dependency
@@ -58,7 +58,7 @@ jobs:
         restore-keys: gomod-
     - name: Build server
       run: GO111MODULE=on go build -o sbuild/elsystem server/main.go
-    - name: Persist front builds
+    - name: Persist server builds
       uses: actions/upload-artifact@v1
       with:
         name: sbuild
@@ -99,7 +99,7 @@ jobs:
         cp bin/* build/gl/EnterLeaveSystem/
     - name: Archive binary for AGD
       run: cd build/agd && tar cvfz ../../agd.tar.gz EnterLeaveSystem/
-    - name: Archive binary for AGD
+    - name: Archive binary for GL
       run: cd build/gl && tar cvfz ../../gl.tar.gz EnterLeaveSystem/
     - name: Calculate version for tag
       run: ./build.sh
