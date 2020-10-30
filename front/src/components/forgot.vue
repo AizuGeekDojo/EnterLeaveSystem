@@ -3,7 +3,7 @@
       <div class="studentNUM">
         <h1>Input your student number</h1>
         <input v-on:keyup.enter="forgot" v-model="sid" placeholder="s12xxxxx">
-        <h4 style="color:#aaaaaa;"><br><span style="color:#88aace;">Enter</span>key to continue -></h4>
+        <h4 style="color:#aaaaaa;"><br><span style="color:#88aace;">Enter</span> key to continue -></h4>
       </div>
     </div>
 </template>
