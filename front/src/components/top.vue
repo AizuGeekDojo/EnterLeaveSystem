@@ -1,11 +1,10 @@
 <template>
   <div id='top' ref="message">
-    <h2>{{clocktext}}</h2>
     <div id="message">
-      <h1>Please hold the card over the reader<br/></h1>
-      <h2>Or <router-link to="/forgot">forgot your card</router-link></h2>
+      <h1>Put your card over the reader<br/></h1>
+      <router-link to="/forgot" id='forgetPos'>Forgot card?</router-link>
     </div>
-    <h4 style="position:fixed;bottom:0;">{{roomname}}</h4>
+    <h4 id="roomPos" style="position:fixed;bottom:0;">{{roomname}}</h4>
   </div>
 </template>
 
@@ -17,7 +16,6 @@ export default {
   data: function () {
     return {
       closeflg: false,
-      clocktext: '----/--/--  --:--:--',
       roomname: ''
     }
   },
@@ -30,38 +28,6 @@ export default {
   mounted: function () {
     this.roomname = util.roomName()
     this.connectCardReader()
-    const self = this
-    setInterval(() => {
-      const da = new Date()
-      const year = da.getFullYear()
-      const month = da.getMonth() + 1
-      const date = da.getDate()
-      const hour = da.getHours()
-      const minute = da.getMinutes()
-      const second = da.getSeconds()
-
-      self.clocktext = `${year}/`
-      if (month < 10) {
-        self.clocktext += '0'
-      }
-      self.clocktext += `${month}/`
-      if (date < 10) {
-        self.clocktext += '0'
-      }
-      self.clocktext += `${date}  `
-      if (hour < 10) {
-        self.clocktext += '0'
-      }
-      self.clocktext += `${hour}:`
-      if (minute < 10) {
-        self.clocktext += '0'
-      }
-      self.clocktext += `${minute}:`
-      if (second < 10) {
-        self.clocktext += '0'
-      }
-      self.clocktext += `${second}`
-    }, 1000)
   },
   methods: {
     connectCardReader: function () {
@@ -107,11 +73,16 @@ export default {
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped>
 h1{
-  font-size: 72px;
+  font-size: 4rem;
+  font-weight: normal;
+  letter-spacing: 0.05rem;
 }
-h2{
-  font-size: 50px;
+
+#forgetPos{
+  font-size: 45px;
+  color: #3282ce;
 }
+
 div #message {
   position: absolute;
   top: 0;
@@ -124,5 +95,13 @@ div #message {
 }
 div #top {
   text-align: center;
+}
+
+#roomPos {
+  padding: 24px 48px;
+  font-size: 1.5rem;
+  font-weight: normal;
+  letter-spacing: 0.05rem;
+  color: #8b8b8b;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
     <div id='welcome'>
-        <h1> Welcome To {{roomname}} {{ username }} </h1>
+        <h1> Welcome to {{roomname}} {{ username }}! </h1>
     </div>
 </template>
 
@@ -31,7 +31,7 @@ export default {
 
 <style scoped>
 h1{
-  font-size: 72px;
+  font-size: 4rem;
 }
 div #welcome {
   position: absolute;
