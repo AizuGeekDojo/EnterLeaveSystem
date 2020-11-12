@@ -24,9 +24,36 @@ func GetUserInfo(UID string, db *sql.DB) (string, bool, error) {
 	return name, (isenter == 1), nil
 }
 
-var UserNotExsistError = errors.New("User is not exsisted");
-func GetUserBorrowing(UID string, db *sql.DB) (string, string, error) {
-	
+
+type ProductDB struct {
+	id string
+	barcode string
+	borrower string
+}
+// GetUserBorrowing is return requester's borrowing products
+func GetUserBorrowing(UID string, db *sql.DB) ([]ProductDB, error) {
+	var products []ProductDB
+	rows, err := db.Query(`SELECT id,name,barcode FROM products WHERE borrowersid=?`, UID)
+	if err != nil {
+		return products, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var id string
+		var name string
+		var barcode string
+		if err := rows.Scan(&id, &name, &barcode); err != nil {
+			return products, err
+		}
+		products = append(products, ProductDB{
+			id:       id,
+			barcode:  name,
+			borrower: barcode,
+		})
+	}
+
+	return products, err
 }
 
 // GetUIDByCardID is return UID by felica's IDm or ID code
