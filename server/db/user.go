@@ -24,45 +24,6 @@ func GetUserInfo(UID string, db *sql.DB) (string, bool, error) {
 	return name, (isenter == 1), nil
 }
 
-
-type ProductDB struct {
-	Id       string
-	Name string
-	Barcode  string
-	Borrower string
-}
-// GetUserBorrowing is return requester's borrowing products
-func GetUserBorrowing(UID string, db *sql.DB) ([]ProductDB, error) {
-	var products []ProductDB
-	rows, err := db.Query(`SELECT id,name,barcode,borrowersid FROM products WHERE borrowersid=?`, UID)
-	if err != nil {
-		return products, err
-	}
-
-	for rows.Next() {
-		var id string
-		var name string
-		var barcode string
-		var borrowersid string
-		if err := rows.Scan(&id, &name, &barcode, &borrowersid); err != nil {
-			return products, err
-		}
-		products = append(products, ProductDB{
-			Id: id,
-			Name: name,
-			Barcode:  barcode,
-			Borrower: borrowersid,
-		})
-	}
-
-	defer rows.Close()
-	if err := rows.Err(); err != nil {
-		return products, err
-	}
-
-	return products, err
-}
-
 // GetUIDByCardID is return UID by felica's IDm or ID code
 // This is prepared for not student person
 // If UID is not found, return nil

@@ -26,6 +26,7 @@ func main() {
 	http.Handle("/socket/readCard", websocket.Handler(h.ReadCardHandler))
 	http.HandleFunc("/api/user", h.UserAPIHandler)
 	http.HandleFunc("/api/log", h.LogAPIHandler)
+	http.HandleFunc("/api/borrow", h.BorrowAPIHandler)
 
 	//Standby NFC card reader
 	go handler.ReadCard(d)
