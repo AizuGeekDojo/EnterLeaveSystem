@@ -40,3 +40,37 @@ func GetUserBorrowing(UID string, db *sql.DB) ([]ProductDB, error) {
 
 	return products, err
 }
+
+func CreateLendingEquipment(name string, barcode string, db *sql.DB) error {
+	_, err := db.Exec(`INSERT INTO products(name,barcode) values(name,barcode)`, name, barcode)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func UpdateLendingEquipmentByID(id string, name string, barcode string, db *sql.DB) error {
+	_, err := db.Exec(`UPDATE products SET name=?,barcode=? WHERE id=?`, name, barcode, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func UpdateLendingEquipmentByBarCode(name string, barcode string, db *sql.DB) error {
+	_, err := db.Exec(`UPDATE products SET name=? WHERE barcode=?`, name, barcode)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func Borrow(id string, sid string, db *sql.DB) error {
+	_, err := db.Exec(`UPDATE products SET borrowersid=? WHERE id=?`, sid, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// TODO: Borrowが使えるようにバーコードとIDでFindできる関数の追加
