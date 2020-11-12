@@ -37,7 +37,6 @@ func GetUserBorrowing(UID string, db *sql.DB) ([]ProductDB, error) {
 	if err != nil {
 		return products, err
 	}
-	defer rows.Close()
 
 	for rows.Next() {
 		var id string
@@ -51,6 +50,11 @@ func GetUserBorrowing(UID string, db *sql.DB) ([]ProductDB, error) {
 			barcode:  name,
 			borrower: barcode,
 		})
+	}
+
+	defer rows.Close()
+	if err := rows.Err(); err != nil {
+		return products, err
 	}
 
 	return products, err
