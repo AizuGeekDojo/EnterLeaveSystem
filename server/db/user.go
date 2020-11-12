@@ -24,6 +24,11 @@ func GetUserInfo(UID string, db *sql.DB) (string, bool, error) {
 	return name, (isenter == 1), nil
 }
 
+var UserNotExsistError = errors.New("User is not exsisted");
+func GetUserBorrowing(UID string, db *sql.DB) (string, string, error) {
+	
+}
+
 // GetUIDByCardID is return UID by felica's IDm or ID code
 // This is prepared for not student person
 // If UID is not found, return nil
