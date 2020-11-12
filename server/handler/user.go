@@ -36,17 +36,6 @@ type UserInfo struct {
 	IsEnter  bool   `json:"IsEnter"`
 }
 
-// UserBorrowingInfo is user data structure for response
-type UserBorrowingInfo struct {
-	Products []UserBorrowingProduct `json:"Products"`
-}
-
-type UserBorrowingProduct struct {
-	ID string `json:"ID"`
-	BarCode string `json:"BarCode"`
-	Name string `json:"Name"`
-}
-
 //UserAPIHandler handles http request for user management
 func (h *Handler) UserAPIHandler(w http.ResponseWriter, r *http.Request) {
 	//Cors Header
@@ -69,38 +58,6 @@ func (h *Handler) UserAPIHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Unexpected method")
 		log.Printf("%v %v: Unexpected method", r.Method, r.URL.Path)
 	}
-}
-
-func getUserBorrowingHandler(w http.ResponseWriter, r *http.Request, d *sql.DB) {
-	var userborrowingdat UserBorrowingInfo
-	r.ParseForm()
-	var uid = r.Form["sid"][0]
-
-	username, _, err := db.GetUserInfo(uid, d)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Printf("%v %v: db.GetUserInfo error: %v", r.Method, r.URL.Path, err)
-	} else if username == "" {
-		w.WriteHeader(http.StatusNoContent)
-	}
-
-	borrowingdb, err := db.GetUserBorrowing(uid, d)
-	for _, bdb := range borrowingdb {
-		userborrowingdat.Products = append(userborrowingdat.Products, UserBorrowingProduct{
-			ID:     bdb.Id,
-			BarCode: bdb.Barcode,
-			Name:    bdb.Name,
-		})
-	}
-
-	retbyte, err := json.Marshal(borrowingdb)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Printf("%v %v: json.Marshal error: %v", r.Method, r.URL.Path, err)
-		fmt.Fprintf(w, "{}")
-		return
-	}
-	w.Write(retbyte)
 }
 
 func getUserHandler(w http.ResponseWriter, r *http.Request, d *sql.DB) {
