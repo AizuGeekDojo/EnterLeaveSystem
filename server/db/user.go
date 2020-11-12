@@ -26,14 +26,15 @@ func GetUserInfo(UID string, db *sql.DB) (string, bool, error) {
 
 
 type ProductDB struct {
-	id string
-	barcode string
-	borrower string
+	Id       string
+	Name string
+	Barcode  string
+	Borrower string
 }
 // GetUserBorrowing is return requester's borrowing products
 func GetUserBorrowing(UID string, db *sql.DB) ([]ProductDB, error) {
 	var products []ProductDB
-	rows, err := db.Query(`SELECT id,name,barcode FROM products WHERE borrowersid=?`, UID)
+	rows, err := db.Query(`SELECT id,name,barcode,borrowersid FROM products WHERE borrowersid=?`, UID)
 	if err != nil {
 		return products, err
 	}
@@ -42,13 +43,15 @@ func GetUserBorrowing(UID string, db *sql.DB) ([]ProductDB, error) {
 		var id string
 		var name string
 		var barcode string
-		if err := rows.Scan(&id, &name, &barcode); err != nil {
+		var borrowersid string
+		if err := rows.Scan(&id, &name, &barcode, &borrowersid); err != nil {
 			return products, err
 		}
 		products = append(products, ProductDB{
-			id:       id,
-			barcode:  name,
-			borrower: barcode,
+			Id: id,
+			Name: name,
+			Barcode:  barcode,
+			Borrower: borrowersid,
 		})
 	}
 
