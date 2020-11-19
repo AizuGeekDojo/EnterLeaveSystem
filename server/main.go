@@ -6,7 +6,6 @@ import (
 
 	"github.com/AizuGeekDojo/EnterLeaveSystem/server/db"
 	"github.com/AizuGeekDojo/EnterLeaveSystem/server/handler"
-	"github.com/AizuGeekDojo/EnterLeaveSystem/server/utils"
 	"golang.org/x/net/websocket"
 )
 
@@ -29,13 +28,13 @@ func main() {
 	http.HandleFunc("/api/borrow", h.BorrowAPIHandler)
 
 	//Standby NFC card reader
-	go handler.ReadCard(d)
+	// go handler.ReadCard(d)
 
 	//Start cron
-	err = utils.CronInit(d)
-	if err != nil {
-		panic(err)
-	}
+	// err = utils.CronInit(d)
+	// if err != nil {
+	//	panic(err)
+	// }
 
 	//Start web server
 	fmt.Println("Start server")

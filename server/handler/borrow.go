@@ -5,8 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/AizuGeekDojo/EnterLeaveSystem/server/db"
+	"io"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 //UserAPIHandler handles http request for user management
@@ -24,8 +26,8 @@ func (h *Handler) BorrowAPIHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
 		getUserBorrowingHandler(w, r, h.DB)
-	//case "POST":
-	//	createNewBorrowing(w, r, h.DB)
+	case "POST":
+		borrowReturnItemHandler(w, r, h.DB)
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		fmt.Fprintf(w, "Unexpected method")
@@ -39,9 +41,19 @@ type UserBorrowingInfo struct {
 }
 
 type UserBorrowingProduct struct {
-	ID string `json:"ID"`
+	ID int `json:"ID"`
 	BarCode string `json:"BarCode"`
 	Name string `json:"Name"`
+}
+
+type UserBorrowingTransaction struct {
+	UID string `json:"SID"`
+	Operations []UserBorrowingOperation `json:"Operations"`
+}
+
+type UserBorrowingOperation struct {
+	ItemID string `json:"ID"`
+	Operation string `json:"Op"`
 }
 
 func getUserBorrowingHandler(w http.ResponseWriter, r *http.Request, d *sql.DB) {
@@ -67,6 +79,45 @@ func getUserBorrowingHandler(w http.ResponseWriter, r *http.Request, d *sql.DB) 
 	}
 
 	retbyte, err := json.Marshal(borrowingdb)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Printf("%v %v: json.Marshal error: %v", r.Method, r.URL.Path, err)
+		fmt.Fprintf(w, "{}")
+		return
+	}
+	w.Write(retbyte)
+}
+
+func borrowReturnItemHandler(w http.ResponseWriter, r *http.Request, d *sql.DB) {
+	var usertrans UserBorrowingTransaction
+	r.ParseForm()
+
+	reqlen, err := strconv.Atoi(r.Header.Get("Content-Length"))
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintf(w, "Cannot get Content-Length: %v", err)
+		log.Printf("%v %v: Bad request: %v", r.Method, r.URL.Path, err)
+		return
+	}
+	body := make([]byte, reqlen)
+	n, err := r.Body.Read(body)
+	if err != nil {
+		if err != io.EOF || n == 0 {
+			w.WriteHeader(http.StatusBadRequest)
+			fmt.Fprintf(w, "Failed to read: %v", err)
+			log.Printf("%v %v: Bad request: %v", r.Method, r.URL.Path, err)
+			return
+		}
+	}
+	err = json.Unmarshal(body, &usertrans)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintf(w, "Failed to parse JSON: %v", err)
+		log.Printf("%v %v: Bad request: %v", r.Method, r.URL.Path, err)
+		return
+	}
+
+	retbyte, err := json.Marshal(usertrans)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		log.Printf("%v %v: json.Marshal error: %v", r.Method, r.URL.Path, err)
