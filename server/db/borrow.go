@@ -42,7 +42,7 @@ func GetUserBorrowing(UID string, db *sql.DB) ([]ProductDB, error) {
 }
 
 func CreateItem(name string, barcode string, db *sql.DB) error {
-	// バーコードの重複などを調べるエラー対処
+	// TODO: バーコードの重複などを調べるエラー対処の実装
 	_, err := db.Exec(`INSERT INTO products(name,barcode) values(name,barcode)`, name, barcode)
 	if err != nil {
 		return err

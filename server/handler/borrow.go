@@ -117,6 +117,10 @@ func borrowReturnItemHandler(w http.ResponseWriter, r *http.Request, d *sql.DB) 
 		return
 	}
 
+	for _, operation := range usertrans.Operations {
+		// TODO: アイテムの貸し出し処理の実装
+	}
+
 	retbyte, err := json.Marshal(usertrans)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
