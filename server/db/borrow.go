@@ -3,7 +3,7 @@ package db
 import "database/sql"
 
 type ProductDB struct {
-	Id       string
+	Id       int
 	Name string
 	Barcode  string
 	Borrower string
@@ -18,7 +18,7 @@ func GetUserBorrowing(UID string, db *sql.DB) ([]ProductDB, error) {
 	}
 
 	for rows.Next() {
-		var id string
+		var id int
 		var name string
 		var barcode string
 		var borrowersid string
@@ -41,7 +41,7 @@ func GetUserBorrowing(UID string, db *sql.DB) ([]ProductDB, error) {
 	return products, err
 }
 
-func CreateLendingEquipment(name string, barcode string, db *sql.DB) error {
+func CreateItem(name string, barcode string, db *sql.DB) error {
 	// バーコードの重複などを調べるエラー対処
 	_, err := db.Exec(`INSERT INTO products(name,barcode) values(name,barcode)`, name, barcode)
 	if err != nil {
@@ -50,7 +50,7 @@ func CreateLendingEquipment(name string, barcode string, db *sql.DB) error {
 	return nil
 }
 
-func UpdateLendingEquipmentByID(id string, name string, barcode string, db *sql.DB) error {
+func UpdateItemByID(id string, name string, barcode string, db *sql.DB) error {
 	_, err := db.Exec(`UPDATE products SET name=?,barcode=? WHERE id=?`, name, barcode, id)
 	if err != nil {
 		return err
@@ -58,7 +58,7 @@ func UpdateLendingEquipmentByID(id string, name string, barcode string, db *sql.
 	return nil
 }
 
-func UpdateLendingEquipmentByBarCode(name string, barcode string, db *sql.DB) error {
+func UpdateItemByBarCode(name string, barcode string, db *sql.DB) error {
 	_, err := db.Exec(`UPDATE products SET name=? WHERE barcode=?`, name, barcode)
 	if err != nil {
 		return err
@@ -66,7 +66,7 @@ func UpdateLendingEquipmentByBarCode(name string, barcode string, db *sql.DB) er
 	return nil
 }
 
-func Borrow(id string, sid string, db *sql.DB) error {
+func BorrowItem(id string, sid string, db *sql.DB) error {
 	_, err := db.Exec(`UPDATE products SET borrowersid=? WHERE id=?`, sid, id)
 	if err != nil {
 		return err
@@ -74,4 +74,18 @@ func Borrow(id string, sid string, db *sql.DB) error {
 	return nil
 }
 
-// TODO: Borrowが使えるようにバーコードとIDでFindできる関数の追加
+func FindItemByBarCode(barcode string, db *sql.DB) (ProductDB, error) {
+	row := db.QueryRow(`SELECT id,name,barcode,borrowersid FROM products WHERE barcode=?`, barcode)
+	var id int
+	var name, barcodeo, borrowersid string
+	err := row.Scan(&id, &name, &barcodeo, &borrowersid)
+	if err != nil {
+		return ProductDB{}, err
+	}
+	return ProductDB{
+		Id:       id,
+		Name:     name,
+		Barcode:  barcodeo,
+		Borrower: borrowersid,
+	}, nil
+}
