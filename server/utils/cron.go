@@ -27,7 +27,7 @@ func CronInit(d *sql.DB) error {
 
 func cronForceLeave(d *sql.DB) func() {
 	return func() {
-		err := db.ForceLeave(d)
+		err := db.ForceLeave(d, GetSlackInfo().LEAVE)
 		if err != nil {
 			log.Printf("Cron: db.ForceLeave error: %v\n", err)
 		}
