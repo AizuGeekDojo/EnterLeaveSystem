@@ -1,6 +1,7 @@
 <template>
     <div id='welcome'>
-        <h1> Welcome to {{roomname}} {{ username }}! </h1>
+        <h1> Welcome to {{roomname}},</h1>
+        <h1>{{ username }}! </h1>
     </div>
 </template>
 
@@ -40,8 +41,8 @@ div #welcome {
   bottom: 0;
   left: 0;
   margin: auto;
-  width: 80%;
-  height: 200px;
+  width: 90%;
+  height: 300px;
   text-align: center;
 }
 </style>
