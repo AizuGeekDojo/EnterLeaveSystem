@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { getUserInfo, roomName } from '../utils/api';
 import type { CardMessage } from '../types';
@@ -11,7 +11,8 @@ function Top() {
   const closeFlgRef = useRef(false);
   const reconnectTimerRef = useRef<number | null>(null);
 
-  const connectCardReader = () => {
+  const connectCardReader = useCallback(function connectCardReaderImpl() {
+    if (closeFlgRef.current) return;
     const ws = new WebSocket('ws://localhost:3000/socket/readCard');
     wsRef.current = ws;
 
@@ -48,13 +49,16 @@ function Top() {
 
     ws.onclose = () => {
       console.log('Card reader stopped');
+      wsRef.current = null;
       if (!closeFlgRef.current) {
         reconnectTimerRef.current = window.setTimeout(() => {
-          window.location.reload();
+          if (!closeFlgRef.current) {
+            connectCardReaderImpl();
+          }
         }, 3000);
       }
     };
-  };
+  }, [navigate]);
 
   useEffect(() => {
     connectCardReader();
@@ -66,9 +70,10 @@ function Top() {
       }
       if (wsRef.current) {
         wsRef.current.close();
+        wsRef.current = null;
       }
     };
-  }, []);
+  }, [connectCardReader]);
 
   return (
     <div className={styles.top}>
