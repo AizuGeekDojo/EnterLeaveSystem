@@ -77,7 +77,7 @@ function Top() {
           Put your card over the reader
           <br />
         </h1>
-        <Link to="/forgot" className={styles.forgotPos}>
+        <Link to="/forgot" className={styles.forgetPos}>
           Forgot card?
         </Link>
       </div>
