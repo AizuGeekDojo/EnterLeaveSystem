@@ -5,11 +5,16 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"strings"
 	"time"
+)
+
+const (
+	// TimestampMillisecondDivisor converts Unix timestamp from milliseconds to seconds
+	TimestampMillisecondDivisor = 1000
 )
 
 // csvExport exports log data as CSV text
@@ -32,7 +37,7 @@ func csvExport(d *sql.DB) (string, error) {
 			return "", err
 		}
 
-		datefmted := time.Unix(ts/1000, 0).Format("2006-01-02 15:04:05")
+		datefmted := time.Unix(ts/TimestampMillisecondDivisor, 0).Format("2006-01-02 15:04:05")
 		entstr := "Leave"
 		if isenter == 1 {
 			entstr = "Enter"
@@ -47,8 +52,14 @@ func csvExport(d *sql.DB) (string, error) {
 				return "", err
 			}
 
-			useage := ExtList["Use"].([]interface{})
-			mess := ExtList["message"].(string)
+			useage, ok := ExtList["Use"].([]interface{})
+			if !ok {
+				return "", errors.New("invalid Ext format: 'Use' field is not an array")
+			}
+			mess, ok := ExtList["message"].(string)
+			if !ok {
+				return "", errors.New("invalid Ext format: 'message' field is not a string")
+			}
 			mess = strings.Replace(mess, "\"", "\"\"", -1)
 
 			csv += fmt.Sprintf("%v,%v,%v,%v,%v,\"%v\"\n", datefmted, sid, name, entstr, useage, mess)
@@ -90,19 +101,27 @@ func sendMonthlyLog(d *sql.DB) error {
 		return err
 	}
 
-	body, err := ioutil.ReadAll(resp.Body)
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
 
 	var res = make(map[string]interface{})
 	err = json.Unmarshal(body, &res)
 	if err != nil {
 		return err
 	}
-	if !res["ok"].(bool) {
-		return errors.New(res["error"].(string))
+	ok, exists := res["ok"].(bool)
+	if !exists {
+		return errors.New("invalid Slack API response: 'ok' field is missing or not a boolean")
+	}
+	if !ok {
+		errMsg, ok := res["error"].(string)
+		if !ok {
+			return errors.New("Slack API request failed with unknown error")
+		}
+		return errors.New(errMsg)
 	}
 
 	_, err = d.Exec(`delete from log`)

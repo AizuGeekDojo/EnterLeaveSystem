@@ -43,28 +43,13 @@ func (h *Handler) LogAPIHandler(w http.ResponseWriter, r *http.Request) {
 }
 func addLogHandler(w http.ResponseWriter, r *http.Request, d *sql.DB) {
 	var logdat LogInfo
-	reqlen, err := strconv.Atoi(r.Header.Get("Content-Length"))
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintf(w, "Cannot get Content-Length: %v", err)
-		log.Printf("%v %v: Bad request: %v", r.Method, r.URL.Path, err)
+	if err := parseRequestBody(r, &logdat); err != nil {
+		handleRequestError(w, r, http.StatusBadRequest, "Bad request", err)
 		return
 	}
-	body := make([]byte, reqlen)
-	n, err := r.Body.Read(body)
-	if err != nil {
-		if err != io.EOF || n == 0 {
-			w.WriteHeader(http.StatusBadRequest)
-			fmt.Fprintf(w, "Failed to read: %v", err)
-			log.Printf("%v %v: Bad request: %v", r.Method, r.URL.Path, err)
-			return
-		}
-	}
-	err = json.Unmarshal(body, &logdat)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintf(w, "Failed to parse JSON: %v", err)
-		log.Printf("%v %v: Bad request: %v", r.Method, r.URL.Path, err)
+
+	if err := validateSID(logdat.UID); err != nil {
+		handleRequestError(w, r, http.StatusBadRequest, "Invalid SID", err)
 		return
 	}
 

@@ -6,10 +6,16 @@ import (
 	"log"
 	"os/exec"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/AizuGeekDojo/EnterLeaveSystem/server/db"
 	"golang.org/x/net/websocket"
+)
+
+const (
+	// ReaderErrorRetryDelay is the delay before retrying after NFC reader error
+	ReaderErrorRetryDelay = 60 * time.Second
 )
 
 // IDCardInfo is structure for IDCard info
@@ -22,14 +28,18 @@ type IDCardInfo struct {
 	ReaderErr string `json:"ReaderErr"`
 }
 
-// clients is websocket connections
-var clients = []*websocket.Conn{}
+var (
+	// clients is websocket connections
+	clients = []*websocket.Conn{}
+	// clientsMutex protects clients slice from concurrent access
+	clientsMutex sync.RWMutex
+)
 
 // ReadCard runs card reader program, wait card data and send to clients.
 func ReadCard(d *sql.DB) {
 	for {
 		var resdat IDCardInfo
-		dat, err := exec.Command("python2.7", "nfc_reader.py").Output()
+		dat, err := exec.Command("python3", "bin/nfc_reader.py").Output()
 		if err != nil {
 			log.Printf("socket: nfc reader error : %v\n", err)
 
@@ -41,10 +51,14 @@ func ReadCard(d *sql.DB) {
 				continue
 			}
 
+			clientsMutex.RLock()
 			for _, c := range clients {
-				c.Write(retbyte)
+				if err := c.Write(retbyte); err != nil {
+					log.Printf("socket: failed to write to client: %v", err)
+				}
 			}
-			time.Sleep(60 * time.Second)
+			clientsMutex.RUnlock()
+			time.Sleep(ReaderErrorRetryDelay)
 			continue
 		}
 
@@ -81,20 +95,39 @@ func ReadCard(d *sql.DB) {
 			continue
 		}
 
+		clientsMutex.Lock()
 		for _, c := range clients {
-			c.Write(retbyte)
+			if err := c.Write(retbyte); err != nil {
+				log.Printf("socket: failed to write to client: %v", err)
+			}
 			c.Close()
 		}
 		clients = nil
+		clientsMutex.Unlock()
 	}
 }
 
 // ReadCardHandler handles Felica card reader.
 func (h *Handler) ReadCardHandler(ws *websocket.Conn) {
+	clientsMutex.Lock()
 	clients = append(clients, ws)
-	dat := []byte{}
-	var err error
-	for err == nil {
-		_, err = ws.Read(dat)
+	clientsMutex.Unlock()
+
+	// Keep connection alive until client disconnects
+	dat := make([]byte, 1024)
+	for {
+		_, err := ws.Read(dat)
+		if err != nil {
+			// Client disconnected, remove from clients list
+			clientsMutex.Lock()
+			for i, c := range clients {
+				if c == ws {
+					clients = append(clients[:i], clients[i+1:]...)
+					break
+				}
+			}
+			clientsMutex.Unlock()
+			break
+		}
 	}
 }

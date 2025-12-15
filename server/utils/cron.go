@@ -5,23 +5,31 @@ import (
 	"log"
 
 	"github.com/AizuGeekDojo/EnterLeaveSystem/server/db"
-	"gopkg.in/robfig/cron.v2"
+	"github.com/robfig/cron/v3"
 )
 
-// CronInit setups gocron and starts cron
+// CronInit setups cron scheduler and starts cron jobs
 func CronInit(d *sql.DB) error {
-	c := cron.New()
-	// sec min hour date month week
-	// 0 0 * * * * -> 0:0:* */* (*) Every month, day, hour and 0min, 0sec == Every hour
+	// Create cron with second precision
+	c := cron.New(cron.WithSeconds())
+
+	// Force leave all users at midnight every day
+	// Format: sec min hour day month day-of-week
+	// "0 0 0 * * *" = Every day at 00:00:00
 	_, err := c.AddFunc("0 0 0 * * *", cronForceLeave(d))
 	if err != nil {
 		return err
 	}
+
+	// Send monthly log on the 1st of every month at 01:00:00
+	// "0 0 1 1 * *" = 1st day of month at 01:00:00
 	_, err = c.AddFunc("0 0 1 1 * *", cronSendMonthlyLog(d))
 	if err != nil {
 		return err
 	}
+
 	c.Start()
+	log.Println("Cron scheduler started successfully")
 	return nil
 }
 
