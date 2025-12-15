@@ -3,7 +3,7 @@ Description=Enter Leave System Front
 After=elsystemd
 
 [Service]
-User=pi
+User=geek
 ExecStart=/home/pi/EnterLeaveSystem/frontstart
 ExecStop=/bin/true
 Type=simple
