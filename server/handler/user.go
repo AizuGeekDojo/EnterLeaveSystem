@@ -4,10 +4,8 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"io"
 	"log"
 	"net/http"
-	"strconv"
 
 	"github.com/AizuGeekDojo/EnterLeaveSystem/server/db"
 )

@@ -2,12 +2,9 @@ package handler
 
 import (
 	"database/sql"
-	"encoding/json"
 	"fmt"
-	"io"
 	"log"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/AizuGeekDojo/EnterLeaveSystem/server/db"

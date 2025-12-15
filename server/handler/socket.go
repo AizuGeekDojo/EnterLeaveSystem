@@ -53,7 +53,7 @@ func ReadCard(d *sql.DB) {
 
 			clientsMutex.RLock()
 			for _, c := range clients {
-				if err := c.Write(retbyte); err != nil {
+				if _, err := c.Write(retbyte); err != nil {
 					log.Printf("socket: failed to write to client: %v", err)
 				}
 			}
@@ -97,7 +97,7 @@ func ReadCard(d *sql.DB) {
 
 		clientsMutex.Lock()
 		for _, c := range clients {
-			if err := c.Write(retbyte); err != nil {
+			if _, err := c.Write(retbyte); err != nil {
 				log.Printf("socket: failed to write to client: %v", err)
 			}
 			c.Close()
