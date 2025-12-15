@@ -43,7 +43,7 @@ function Forgot() {
           value={sid}
           onChange={(e) => setSid(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="s12xxxxx"
+          placeholder="s13xxxxx"
         />
         <h4 style={{ color: '#aaaaaa' }}>
           <br />
