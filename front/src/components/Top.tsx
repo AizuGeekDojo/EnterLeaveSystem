@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate, Link } from 'react-router';
+import { useNavigate, Link } from 'react-router-dom';
 import { getUserInfo, roomName } from '../utils/api';
 import type { CardMessage } from '../types';
 import styles from './Top.module.css';
