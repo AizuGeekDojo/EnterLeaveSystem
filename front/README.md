@@ -53,20 +53,6 @@ The application will be available at `http://localhost:5173` by default.
 npm run build
 ```
 
-### Build for Specific Environments
-
-For AGD (Aizu Geek Dojo) version:
-```bash
-cp .env.agd .env.production
-npm run build
-```
-
-For GL (Global Lounge) version:
-```bash
-cp .env.gl .env.production
-npm run build
-```
-
 The built files will be output to the `dist/` directory.
 
 ## Project Structure
