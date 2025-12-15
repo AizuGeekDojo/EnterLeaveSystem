@@ -44,7 +44,7 @@ function Register() {
           value={sid}
           onChange={(e) => setSid(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="s13xxxxx"
+          placeholder="s12xxxxx"
         />
         <h4 style={{ color: '#aaaaaa' }}>
           <br />
