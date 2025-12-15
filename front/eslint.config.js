@@ -8,8 +8,8 @@ export default [
   { ignores: ['dist'] },
   js.configs.recommended,
   tseslint.configs.recommended,
-  reactHooks.configs.flat.recommended,
-  reactRefresh.configs.vite,
+  reactHooks.configs.recommended,
+  reactRefresh.configs.recommended,
   {
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
