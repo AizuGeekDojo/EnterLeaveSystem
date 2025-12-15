@@ -50,7 +50,7 @@ function Top() {
       console.log('Card reader stopped');
       if (!closeFlgRef.current) {
         reconnectTimerRef.current = window.setTimeout(() => {
-          connectCardReader();
+          window.location.reload();
         }, 3000);
       }
     };
