@@ -8,5 +8,5 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/mattn/go-sqlite3 v1.14.32
 	github.com/robfig/cron/v3 v3.0.1
-	golang.org/x/net v0.47.0
+	golang.org/x/net v0.48.0
 )
