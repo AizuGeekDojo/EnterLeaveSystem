@@ -8,17 +8,21 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v1
+      uses: actions/checkout@v4
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
     - name: Make front build directory
       run: |
         mkdir -p fbuild/agd
         mkdir -p fbuild/gl
     - name: Restore cache
-      uses: actions/cache@v1
+      uses: actions/cache@v4
       with:
         path: ./front/node_modules
-        key: npm-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: npm-
+        key: npm-front-${{ hashFiles('front/package-lock.json') }}
+        restore-keys: npm-front-
     - name: Install dependency
       run: |
         cd front
@@ -36,7 +40,7 @@ jobs:
         npm run build
         mv dist ../fbuild/gl/
     - name: Persist front builds
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v4
       with:
         name: fbuild
         path: ./fbuild
@@ -47,11 +51,11 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v1
+      uses: actions/checkout@v4
     - name: Make server build directory
       run: mkdir sbuild
     - name: Restore cache
-      uses: actions/cache@v1
+      uses: actions/cache@v4
       with:
         path: /go/pkg/mod
         key: gomod-${{ hashFiles('go.sum') }}
@@ -59,7 +63,7 @@ jobs:
     - name: Build server
       run: GO111MODULE=on go build -o sbuild/elsystem server/main.go
     - name: Persist server builds
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v4
       with:
         name: sbuild
         path: ./sbuild
@@ -72,13 +76,13 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v1
+      uses: actions/checkout@v4
     - name: Restore front build
-      uses: actions/download-artifact@v1
+      uses: actions/download-artifact@v4
       with:
         name: fbuild
     - name: Restore server build
-      uses: actions/download-artifact@v1
+      uses: actions/download-artifact@v4
       with:
         name: sbuild
     - name: Make build directory
@@ -87,7 +91,7 @@ jobs:
         mkdir -p build/gl/EnterLeaveSystem
     - name: Copy front build files
       run: |
-        cp -r fbuild/agd/dist build/agd/EnterLeaveSystem/ 
+        cp -r fbuild/agd/dist build/agd/EnterLeaveSystem/
         cp -r fbuild/gl/dist build/gl/EnterLeaveSystem/
     - name: Copy server build file
       run: |

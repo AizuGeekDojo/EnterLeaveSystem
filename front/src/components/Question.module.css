@@ -1,0 +1,62 @@
+h2 {
+  font-size: 3rem;
+  font-weight: normal;
+  letter-spacing: 0.05rem;
+  width: 100%;
+  font-weight: normal;
+}
+
+h3 {
+  font-size: 1.5rem;
+  font-weight: normal;
+  letter-spacing: 0.05rem;
+  width: 100%;
+  font-weight: normal;
+}
+
+input[type='checkbox'] {
+  font-size: 26px;
+  width: 3rem;
+  height: 3rem;
+}
+
+.checkbox {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.checkboxes {
+  width: 50%;
+  height: 175px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.question textarea {
+  resize: none;
+  width: 500px;
+  height: 200px;
+}
+
+.question {
+  width: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+}
+
+.ques {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  height: 600px;
+  width: 100%;
+}
