@@ -10,8 +10,8 @@ function Welcome() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  let userinfo = location.state?.userinfo as UserInfo | undefined | null;
   useEffect(() => {
-    const userinfo = location.state?.userinfo as UserInfo | undefined;
     if (userinfo) {
       setUsername(userinfo.UserName);
       addLog(userinfo.SID, true, '');
@@ -21,8 +21,8 @@ function Welcome() {
       navigate('/');
     }, 5000);
 
-    return () => clearTimeout(timer);
-  }, [location.state, navigate]);
+    return () => { userinfo = null; clearTimeout(timer) };
+  }, [location.state.userinfo, navigate]);
 
   return (
     <div className={styles.welcome}>
