@@ -1,4 +1,4 @@
-import { useLocation, Link } from 'react-router';
+import { useLocation } from 'react-router';
 import type { ErrorInfo } from '../types';
 import styles from './Error.module.css';
 
