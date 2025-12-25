@@ -45,6 +45,7 @@ function Top() {
 
     ws.onerror = (e) => {
       console.log('Card reader communication error', e);
+      navigate('/error', { state: { errorInfo: {message: 'Card reader communication error'} } });
     };
 
     ws.onclose = () => {

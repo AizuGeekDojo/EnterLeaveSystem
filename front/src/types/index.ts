@@ -19,3 +19,7 @@ export interface QuestionData {
   Use: string[];
   message: string;
 }
+
+export interface ErrorInfo {
+  message: string;
+}

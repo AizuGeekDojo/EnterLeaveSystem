@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import dayjs from 'dayjs';
 import Top from './components/Top';
 import Register from './components/Register';
 import Welcome from './components/Welcome';
 import Goodbye from './components/Goodbye';
 import Question from './components/Question';
 import Forgot from './components/Forgot';
+import Error from './components/Error';
 import styles from './App.module.css';
 
 function App() {
@@ -13,38 +15,10 @@ function App() {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      const da = new Date();
-      const year = da.getFullYear();
-      const month = da.getMonth() + 1;
-      const date = da.getDate();
-      const hour = da.getHours();
-      const minute = da.getMinutes();
-      const second = da.getSeconds();
-
-      let text = `${year}/`;
-      if (month < 10) {
-        text += '0';
-      }
-      text += `${month}/`;
-      if (date < 10) {
-        text += '0';
-      }
-      text += `${date}  `;
-      if (hour < 10) {
-        text += '0';
-      }
-      text += `${hour}:`;
-      if (minute < 10) {
-        text += '0';
-      }
-      text += `${minute}:`;
-      if (second < 10) {
-        text += '0';
-      }
-      text += `${second}`;
-
+      const now = dayjs();
+      const text = now.format('YYYY/MM/DD  HH:mm:ss');
       setClockText(text);
-    }, 1000);
+    }, 500);
 
     return () => clearInterval(timer);
   }, []);
@@ -66,6 +40,7 @@ function App() {
             <Route path="/goodbye" element={<Goodbye />} />
             <Route path="/question" element={<Question />} />
             <Route path="/forgot" element={<Forgot />} />
+            <Route path="/error" element={<Error />} />
           </Routes>
         </div>
       </div>

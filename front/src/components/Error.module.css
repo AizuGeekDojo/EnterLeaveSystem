@@ -1,0 +1,31 @@
+
+.error {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  width: 50%;
+  height: 200px;
+}
+
+.message {
+  position: absolute;
+  top: 100;
+  right: 0;
+  left: 0;
+  margin: auto;
+  height: 200px;
+}
+
+h1 {
+  font-size: 4rem;
+  font-weight: normal;
+  letter-spacing: 0.05rem;
+}
+
+p {
+  font-size: 2rem;
+  margin-top: 20px;
+}
