@@ -1,3 +1,5 @@
 .vscode/
 database.db
 server/test/dist
+.env
+

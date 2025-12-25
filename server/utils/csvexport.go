@@ -79,8 +79,8 @@ func csvExport(d *sql.DB) (string, error) {
 func sendMonthlyLog(d *sql.DB) error {
 	cfg := GetSlackInfo()
 	UPLOADURL := "https://slack.com/api/files.upload"
-	TOKEN := cfg.CSVLOGTOKEN
-	CHANNEL := cfg.CSVLOGCHID
+	TOKEN := cfg.CSVLogToken
+	CHANNEL := cfg.CSVLogChannelID
 
 	csv, err := csvExport(d)
 	if err != nil {

@@ -49,6 +49,12 @@ func run() error {
 
 	h := handler.NewHandler(d)
 
+	// Initialize Slack Socket Mode client
+	log.Println("Initializing Slack Socket Mode...")
+	if err := utils.InitSlackSocketMode(); err != nil {
+		log.Printf("Warning: Failed to initialize Slack Socket Mode: %v", err)
+	}
+
 	// Setup HTTP handlers
 	log.Println("Setting up HTTP handlers...")
 	mux := http.NewServeMux()
