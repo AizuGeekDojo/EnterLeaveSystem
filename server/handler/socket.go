@@ -39,7 +39,7 @@ var (
 func ReadCard(d *sql.DB) {
 	for {
 		var resdat IDCardInfo
-		dat, err := exec.Command("python3", "bin/nfc_reader.py").Output()
+		dat, err := exec.Command("python3", "server/nfc/nfc_reader.py").Output()
 		if err != nil {
 			log.Printf("socket: nfc reader error : %v\n", err)
 
@@ -69,6 +69,8 @@ func ReadCard(d *sql.DB) {
 
 		cardtype := datstrspl[0]
 		cardid := strings.Split(datstrspl[1], "\n")[0]
+
+		log.Printf("socket: card read: type=%s id=%s\n", cardtype, cardid)
 
 		resdat.IsCard = true
 		resdat.CardID = cardid
