@@ -4,7 +4,7 @@ After=elsystemd
 
 [Service]
 User=geek
-ExecStart=/home/pi/EnterLeaveSystem/frontstart
+ExecStart=/home/geek/EnterLeaveSystem/frontstart
 ExecStop=/bin/true
 Type=simple
 RemainAfterExit=yes
