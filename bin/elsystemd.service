@@ -5,7 +5,6 @@ Requires=network.target local-fs.target
 
 [Service]
 User=geek
-Group=geek
 EnvironmentFile=/home/geek/EnterLeaveSystem/.env
 WorkingDirectory=/home/geek/EnterLeaveSystem
 ExecStart=/home/geek/EnterLeaveSystem/elsystem
