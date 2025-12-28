@@ -13,15 +13,15 @@ def on_connect(tag):
             if data[0:4] == "1000":
                 sid = data[4:11]
                 if sid[0] == "1":
-                    print "student s" + sid
+                    print("student s" + sid)
                 elif sid[0] == "5":
-                    print "student m" + sid
+                    print("student m" + sid)
                 elif sid[0] == "8":
-                    print "student d" + sid
+                    print("student d" + sid)
             else:
-                print "univ " + data
+                print("univ " + data)
         except Exception as e:
-            print "general " + "" . join(['%02x' % s for s in tag.idm])
+            print("general " + "" . join(['%02x' % s for s in tag.idm]))
 
 clf = nfc.ContactlessFrontend('usb')
 try:
