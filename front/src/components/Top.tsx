@@ -11,6 +11,11 @@ function Top() {
   const closeFlgRef = useRef(false);
   const reconnectTimerRef = useRef<number | null>(null);
 
+  const cardReaderError = (e: Event) => {
+    console.log('Card reader communication error', e);
+    import.meta.env.PROD && navigate('/forgot', { state: { errorInfo: {message: 'Card reader communication error'} } });
+  }
+
   const connectCardReader = useCallback(function connectCardReaderImpl() {
     if (closeFlgRef.current) return;
     const ws = new WebSocket('ws://localhost:3000/socket/readCard');
@@ -40,12 +45,11 @@ function Top() {
         } else if (message.CardID) {
           navigate('/regist', { state: { cardid: message.CardID } });
         }
-      }
+      } else cardReaderError(e)
     };
 
     ws.onerror = (e) => {
-      console.log('Card reader communication error', e);
-      import.meta.env.PROD && navigate('/forgot', { state: { errorInfo: {message: 'Card reader communication error'} } });
+      cardReaderError(e);
     };
 
     ws.onclose = () => {
