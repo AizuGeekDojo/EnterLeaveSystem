@@ -15,7 +15,7 @@ import (
 
 const (
 	// ReaderErrorRetryDelay is the delay before retrying after NFC reader error
-	ReaderErrorRetryDelay = 60 * time.Second
+	ReaderErrorRetryDelay = 5 * time.Second
 )
 
 // IDCardInfo is structure for IDCard info
