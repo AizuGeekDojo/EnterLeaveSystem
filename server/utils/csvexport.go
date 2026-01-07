@@ -5,11 +5,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io"
-	"net/http"
-	"net/url"
 	"strings"
 	"time"
+
+	"github.com/slack-go/slack"
 )
 
 const (
@@ -77,57 +76,33 @@ func csvExport(d *sql.DB) (string, error) {
 
 // sendMonthlyLog sends csv log file via slack
 func sendMonthlyLog(d *sql.DB) error {
-	cfg := GetSlackInfo()
-	UPLOADURL := "https://slack.com/api/files.upload"
-	TOKEN := cfg.CSVLogToken
-	CHANNEL := cfg.CSVLogChannelID
+	// Use initialized Slack client (socket mode capable) like slack.go
+	client := GetSlackClient()
+	if client == nil {
+		return errors.New("Slack client is not initialized")
+	}
 
+	cfg := GetSlackInfo()
 	csv, err := csvExport(d)
 	if err != nil {
 		return err
 	}
-	resp, err := http.PostForm(
-		UPLOADURL,
-		url.Values{
-			"token":           {TOKEN},
-			"channels":        {CHANNEL},
-			"filename":        {"log.csv"},
-			"initial_comment": {"Enter leave log (csv format) by csvexport"},
-			"title":           {"log.csv"},
-			"content":         {csv},
-		},
-	)
+
+	// Upload the CSV content using UploadFileV2 (files.upload v2)
+	_, err = client.UploadFileV2(slack.UploadFileV2Parameters{
+		Filename:       "log.csv",
+		Title:          "log.csv",
+		InitialComment: "Enter leave log (csv format) by csvexport",
+		Content:        csv,
+		FileSize:       len([]byte(csv)),
+		Channel:        cfg.CSVLogChannelID,
+	})
 	if err != nil {
 		return err
 	}
 
-	defer resp.Body.Close()
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
+	if _, err = d.Exec(`delete from log`); err != nil {
 		return err
 	}
-
-	var res = make(map[string]interface{})
-	err = json.Unmarshal(body, &res)
-	if err != nil {
-		return err
-	}
-	ok, exists := res["ok"].(bool)
-	if !exists {
-		return errors.New("invalid Slack API response: 'ok' field is missing or not a boolean")
-	}
-	if !ok {
-		errMsg, ok := res["error"].(string)
-		if !ok {
-			return errors.New("Slack API request failed with unknown error")
-		}
-		return errors.New(errMsg)
-	}
-
-	_, err = d.Exec(`delete from log`)
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
