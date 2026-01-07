@@ -1,11 +1,15 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { getUserInfo } from '../utils/api';
+import type { ErrorInfo } from '../types';
 import styles from './Forgot.module.css';
 
 function Forgot() {
   const [sid, setSid] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
+
+  let errorInfo = location.state?.errorInfo as ErrorInfo | undefined;
 
   const handleForgot = async () => {
     try {
@@ -37,6 +41,7 @@ function Forgot() {
   return (
     <div className={styles.forgot}>
       <div className={styles.studentNUM}>
+        {errorInfo && <p>{errorInfo.message}</p>}
         <h1>Input your student number</h1>
         <input
           type="text"

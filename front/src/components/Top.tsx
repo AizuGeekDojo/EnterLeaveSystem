@@ -45,7 +45,7 @@ function Top() {
 
     ws.onerror = (e) => {
       console.log('Card reader communication error', e);
-      import.meta.env.PROD && navigate('/error', { state: { errorInfo: {message: 'Card reader communication error'} } });
+      import.meta.env.PROD && navigate('/forgot', { state: { errorInfo: {message: 'Card reader communication error'} } });
     };
 
     ws.onclose = () => {
