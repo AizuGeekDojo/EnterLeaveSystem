@@ -27,7 +27,7 @@ function Welcome() {
   return (
     <div className={styles.welcome}>
       <h1>
-        Welcome to {room} {username}!
+        Welcome to {room},<br/>{username}!
       </h1>
     </div>
   );
