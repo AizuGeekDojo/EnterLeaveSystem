@@ -8,7 +8,7 @@ cd "$(dirname "$0")/.."
 
 previous_commit=$(git log --merges -n 1 --pretty=format:"%H")
 
-git pull origin main
+git pull origin master
 
 latest_commit=$(git log --merges -n 1 --pretty=format:"%H")
 
