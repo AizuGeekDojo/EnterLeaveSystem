@@ -26,9 +26,16 @@ function Welcome() {
 
   return (
     <div className={styles.welcome}>
-      <h1>
-        Welcome to {room},<br/>{username}!
-      </h1>
+      {username && // usernameがある
+        <h1>
+          Welcome to {room},<br/>{username}!
+        </h1>
+      }
+      {username === '' && // usernameがない: 新入生等DBに未登録のユーザー
+        <h1>
+          Welcome to {room}!
+        </h1>
+      }
     </div>
   );
 }

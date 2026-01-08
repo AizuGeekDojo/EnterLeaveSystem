@@ -74,7 +74,12 @@ func SlackNotify(name string, uid string, isEnter bool, timestamp time.Time, ext
 		status = "入室"
 	}
 
-	messageText := fmt.Sprintf("%v : %v さんが %v に%vしました。", uid, name, timestamp.Format("2006-01-02 15:04:05"), status)
+	var messageText string
+	if name == "" {
+		messageText = fmt.Sprintf("%v : (未登録ユーザー)が %v に%vしました。", uid, timestamp.Format("2006-01-02 15:04:05"), status)
+	} else {
+		messageText = fmt.Sprintf("%v : %v さんが %v に%vしました。", uid, name, timestamp.Format("2006-01-02 15:04:05"), status)
+	}
 
 	var attachments []slack.Attachment
 

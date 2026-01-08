@@ -58,11 +58,6 @@ func addLogHandler(w http.ResponseWriter, r *http.Request, d *sql.DB) {
 		log.Printf("%v %v: db.GetUserInfo error: %v", r.Method, r.URL.Path, err)
 		return
 	}
-	if name == "" {
-		w.WriteHeader(http.StatusNotFound)
-		fmt.Fprintf(w, "The ID is not found.")
-		return
-	}
 
 	err = db.AddLog(logdat.UID, logdat.IsEnter, ts, logdat.Ext, d)
 	if err != nil {

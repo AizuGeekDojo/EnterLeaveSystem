@@ -49,8 +49,6 @@ func (h *Handler) UserAPIHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
 		getUserHandler(w, r, h.DB)
-	case "POST":
-		createUserHandler(w, r, h.DB)
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		fmt.Fprintf(w, "Unexpected method")
@@ -86,53 +84,9 @@ func getUserHandler(w http.ResponseWriter, r *http.Request, d *sql.DB) {
 		log.Printf("%v %v: db.GetUserInfo error: %v", r.Method, r.URL.Path, err)
 		fmt.Fprintf(w, "{}")
 		return
-	} else if username == "" {
-		w.WriteHeader(http.StatusNoContent)
-		fmt.Fprintf(w, "{}")
-		return
 	}
 	userresdat.UserName = username
 	userresdat.IsEnter = isenter
-
-	retbyte, err := json.Marshal(userresdat)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Printf("%v %v: json.Marshal error: %v", r.Method, r.URL.Path, err)
-		fmt.Fprintf(w, "{}")
-		return
-	}
-	w.Write(retbyte)
-}
-
-func createUserHandler(w http.ResponseWriter, r *http.Request, d *sql.DB) {
-	var userdat RegistUserInfo
-	var userresdat RegistUserResInfo
-
-	if err := parseRequestBody(r, &userdat); err != nil {
-		handleRequestError(w, r, http.StatusBadRequest, "Bad request", err)
-		return
-	}
-
-	if err := validateSID(userdat.UID); err != nil {
-		handleRequestError(w, r, http.StatusBadRequest, "Invalid SID", err)
-		return
-	}
-
-	if err := validateCardID(userdat.CardID); err != nil {
-		handleRequestError(w, r, http.StatusBadRequest, "Invalid CardID", err)
-		return
-	}
-
-	err := db.RegisterCard(userdat.CardID, userdat.UID, d)
-	if err == nil {
-		userresdat.Success = true
-		userresdat.Reason = ""
-	} else {
-		userresdat.Success = false
-		userresdat.Reason = fmt.Sprintf("%v\n", err)
-		log.Printf("%v %v: Bad request: %v", r.Method, r.URL.Path, err)
-		w.WriteHeader(http.StatusBadRequest)
-	}
 
 	retbyte, err := json.Marshal(userresdat)
 	if err != nil {

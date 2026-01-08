@@ -14,14 +14,6 @@ export const getUserInfo = async (sid: string): Promise<UserInfo> => {
     throw response;
   }
 
-  if (response.status === 204) {
-    return {
-      SID: sid,
-      UserName: '',
-      IsEnter: true,
-    };
-  }
-
   return response.json();
 };
 
