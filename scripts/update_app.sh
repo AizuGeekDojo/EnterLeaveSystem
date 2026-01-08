@@ -2,7 +2,6 @@
 
 
 sudo systemctl stop elsystemd.service
-sudo systemctl stop elsystemf.service
 
 cd "$(dirname "$0")/.."
 
@@ -33,4 +32,3 @@ else
 fi
 
 sudo systemctl start elsystemd.service
-sudo systemctl start elsystemf.service
