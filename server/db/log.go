@@ -37,10 +37,20 @@ func AddLog(UID string, isEnter bool, Timestamp time.Time, Ext string, db *sql.D
 		return fmt.Errorf("failed to insert log: %w", err)
 	}
 
-	// Update user enter/leave status
-	_, err = tx.Exec(`UPDATE users SET isenter=? WHERE sid=?`, isEnterInt, UID)
+	// Update user enter/leave status; create placeholder if the user is not registered
+	res, err := tx.Exec(`UPDATE users SET isenter=? WHERE sid=?`, isEnterInt, UID)
 	if err != nil {
 		return fmt.Errorf("failed to update user status: %w", err)
+	}
+
+	rows, err := res.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("failed to confirm user update: %w", err)
+	}
+	if rows == 0 {
+		if _, err := tx.Exec(`INSERT INTO users (sid, name, isenter) VALUES (?, ?, ?)`, UID, "", isEnterInt); err != nil {
+			return fmt.Errorf("failed to create placeholder user %s: %w", UID, err)
+		}
 	}
 
 	// Commit transaction
