@@ -2,7 +2,7 @@ package db
 
 import (
 	"database/sql"
-	"errors"
+	"fmt"
 	"log"
 	"time"
 )
@@ -41,70 +41,98 @@ func GetUIDByCardID(CardID string, db *sql.DB) (string, error) {
 	return sid, nil
 }
 
-// RegisterCard regist cardid with UID
+// RegisterCard registers a card ID with a user ID
 func RegisterCard(CardID string, UID string, db *sql.DB) error {
-	// Check user is exist
+	// Check user exists
 	gotuid, _, err := GetUserInfo(UID, db)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to get user info: %w", err)
 	}
 	if gotuid == "" {
-		return errors.New("ID \"" + UID + "\" is not found.")
+		return fmt.Errorf("user ID %q not found", UID)
 	}
 
-	// Check cardID is not registered
+	// Check cardID is not already registered
 	row := db.QueryRow(`SELECT sid FROM idcard WHERE idm=? AND sid=?`, CardID, UID)
 	var sid string
 	err = row.Scan(&sid)
 	if err != sql.ErrNoRows {
-		// No error (already registered) don't continue
-		// Other error can't continue
-		return err
+		if err == nil {
+			return fmt.Errorf("card %q is already registered to user %q", CardID, UID)
+		}
+		return fmt.Errorf("failed to check card registration: %w", err)
 	}
 
 	// Register cardID into database
-	_, err = db.Exec(`insert into idcard values(?,?)`, CardID, UID)
-	return err
+	_, err = db.Exec(`INSERT INTO idcard (idm, sid) VALUES (?, ?)`, CardID, UID)
+	if err != nil {
+		return fmt.Errorf("failed to register card: %w", err)
+	}
+	return nil
 }
 
-// ForceLeave sets all users leave status
+// ForceLeave sets all users to leave status (called daily at midnight)
 func ForceLeave(d *sql.DB) error {
-	rows, err := d.Query(`SELECT * FROM users where isenter=1`)
-	if err != nil {
-		return err
-	}
-	ts := time.Now()
-
+	// Start transaction
 	tx, err := d.Begin()
+	if err != nil {
+		return fmt.Errorf("failed to begin transaction: %w", err)
+	}
+	defer func() {
+		if err != nil {
+			if rbErr := tx.Rollback(); rbErr != nil {
+				log.Printf("Failed to rollback transaction: %v", rbErr)
+			}
+		}
+	}()
+
+	// Query users who are currently in the room
+	rows, err := tx.Query(`SELECT sid, name FROM users WHERE isenter=1`)
+	if err != nil {
+		return fmt.Errorf("failed to query users: %w", err)
+	}
+	defer rows.Close()
+
+	ts := time.Now()
+	tsMillis := ts.UnixNano() / int64(time.Millisecond)
+	count := 0
+
+	// Process each user
 	for rows.Next() {
-		var (
-			sid     string
-			name    string
-			isenter int64
+		var sid, name string
+		if err := rows.Scan(&sid, &name); err != nil {
+			return fmt.Errorf("failed to scan user row: %w", err)
+		}
+
+		// Insert leave log
+		_, err := tx.Exec(
+			`INSERT INTO log (sid, isenter, time, ext) VALUES (?, ?, ?, ?)`,
+			sid, 0, tsMillis, "",
 		)
-		if err := rows.Scan(&sid, &name, &isenter); err != nil {
-			return err
+		if err != nil {
+			return fmt.Errorf("failed to insert log for user %s: %w", sid, err)
 		}
 
-		tsint64 := ts.UnixNano() / int64(time.Millisecond)
+		// Update user status to left
+		_, err = tx.Exec(`UPDATE users SET isenter=? WHERE sid=?`, 0, sid)
+		if err != nil {
+			return fmt.Errorf("failed to update user %s: %w", sid, err)
+		}
 
-		_, err := tx.Exec(`insert into log values(?,?,?,?)`, sid, 0, tsint64, "")
-		if err != nil {
-			return err
-		}
-		_, err = tx.Exec(`update users set isenter=? where sid=?`, 0, sid)
-		if err != nil {
-			return err
-		}
-		log.Printf("Force left: %v(%v)", sid, name)
+		log.Printf("Force left: %s (%s)", sid, name)
+		count++
 	}
-	err = rows.Close()
-	if err != nil {
-		return err
+
+	// Check for errors from iterating over rows
+	if err := rows.Err(); err != nil {
+		return fmt.Errorf("error iterating rows: %w", err)
 	}
-	err = tx.Commit()
-	if err != nil {
-		return err
+
+	// Commit transaction
+	if err := tx.Commit(); err != nil {
+		return fmt.Errorf("failed to commit transaction: %w", err)
 	}
+
+	log.Printf("Force leave completed: %d users processed", count)
 	return nil
 }

@@ -1,3 +1,6 @@
 .vscode/
-server/test/database.db
+database.db
 server/test/dist
+.env
+elsystem
+dist/

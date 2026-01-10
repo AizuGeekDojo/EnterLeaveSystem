@@ -6,17 +6,13 @@ import (
 
 // SlackInfo is structure for slack info in env
 type SlackInfo struct {
-	WEBHOOKURL  string `default:"https://hooks.slack.com/services/"`
-	UserName    string `default:"Logging Bot"`
-	IconEmoji   string `default:":robot_face:"`
-	Channel     string `default:"#enter_leave_log"`
-	CSVLOGTOKEN string `default:""`
-	CSVLOGCHID  string `default:""`
-}
-
-// GetWebHookURL returns slack webhook URL
-func (sl SlackInfo) GetWebHookURL() string {
-	return sl.WEBHOOKURL
+	AppToken    string `envconfig:"APP_TOKEN" default:""`
+	BotToken    string `envconfig:"BOT_TOKEN" default:""`
+	UserName    string `envconfig:"USER_NAME" default:"Logging Bot"`
+	IconEmoji   string `envconfig:"ICON_EMOJI" default:":robot_face:"`
+	ChannelID     string `envconfig:"CHANNEL_ID" default:"#enter_leave_log"`
+	CSVLogToken string `envconfig:"CSV_LOG_TOKEN" default:""`
+	CSVLogChannelID  string `envconfig:"CSV_LOG_CHANNEL_ID" default:""`
 }
 
 var slackinfo SlackInfo
