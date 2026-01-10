@@ -58,6 +58,10 @@ func createTables(db *sql.DB) error {
 			schema: `CREATE TABLE IF NOT EXISTS "users" (sid TEXT PRIMARY KEY, name TEXT NOT NULL, isenter INTEGER DEFAULT 0)`,
 		},
 		{
+			name:   "idcard",
+			schema: `CREATE TABLE IF NOT EXISTS "idcard" (idm TEXT PRIMARY KEY, sid TEXT NOT NULL, FOREIGN KEY(sid) REFERENCES users(sid))`,
+		},
+		{
 			name:   "log",
 			schema: `CREATE TABLE IF NOT EXISTS "log" (id INTEGER PRIMARY KEY AUTOINCREMENT, sid TEXT NOT NULL, isenter INTEGER NOT NULL, time INTEGER NOT NULL, ext TEXT)`,
 		},
@@ -72,6 +76,7 @@ func createTables(db *sql.DB) error {
 	// Create indexes for better query performance
 	indexes := []string{
 		`CREATE INDEX IF NOT EXISTS idx_users_sid ON users(sid)`,
+		`CREATE INDEX IF NOT EXISTS idx_idcard_idm ON idcard(idm)`,
 		`CREATE INDEX IF NOT EXISTS idx_log_sid ON log(sid)`,
 		`CREATE INDEX IF NOT EXISTS idx_log_time ON log(time)`,
 	}

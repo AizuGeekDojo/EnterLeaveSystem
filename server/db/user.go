@@ -24,6 +24,53 @@ func GetUserInfo(UID string, db *sql.DB) (string, bool, error) {
 	return name, (isenter == 1), nil
 }
 
+// GetUIDByCardID is return UID by felica's IDm or ID code
+// This is prepared for not student person
+// If UID is not found, return nil
+func GetUIDByCardID(CardID string, db *sql.DB) (string, error) {
+	// Check cardID is not registered
+	row := db.QueryRow(`SELECT sid FROM idcard WHERE idm=?`, CardID)
+	var sid string
+	err := row.Scan(&sid)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return "", nil
+		}
+		return "", err
+	}
+	return sid, nil
+}
+
+// RegisterCard registers a card ID with a user ID
+func RegisterCard(CardID string, UID string, db *sql.DB) error {
+	// Check user exists
+	gotuid, _, err := GetUserInfo(UID, db)
+	if err != nil {
+		return fmt.Errorf("failed to get user info: %w", err)
+	}
+	if gotuid == "" {
+		return fmt.Errorf("user ID %q not found", UID)
+	}
+
+	// Check cardID is not already registered
+	row := db.QueryRow(`SELECT sid FROM idcard WHERE idm=? AND sid=?`, CardID, UID)
+	var sid string
+	err = row.Scan(&sid)
+	if err != sql.ErrNoRows {
+		if err == nil {
+			return fmt.Errorf("card %q is already registered to user %q", CardID, UID)
+		}
+		return fmt.Errorf("failed to check card registration: %w", err)
+	}
+
+	// Register cardID into database
+	_, err = db.Exec(`INSERT INTO idcard (idm, sid) VALUES (?, ?)`, CardID, UID)
+	if err != nil {
+		return fmt.Errorf("failed to register card: %w", err)
+	}
+	return nil
+}
+
 // ForceLeave sets all users to leave status (called daily at midnight)
 func ForceLeave(d *sql.DB) error {
 	// Start transaction
