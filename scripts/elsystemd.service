@@ -5,9 +5,9 @@ Requires=network.target local-fs.target
 
 [Service]
 User=geek
-EnvironmentFile=/home/geek/EnterLeaveSystem/.env
-WorkingDirectory=/home/geek/EnterLeaveSystem
-ExecStart=/home/geek/EnterLeaveSystem/elsystem
+EnvironmentFile=%h/EnterLeaveSystem/.env
+WorkingDirectory=%h/EnterLeaveSystem
+ExecStart=%h/EnterLeaveSystem/elsystem
 ExecStop=/bin/kill -SIGINT $MAINPID
 Restart=always
 Type=simple
