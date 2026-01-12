@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { addLog, isShowQuestion } from '../utils/api';
+import { addLog } from '../utils/api';
 import type { UserInfo } from '../types';
 import styles from './Question.module.css';
 
@@ -11,16 +11,6 @@ function Question() {
   const sendBtnRef = useRef<HTMLButtonElement>(null);
   const navigate = useNavigate();
   const location = useLocation();
-
-  useEffect(() => {
-    if (!isShowQuestion()) {
-      const userinfo = location.state?.userinfo as UserInfo | undefined;
-      if (userinfo) {
-        addLog(userinfo.SID, false, '');
-      }
-      navigate('/goodbye');
-    }
-  }, [location.state, navigate]);
 
   const handleCheckboxChange = (value: string) => {
     if (checkedUse.includes(value)) {
@@ -51,7 +41,7 @@ function Question() {
       return;
     }
 
-    addLog(userinfo.SID, false, answer);
+    addLog(userinfo.AINSID, false, answer);
     navigate('/goodbye');
   };
 

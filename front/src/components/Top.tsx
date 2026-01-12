@@ -30,8 +30,8 @@ function Top() {
       console.log('Read card data:', message);
 
       if (message.IsCard === true) {
-        if (message.IsNew === false && message.SID) {
-          getUserInfo(message.SID)
+        if (message.IsNew === false && message.AINSID) {
+          getUserInfo(message.AINSID)
             .then((res) => {
               if (res.IsEnter) {
                 navigate('/question', { state: { userinfo: res } });
@@ -43,7 +43,7 @@ function Top() {
               console.error(error);
             });
         } else if (message.CardID) {
-          navigate('/regist', { state: { cardid: message.CardID } });
+          navigate('/register', { state: { cardid: message.CardID } });
         }
       } else cardReaderError(e)
     };

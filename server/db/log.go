@@ -8,7 +8,7 @@ import (
 )
 
 // AddLog adds enter/leave log and updates user status in a transaction
-func AddLog(UID string, isEnter bool, Timestamp time.Time, Ext string, db *sql.DB) error {
+func AddLog(ainsID string, isEnter bool, Timestamp time.Time, Ext string, db *sql.DB) error {
 	// Start transaction for atomic operation
 	tx, err := db.Begin()
 	if err != nil {
@@ -30,27 +30,11 @@ func AddLog(UID string, isEnter bool, Timestamp time.Time, Ext string, db *sql.D
 
 	// Insert log entry
 	_, err = tx.Exec(
-		`INSERT INTO log (sid, isenter, time, ext) VALUES (?, ?, ?, ?)`,
-		UID, isEnterInt, tsMillis, Ext,
+		`INSERT INTO log (ainsID, isenter, time, ext) VALUES (?, ?, ?, ?)`,
+		ainsID, isEnterInt, tsMillis, Ext,
 	)
 	if err != nil {
 		return fmt.Errorf("failed to insert log: %w", err)
-	}
-
-	// Update user enter/leave status; create placeholder if the user is not registered
-	res, err := tx.Exec(`UPDATE users SET isenter=? WHERE sid=?`, isEnterInt, UID)
-	if err != nil {
-		return fmt.Errorf("failed to update user status: %w", err)
-	}
-
-	rows, err := res.RowsAffected()
-	if err != nil {
-		return fmt.Errorf("failed to confirm user update: %w", err)
-	}
-	if rows == 0 {
-		if _, err := tx.Exec(`INSERT INTO users (sid, name, isenter) VALUES (?, ?, ?)`, UID, "", isEnterInt); err != nil {
-			return fmt.Errorf("failed to create placeholder user %s: %w", UID, err)
-		}
 	}
 
 	// Commit transaction

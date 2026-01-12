@@ -1,22 +1,22 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { registCardInfo, getUserInfo } from '../utils/api';
+import { registerCardInfo, getUserInfo } from '../utils/api';
 import styles from './Register.module.css';
 
 function Register() {
-  const [sid, setSid] = useState('');
+  const [ainsID, setAinsID] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
   const cardid = location.state?.cardid || '';
 
-  const handleRegist = async () => {
+  const handleRegister = async () => {
     try {
-      const res = await registCardInfo(cardid, sid);
+      const res = await registerCardInfo(cardid, ainsID);
       if (res.Success !== true) {
         console.log('Card register failed');
-        alert('The ID is not found.');
+        alert(`Your AINS ID (${ainsID}) is not registered in the system\nPlease contact to administrator.`);
       } else {
-        const userinfo = await getUserInfo(sid);
+        const userinfo = await getUserInfo(ainsID);
         if (userinfo.IsEnter) {
           navigate('/question', { state: { userinfo } });
         } else {
@@ -31,18 +31,18 @@ function Register() {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      handleRegist();
+      handleRegister();
     }
   };
 
   return (
-    <div className={styles.regist}>
-      <div className={styles.studentNUM}>
-        <h1>Input your student number</h1>
+    <div className={styles.register}>
+      <div className={styles.ainsID}>
+        <h1>Please input your AINS ID</h1>
         <input
           type="text"
-          value={sid}
-          onChange={(e) => setSid(e.target.value)}
+          value={ainsID}
+          onChange={(e) => setAinsID(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="s13xxxxx"
         />

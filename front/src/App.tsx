@@ -18,7 +18,7 @@ function App() {
       const now = dayjs();
       const text = now.format('YYYY/MM/DD  HH:mm:ss');
       setClockText(text);
-    }, 500);
+    }, 1000);
 
     return () => clearInterval(timer);
   }, []);
@@ -35,7 +35,7 @@ function App() {
           <h2 className={styles.clockPos}>{clockText}</h2>
           <Routes>
             <Route path="/" element={<Top />} />
-            <Route path="/regist" element={<Register />} />
+            <Route path="/register" element={<Register />} />
             <Route path="/welcome" element={<Welcome />} />
             <Route path="/goodbye" element={<Goodbye />} />
             <Route path="/question" element={<Question />} />

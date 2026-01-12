@@ -14,7 +14,7 @@ function Welcome() {
   useEffect(() => {
     if (userinfo) {
       setUsername(userinfo.UserName);
-      addLog(userinfo.SID, true, '');
+      addLog(userinfo.AINSID, true, '');
     }
 
     const timer = setTimeout(() => {

@@ -1,7 +1,7 @@
 import type { UserInfo, RegistResponse } from '../types';
 
-export const getUserInfo = async (sid: string): Promise<UserInfo> => {
-  const response = await fetch(`http://localhost:3000/api/user?sid=${sid}`, {
+export const getUserInfo = async (ainsID: string): Promise<UserInfo> => {
+  const response = await fetch(`http://localhost:3000/api/user?AINSID=${ainsID}`, {
     mode: 'cors',
     method: 'GET',
     headers: {
@@ -17,9 +17,9 @@ export const getUserInfo = async (sid: string): Promise<UserInfo> => {
   return response.json();
 };
 
-export const registCardInfo = async (
+export const registerCardInfo = async (
   cardid: string,
-  sid: string
+  ainsID: string
 ): Promise<RegistResponse> => {
   const response = await fetch('http://localhost:3000/api/user', {
     mode: 'cors',
@@ -29,7 +29,7 @@ export const registCardInfo = async (
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      SID: sid,
+      AINSID: ainsID,
       CardID: cardid,
     }),
   });
@@ -38,12 +38,12 @@ export const registCardInfo = async (
 };
 
 export const addLog = async (
-  sid: string,
+  ainsID: string,
   isenter: boolean,
   ext: string
 ): Promise<Response | null> => {
   console.log({
-    SID: sid,
+    ainsID: ainsID,
     IsEnter: isenter,
     Ext: ext,
   });
@@ -57,7 +57,7 @@ export const addLog = async (
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        SID: sid,
+        AINSID: ainsID,
         IsEnter: isenter,
         Ext: ext,
       }),

@@ -5,7 +5,7 @@ import type { ErrorInfo } from '../types';
 import styles from './Forgot.module.css';
 
 function Forgot() {
-  const [sid, setSid] = useState('');
+  const [ainsID, setAinsID] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -13,7 +13,7 @@ function Forgot() {
 
   const handleForgot = async () => {
     try {
-      const res = await getUserInfo(sid);
+      const res = await getUserInfo(ainsID);
       console.log(res);
 
       if (res.UserName === '') {
@@ -45,8 +45,8 @@ function Forgot() {
         <h1>Input your student number</h1>
         <input
           type="text"
-          value={sid}
-          onChange={(e) => setSid(e.target.value)}
+          value={ainsID}
+          onChange={(e) => setAinsID(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="s13xxxxx"
         />

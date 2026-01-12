@@ -1,13 +1,15 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 printf "Input server hostname(including u-aizu.ac.jp):"
 read SERVER
 printf "Input your ID: "
 read USERID
 
-ssh ${USERID}@${SERVER} getent passwd |awk -F: '{print $1 "|" $5 "|0"}' > users_sqlite
+ssh ${USERID}@${SERVER} getent passwd |awk -F: '{print $1 "|" $5}' > users_sqlite
 
 sqlite3 ./database.db << EOF
 delete from users;
 .import users_sqlite users
 EOF
+
+rm users_sqlite

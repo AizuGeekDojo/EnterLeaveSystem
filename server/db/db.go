@@ -55,15 +55,15 @@ func createTables(db *sql.DB) error {
 	}{
 		{
 			name:   "users",
-			schema: `CREATE TABLE IF NOT EXISTS "users" (sid TEXT PRIMARY KEY, name TEXT NOT NULL, isenter INTEGER DEFAULT 0)`,
+			schema: `CREATE TABLE IF NOT EXISTS "users" (ainsID TEXT PRIMARY KEY, name TEXT NOT NULL)`,
 		},
 		{
 			name:   "idcard",
-			schema: `CREATE TABLE IF NOT EXISTS "idcard" (idm TEXT PRIMARY KEY, sid TEXT NOT NULL, FOREIGN KEY(sid) REFERENCES users(sid))`,
+			schema: `CREATE TABLE IF NOT EXISTS "idcard" (idm TEXT PRIMARY KEY, ainsID TEXT NOT NULL)`,
 		},
 		{
 			name:   "log",
-			schema: `CREATE TABLE IF NOT EXISTS "log" (id INTEGER PRIMARY KEY AUTOINCREMENT, sid TEXT NOT NULL, isenter INTEGER NOT NULL, time INTEGER NOT NULL, ext TEXT)`,
+			schema: `CREATE TABLE IF NOT EXISTS "log" (id INTEGER PRIMARY KEY AUTOINCREMENT, ainsID TEXT NOT NULL, isenter INTEGER NOT NULL, time INTEGER NOT NULL, ext TEXT)`,
 		},
 	}
 
@@ -75,9 +75,9 @@ func createTables(db *sql.DB) error {
 
 	// Create indexes for better query performance
 	indexes := []string{
-		`CREATE INDEX IF NOT EXISTS idx_users_sid ON users(sid)`,
+		`CREATE INDEX IF NOT EXISTS idx_users_ainsID ON users(ainsID)`,
 		`CREATE INDEX IF NOT EXISTS idx_idcard_idm ON idcard(idm)`,
-		`CREATE INDEX IF NOT EXISTS idx_log_sid ON log(sid)`,
+		`CREATE INDEX IF NOT EXISTS idx_log_ainsID ON log(ainsID)`,
 		`CREATE INDEX IF NOT EXISTS idx_log_time ON log(time)`,
 	}
 

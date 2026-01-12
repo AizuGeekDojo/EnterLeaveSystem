@@ -10,14 +10,14 @@ import (
 	"github.com/AizuGeekDojo/EnterLeaveSystem/server/db"
 )
 
-// RegistUserInfo is user register data structue for request
-type RegistUserInfo struct {
-	UID    string `json:"SID"`
+// RegisterUserInfo is user register data structue for request
+type RegisterUserInfo struct {
+	AINSID string `json:"AINSID"`
 	CardID string `json:"CardID"`
 }
 
-// RegistUserResInfo is user register data structue for response
-type RegistUserResInfo struct {
+// RegisterUserResInfo is user register data structue for response
+type RegisterUserResInfo struct {
 	Success bool   `json:"Success"`
 	Reason  string `json:"Reason"`
 }
@@ -29,7 +29,7 @@ type RegistUserResInfo struct {
 
 // UserInfo is user data structue for response
 type UserInfo struct {
-	UID      string `json:"SID"`
+	AINSID   string `json:"AINSID"`
 	UserName string `json:"UserName"`
 	IsEnter  bool   `json:"IsEnter"`
 }
@@ -49,6 +49,8 @@ func (h *Handler) UserAPIHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
 		getUserHandler(w, r, h.DB)
+	case "POST":
+		createUserHandler(w, r, h.DB)
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		fmt.Fprintf(w, "Unexpected method")
@@ -60,33 +62,31 @@ func getUserHandler(w http.ResponseWriter, r *http.Request, d *sql.DB) {
 	var userresdat UserInfo
 	r.ParseForm()
 
-	if len(r.Form["sid"]) == 0 {
+	if len(r.Form["AINSID"]) == 0 {
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintf(w, "Missing 'sid' parameter")
-		log.Printf("%v %v: Missing 'sid' parameter", r.Method, r.URL.Path)
+		fmt.Fprintf(w, "Missing 'ainsID' parameter")
+		log.Printf("%v %v: Missing 'ainsID' parameter", r.Method, r.URL.Path)
 		return
 	}
 
-	var uid = r.Form["sid"][0]
-
-	if err := validateSID(uid); err != nil {
+	var ainsID = r.Form["AINSID"][0]
+	if err := validateAinsID(ainsID); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintf(w, "Invalid SID: %v", err)
-		log.Printf("%v %v: Invalid SID: %v", r.Method, r.URL.Path, err)
+		fmt.Fprintf(w, "Invalid AINS ID: %v", err)
+		log.Printf("%v %v: Invalid AINS ID: %v", r.Method, r.URL.Path, err)
 		return
 	}
 
-	userresdat.UID = uid
-
-	username, isenter, err := db.GetUserInfo(uid, d)
+	userresdat.AINSID = ainsID
+	name, isEnter, err := db.GetUserEnterStatusByAinsID(ainsID, d)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		log.Printf("%v %v: db.GetUserInfo error: %v", r.Method, r.URL.Path, err)
+		log.Printf("%v %v: db.GetUserEnterStatusByAinsID error: %v", r.Method, r.URL.Path, err)
 		fmt.Fprintf(w, "{}")
 		return
 	}
-	userresdat.UserName = username
-	userresdat.IsEnter = isenter
+	userresdat.UserName = name
+	userresdat.IsEnter = isEnter
 
 	retbyte, err := json.Marshal(userresdat)
 	if err != nil {
@@ -94,6 +94,44 @@ func getUserHandler(w http.ResponseWriter, r *http.Request, d *sql.DB) {
 		log.Printf("%v %v: json.Marshal error: %v", r.Method, r.URL.Path, err)
 		fmt.Fprintf(w, "{}")
 		return
+	}
+	w.Write(retbyte)
+}
+
+func createUserHandler(w http.ResponseWriter, r *http.Request, d *sql.DB) {
+	var userdat RegisterUserInfo
+	var userresdat RegisterUserResInfo
+
+	if err := parseRequestBody(r, &userdat); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintf(w, "Bad request: %v", err)
+		log.Printf("%v %v: Bad request: %v", r.Method, r.URL.Path, err)
+		return
+	}
+
+	if err := validateAinsID(userdat.AINSID); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintf(w, "Invalid AINS ID: %v", err)
+		log.Printf("%v %v: Invalid AINS ID: %v", r.Method, r.URL.Path, err)
+		return
+	}
+
+	err := db.RegisterCard(userdat.CardID, userdat.AINSID, d)
+	if err == nil {
+		userresdat.Success = true
+		userresdat.Reason = ""
+	} else {
+		userresdat.Success = false
+		userresdat.Reason = fmt.Sprintf("%v\n", err)
+		log.Printf("%v %v: Bad request: %v", r.Method, r.URL.Path, err)
+		w.WriteHeader(http.StatusBadRequest)
+	}
+
+	retbyte, err := json.Marshal(userresdat)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Printf("%v %v: json.Marshal error: %v", r.Method, r.URL.Path, err)
+		fmt.Fprintf(w, "{}")
 	}
 	w.Write(retbyte)
 }

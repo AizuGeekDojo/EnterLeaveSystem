@@ -57,13 +57,13 @@ func handleRequestError(w http.ResponseWriter, r *http.Request, statusCode int, 
 	log.Printf("%v %v: %s: %v", r.Method, r.URL.Path, message, err)
 }
 
-// validateSID validates student ID format (basic validation)
-func validateSID(sid string) error {
-	if sid == "" {
-		return fmt.Errorf("SID cannot be empty")
+// validateAinsID validates student ID format (basic validation)
+func validateAinsID(ainsID string) error {
+	if ainsID == "" {
+		return fmt.Errorf("AINS ID cannot be empty")
 	}
-	if len(sid) > 100 {
-		return fmt.Errorf("SID too long (max 100 characters)")
+	if len(ainsID) > 100 {
+		return fmt.Errorf("AINS ID too long (max 100 characters)")
 	}
 	return nil
 }

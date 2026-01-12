@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """NFC card reader for student ID and university cards."""
 
-import sys
 import nfc
 
 SERVICE_CODE = 0x300b
@@ -26,7 +25,7 @@ def on_connect(tag):
                 elif sid[0] == "8":
                     print(f"student d{sid}")
             else:
-                print(f"univ {data}")
+                print(f"faculty {data}")
         except Exception as e:
             # General card - use IDm as identifier
             idm_hex = "".join([f"{s:02x}" for s in tag.idm])

@@ -13,9 +13,9 @@ import (
 
 // LogInfo is log data structue
 type LogInfo struct {
-	UID     string `json:"SID"`
-	IsEnter bool   `json:"IsEnter"`
-	Ext     string `json:"Ext"`
+	AINSID   string `json:"AINSID"`
+	IsEnter  bool   `json:"IsEnter"`
+	Ext      string `json:"Ext"`
 }
 
 //LogAPIHandler handles http request for logging
@@ -39,27 +39,27 @@ func (h *Handler) LogAPIHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func addLogHandler(w http.ResponseWriter, r *http.Request, d *sql.DB) {
-	var logdat LogInfo
-	if err := parseRequestBody(r, &logdat); err != nil {
+	var logData LogInfo
+	if err := parseRequestBody(r, &logData); err != nil {
 		handleRequestError(w, r, http.StatusBadRequest, "Bad request", err)
 		return
 	}
 
-	if err := validateSID(logdat.UID); err != nil {
-		handleRequestError(w, r, http.StatusBadRequest, "Invalid SID", err)
+	if err := validateAinsID(logData.AINSID); err != nil {
+		handleRequestError(w, r, http.StatusBadRequest, "Invalid AINS ID", err)
 		return
 	}
 
 	ts := time.Now()
-	name, _, err := db.GetUserInfo(logdat.UID, d)
+	name, _, err := db.GetUserEnterStatusByAinsID(logData.AINSID, d)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintf(w, "Internal server error: %v", err)
-		log.Printf("%v %v: db.GetUserInfo error: %v", r.Method, r.URL.Path, err)
+		log.Printf("%v %v: db.GetUserEnterStatusByAinsID error: %v", r.Method, r.URL.Path, err)
 		return
 	}
 
-	err = db.AddLog(logdat.UID, logdat.IsEnter, ts, logdat.Ext, d)
+	err = db.AddLog(logData.AINSID, logData.IsEnter, ts, logData.Ext, d)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintf(w, "Internal server error: %v", err)
@@ -67,7 +67,7 @@ func addLogHandler(w http.ResponseWriter, r *http.Request, d *sql.DB) {
 		return
 	}
 
-	err = utils.SlackNotify(name, logdat.UID, logdat.IsEnter, ts, logdat.Ext)
+	err = utils.SlackNotify(name, logData.AINSID, logData.IsEnter, ts, logData.Ext)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintf(w, "Internal server error: %v", err)

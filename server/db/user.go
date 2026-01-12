@@ -7,29 +7,54 @@ import (
 	"time"
 )
 
-// GetUserInfo returns username the person is in the room or not.
+// GetUserEnterStatusByAinsID returns username the person is in the room or not.
 // If the person in the room, return true
-func GetUserInfo(UID string, db *sql.DB) (string, bool, error) {
+func GetUserEnterStatusByAinsID(ainsID string, db *sql.DB) (string, bool, error) {
 	// Check cardID is not registered
-	row := db.QueryRow(`SELECT name,isenter FROM users WHERE sid=?`, UID)
-	var isenter int
-	var name string
-	err := row.Scan(&name, &isenter)
+	row := db.QueryRow(`
+		SELECT name, isEnter
+		FROM log
+		LEFT OUTER JOIN users ON log.ainsID = users.ainsID
+		WHERE log.ainsID=?
+		ORDER BY log.time DESC
+		LIMIT 1
+	`, ainsID)
+	var isEnter int
+	var name *string
+	err := row.Scan(&name, &isEnter)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return "", false, nil
 		}
 		return "", false, err
 	}
-	return name, (isenter == 1), nil
+	if name == nil {
+		return "", (isEnter == 1), nil
+	}
+	return *name, (isEnter == 1), nil
 }
 
-// GetUIDByCardID is return UID by felica's IDm or ID code
-// This is prepared for not student person
-// If UID is not found, return nil
-func GetUIDByCardID(CardID string, db *sql.DB) (string, error) {
+// GetUserInfoByAinsID returns username by ainsID
+func GetUserInfoByAinsID(ainsID string, db *sql.DB) (string, error) {
 	// Check cardID is not registered
-	row := db.QueryRow(`SELECT sid FROM idcard WHERE idm=?`, CardID)
+	row := db.QueryRow(`SELECT name FROM users WHERE ainsID=?`, ainsID)
+	var name string
+	err := row.Scan(&name)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return "", nil
+		}
+		return "", err
+	}
+	return name, nil
+}
+
+// GetAinsIDByCardID is return ainsID by felica's IDm or ID code
+// This is prepared for not student person
+// If ainsID is not found, return nil
+func GetAinsIDByCardID(cardID string, db *sql.DB) (string, error) {
+	// Check cardID is not registered
+	row := db.QueryRow(`SELECT ainsID FROM idcard WHERE idm=?`, cardID)
 	var sid string
 	err := row.Scan(&sid)
 	if err != nil {
@@ -39,36 +64,6 @@ func GetUIDByCardID(CardID string, db *sql.DB) (string, error) {
 		return "", err
 	}
 	return sid, nil
-}
-
-// RegisterCard registers a card ID with a user ID
-func RegisterCard(CardID string, UID string, db *sql.DB) error {
-	// Check user exists
-	gotuid, _, err := GetUserInfo(UID, db)
-	if err != nil {
-		return fmt.Errorf("failed to get user info: %w", err)
-	}
-	if gotuid == "" {
-		return fmt.Errorf("user ID %q not found", UID)
-	}
-
-	// Check cardID is not already registered
-	row := db.QueryRow(`SELECT sid FROM idcard WHERE idm=? AND sid=?`, CardID, UID)
-	var sid string
-	err = row.Scan(&sid)
-	if err != sql.ErrNoRows {
-		if err == nil {
-			return fmt.Errorf("card %q is already registered to user %q", CardID, UID)
-		}
-		return fmt.Errorf("failed to check card registration: %w", err)
-	}
-
-	// Register cardID into database
-	_, err = db.Exec(`INSERT INTO idcard (idm, sid) VALUES (?, ?)`, CardID, UID)
-	if err != nil {
-		return fmt.Errorf("failed to register card: %w", err)
-	}
-	return nil
 }
 
 // ForceLeave sets all users to leave status (called daily at midnight)
@@ -86,40 +81,34 @@ func ForceLeave(d *sql.DB) error {
 		}
 	}()
 
-	// Query users who are currently in the room
-	rows, err := tx.Query(`SELECT sid, name FROM users WHERE isenter=1`)
+	timeMillis := time.Now().UnixNano() / int64(time.Millisecond)
+	yesterdayStartTime := timeMillis - 24*60*60*1000
+	count := 0
+
+	// Select all users who are currently in the room
+	rows, err := tx.Query(`SELECT ainsID FROM log WHERE isEnter=1 AND time<?`, yesterdayStartTime)
 	if err != nil {
-		return fmt.Errorf("failed to query users: %w", err)
+		return fmt.Errorf("failed to query users in room: %w", err)
 	}
 	defer rows.Close()
 
-	ts := time.Now()
-	tsMillis := ts.UnixNano() / int64(time.Millisecond)
-	count := 0
-
 	// Process each user
 	for rows.Next() {
-		var sid, name string
-		if err := rows.Scan(&sid, &name); err != nil {
+		var ainsID string
+		if err := rows.Scan(&ainsID); err != nil {
 			return fmt.Errorf("failed to scan user row: %w", err)
 		}
 
 		// Insert leave log
 		_, err := tx.Exec(
-			`INSERT INTO log (sid, isenter, time, ext) VALUES (?, ?, ?, ?)`,
-			sid, 0, tsMillis, "",
+			`INSERT INTO log (ainsID, isEnter, time, ext) VALUES (?, ?, ?, ?)`,
+			ainsID, 0, timeMillis, "",
 		)
 		if err != nil {
-			return fmt.Errorf("failed to insert log for user %s: %w", sid, err)
+			return fmt.Errorf("failed to insert log for user %s: %w", ainsID, err)
 		}
 
-		// Update user status to left
-		_, err = tx.Exec(`UPDATE users SET isenter=? WHERE sid=?`, 0, sid)
-		if err != nil {
-			return fmt.Errorf("failed to update user %s: %w", sid, err)
-		}
-
-		log.Printf("Force left: %s (%s)", sid, name)
+		log.Printf("Force left: %s", ainsID)
 		count++
 	}
 
