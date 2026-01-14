@@ -12,14 +12,20 @@ import (
 func GetUserEnterStatusByAinsID(ainsID string, db *sql.DB) (string, bool, error) {
 	// Check cardID is not registered
 	row := db.QueryRow(`
-		SELECT name, isEnter
-		FROM log
-		LEFT OUTER JOIN users ON log.ainsID = users.ainsID
-		WHERE log.ainsID=?
-		ORDER BY log.time DESC
-		LIMIT 1
+		SELECT
+		  	u.name,
+			(
+				SELECT l.isEnter
+				FROM log AS l
+				WHERE l.ainsID = u.ainsID
+				ORDER BY l.time DESC
+				LIMIT 1
+			) AS isEnter
+		FROM users AS u
+		WHERE u.ainsID = ?;
+
 	`, ainsID)
-	var isEnter int
+	var isEnter *int
 	var name *string
 	err := row.Scan(&name, &isEnter)
 	if err != nil {
@@ -29,9 +35,9 @@ func GetUserEnterStatusByAinsID(ainsID string, db *sql.DB) (string, bool, error)
 		return "", false, err
 	}
 	if name == nil {
-		return "", (isEnter == 1), nil
+		return "", (isEnter != nil && *isEnter == 1), nil
 	}
-	return *name, (isEnter == 1), nil
+	return *name, (isEnter != nil && *isEnter == 1), nil
 }
 
 // GetUserInfoByAinsID returns username by ainsID
