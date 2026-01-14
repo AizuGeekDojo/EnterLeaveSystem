@@ -1,7 +1,6 @@
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
 CREATE TABLE IF NOT EXISTS "users" (sid TEXT,name TEXT,isenter INTEGER);
-INSERT INTO users VALUES('s1240095','Yusuke Namiki',0);
 CREATE TABLE IF NOT EXISTS "idcard" (idm TEXT,sid TEXT);
 CREATE TABLE IF NOT EXISTS "log" (sid TEXT,isenter INTEGER,time INTEGER,ext TEXT);
 COMMIT;
