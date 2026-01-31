@@ -5,11 +5,15 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
-	"net/http"
-	"net/url"
 	"strings"
 	"time"
+
+	"github.com/slack-go/slack"
+)
+
+const (
+	// TimestampMillisecondDivisor converts Unix timestamp from milliseconds to seconds
+	TimestampMillisecondDivisor = 1000
 )
 
 // csvExport exports log data as CSV text
@@ -32,7 +36,7 @@ func csvExport(d *sql.DB) (string, error) {
 			return "", err
 		}
 
-		datefmted := time.Unix(ts/1000, 0).Format("2006-01-02 15:04:05")
+		datefmted := time.Unix(ts/TimestampMillisecondDivisor, 0).Format("2006-01-02 15:04:05")
 		entstr := "Leave"
 		if isenter == 1 {
 			entstr = "Enter"
@@ -47,8 +51,14 @@ func csvExport(d *sql.DB) (string, error) {
 				return "", err
 			}
 
-			useage := ExtList["Use"].([]interface{})
-			mess := ExtList["message"].(string)
+			useage, ok := ExtList["Use"].([]interface{})
+			if !ok {
+				return "", errors.New("invalid Ext format: 'Use' field is not an array")
+			}
+			mess, ok := ExtList["message"].(string)
+			if !ok {
+				return "", errors.New("invalid Ext format: 'message' field is not a string")
+			}
 			mess = strings.Replace(mess, "\"", "\"\"", -1)
 
 			csv += fmt.Sprintf("%v,%v,%v,%v,%v,\"%v\"\n", datefmted, sid, name, entstr, useage, mess)
@@ -66,49 +76,33 @@ func csvExport(d *sql.DB) (string, error) {
 
 // sendMonthlyLog sends csv log file via slack
 func sendMonthlyLog(d *sql.DB) error {
-	cfg := GetSlackInfo()
-	UPLOADURL := "https://slack.com/api/files.upload"
-	TOKEN := cfg.CSVLOGTOKEN
-	CHANNEL := cfg.CSVLOGCHID
+	// Use initialized Slack client (socket mode capable) like slack.go
+	client := GetSlackClient()
+	if client == nil {
+		return errors.New("Slack client is not initialized")
+	}
 
+	cfg := GetSlackInfo()
 	csv, err := csvExport(d)
 	if err != nil {
 		return err
 	}
-	resp, err := http.PostForm(
-		UPLOADURL,
-		url.Values{
-			"token":           {TOKEN},
-			"channels":        {CHANNEL},
-			"filename":        {"log.csv"},
-			"initial_comment": {"Enter leave log (csv format) by csvexport"},
-			"title":           {"log.csv"},
-			"content":         {csv},
-		},
-	)
+
+	// Upload the CSV content using UploadFileV2 (files.upload v2)
+	_, err = client.UploadFileV2(slack.UploadFileV2Parameters{
+		Filename:       "log.csv",
+		Title:          "log.csv",
+		InitialComment: "Enter leave log (csv format) by csvexport",
+		Content:        csv,
+		FileSize:       len([]byte(csv)),
+		Channel:        cfg.CSVLogChannelID,
+	})
 	if err != nil {
 		return err
 	}
 
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
+	if _, err = d.Exec(`delete from log`); err != nil {
 		return err
 	}
-	defer resp.Body.Close()
-
-	var res = make(map[string]interface{})
-	err = json.Unmarshal(body, &res)
-	if err != nil {
-		return err
-	}
-	if !res["ok"].(bool) {
-		return errors.New(res["error"].(string))
-	}
-
-	_, err = d.Exec(`delete from log`)
-	if err != nil {
-		return err
-	}
-
 	return nil
 }

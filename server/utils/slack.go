@@ -4,110 +4,113 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"log"
-	"net/http"
-	"net/url"
+	"sync"
 	"time"
+
+	"github.com/slack-go/slack"
+	"github.com/slack-go/slack/socketmode"
 )
 
-// WebHook is structure for slack notify
-type WebHook struct {
-	Channel     string       `json:"channel"`
-	Username    string       `json:"username"`
-	Text        string       `json:"text"`
-	IconEmoji   string       `json:"icon_emoji"`
-	Attachments []Attachment `json:"attachments"`
+var (
+	slackClient     *slack.Client
+	socketClient    *socketmode.Client
+	slackClientOnce sync.Once
+)
+
+// InitSlackSocketMode initializes the Slack Socket Mode client
+func InitSlackSocketMode() error {
+	var err error
+	slackClientOnce.Do(func() {
+		cfg := GetSlackInfo()
+		if cfg.BotToken == "" {
+			err = errors.New("Slack Bot Token is not defined")
+			return
+		}
+
+		slackClient = slack.New(
+			cfg.BotToken,
+			slack.OptionAppLevelToken(cfg.AppToken),
+		)
+
+		if cfg.AppToken != "" {
+			socketClient = socketmode.New(
+				slackClient,
+				socketmode.OptionDebug(false),
+			)
+			log.Println("Slack Socket Mode initialized")
+		} else {
+			log.Println("Slack client initialized (no App Token for Socket Mode)")
+		}
+	})
+	return err
 }
 
-// Attachment is structure for slack notify data
-type Attachment struct {
-	Title   string `json:"title"`
-	Pretext string `json:"pretext"`
-	Text    string `json:"text"`
-}
-
-// WebHookInit returns new WebHook data
-func WebHookInit(cfg *SlackInfo) *WebHook {
-	return &WebHook{
-		Username:  cfg.UserName,
-		IconEmoji: cfg.IconEmoji,
-		Channel:   cfg.Channel,
+// GetSlackClient returns the initialized Slack client
+func GetSlackClient() *slack.Client {
+	if slackClient == nil {
+		if err := InitSlackSocketMode(); err != nil {
+			log.Printf("Failed to initialize Slack client: %v", err)
+			return nil
+		}
 	}
+	return slackClient
 }
 
-// SlackNotify sends slack notification.
-func SlackNotify(Name string, UID string, isEnter bool, Timestamp time.Time, Ext string) error {
+// SlackNotify sends Slack notification using slack-go socket mode client.
+func SlackNotify(name string, uid string, isEnter bool, timestamp time.Time, ext string) error {
+	client := GetSlackClient()
+	if client == nil {
+		return errors.New("Slack client is not initialized")
+	}
 
 	cfg := GetSlackInfo()
-	HookJSON := WebHookInit(&cfg)
-
-	var io string
-	if isEnter {
-		io = "入室"
-	} else {
-		io = "退室"
+	if cfg.ChannelID == "" {
+		return errors.New("Slack ChannelID is not defined")
 	}
 
-	HookJSON.Text = fmt.Sprintf("%v : %v さんが %v に%vしました。", UID, Name, Timestamp.Format("2006-01-02 15:04:05"), io)
+	status := "退室"
+	if isEnter {
+		status = "入室"
+	}
 
-	if Ext != "" {
-		var RawJSON = []byte(Ext)
-		var ExtList = make(map[string]interface{})
+	var messageText string
+	if name == "" {
+		messageText = fmt.Sprintf("%v : (未登録ユーザー)が %v に%vしました。", uid, timestamp.Format("2006-01-02 15:04:05"), status)
+	} else {
+		messageText = fmt.Sprintf("%v : %v さんが %v に%vしました。", uid, name, timestamp.Format("2006-01-02 15:04:05"), status)
+	}
 
-		err := json.Unmarshal(RawJSON, &ExtList)
-		if err != nil {
+	var attachments []slack.Attachment
+
+	if ext != "" {
+		var extMap map[string]interface{}
+		if err := json.Unmarshal([]byte(ext), &extMap); err != nil {
 			log.Println(err)
-			log.Println("Error has occured in SlackNotify. User Ext is : ", Ext)
+			log.Println("Error has occured in SlackNotify. User Ext is : ", ext)
 			return err
 		}
 
-		useage := ExtList["Use"].([]interface{})
-		mess := ExtList["message"].(string)
-
-		HookJSON.Attachments = append(HookJSON.Attachments, Attachment{
+		usage := extMap["Use"]
+		mess := extMap["message"]
+		attachments = append(attachments, slack.Attachment{
 			Title: "アンケート結果",
-			Text:  fmt.Sprintf("目的 : %v \n 感想 : %v", useage, mess),
+			Text:  fmt.Sprintf("目的 : %v \n 感想 : %v", usage, mess),
 		})
 	}
-
-	err := postEnterLeaveLog(HookJSON)
-	if err != nil {
-		log.Println(err)
-		return err
-	}
-	return nil
-}
-
-func postEnterLeaveLog(ellog *WebHook) error {
-	IncomingURL := GetSlackInfo().GetWebHookURL()
-	if IncomingURL == "" {
-		return errors.New("Slack URL is not defined")
-	}
-
-	params, err := json.Marshal(ellog)
-	if err != nil {
-		return err
-	}
-
-	client := http.Client{
-		Timeout: time.Duration(5 * time.Second),
-	}
-
-	resp, err := client.PostForm(
-		IncomingURL,
-		url.Values{"payload": {string(params)}},
+	log.Println(cfg.ChannelID)
+	_, _, err := client.PostMessage(
+		cfg.ChannelID,
+		slack.MsgOptionText(messageText, false),
+		slack.MsgOptionUsername(cfg.UserName),
+		slack.MsgOptionIconEmoji(cfg.IconEmoji),
+		slack.MsgOptionAttachments(attachments...),
 	)
+
 	if err != nil {
+		log.Printf("Failed to send Slack message: %v", err)
 		return err
 	}
 
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-
-	println(string(body))
 	return nil
 }

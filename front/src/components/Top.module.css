@@ -1,0 +1,38 @@
+.top {
+  text-align: center;
+  height: 100%;
+  width: 100%;
+}
+
+h1 {
+  font-size: 4rem;
+  font-weight: normal;
+  letter-spacing: 0.05rem;
+}
+
+.forgetPos {
+  font-size: 45px;
+  color: #3282ce;
+}
+
+.message {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  width: 80%;
+  height: 200px;
+}
+
+.roomPos {
+  position: fixed;
+  bottom: 0;
+  padding: 24px 48px;
+  font-size: 1.5rem;
+  font-weight: normal;
+  letter-spacing: 0.05rem;
+  color: #8b8b8b;
+  margin: 0;
+}

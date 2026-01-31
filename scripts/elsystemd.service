@@ -1,0 +1,16 @@
+[Unit]
+Description=Enter Leave System Daemon
+After=network.target local-fs.target
+Requires=network.target local-fs.target
+
+[Service]
+User=geek
+EnvironmentFile=%h/EnterLeaveSystem/.env
+WorkingDirectory=%h/EnterLeaveSystem
+ExecStart=%h/EnterLeaveSystem/elsystem
+ExecStop=/bin/kill -SIGINT $MAINPID
+Restart=always
+Type=simple
+
+[Install]
+WantedBy=multi-user.target
