@@ -16,9 +16,11 @@ const (
 	TimestampMillisecondDivisor = 1000
 )
 
+const Enter = 1
+
 // csvExport exports log data as CSV text
 func csvExport(d *sql.DB) (string, error) {
-	rows, err := d.Query(`select time,log.sid,name,log.isenter,ext from log,users where log.sid=users.sid`)
+	rows, err := d.Query(`SELECT log.time,log.ainsID,users.name,log.isenter,log.ext FROM log,users WHERE log.ainsID=users.ainsID`)
 	if err != nil {
 		return "", err
 	}
@@ -27,18 +29,18 @@ func csvExport(d *sql.DB) (string, error) {
 	for rows.Next() {
 		var (
 			ts      int64
-			sid     string
+			ainsID     string
 			name    string
-			isenter int64
+			isEnter int64
 			ext     string
 		)
-		if err := rows.Scan(&ts, &sid, &name, &isenter, &ext); err != nil {
+		if err := rows.Scan(&ts, &ainsID, &name, &isEnter, &ext); err != nil {
 			return "", err
 		}
 
 		datefmted := time.Unix(ts/TimestampMillisecondDivisor, 0).Format("2006-01-02 15:04:05")
 		entstr := "Leave"
-		if isenter == 1 {
+		if isEnter == Enter {
 			entstr = "Enter"
 		}
 
@@ -61,9 +63,9 @@ func csvExport(d *sql.DB) (string, error) {
 			}
 			mess = strings.Replace(mess, "\"", "\"\"", -1)
 
-			csv += fmt.Sprintf("%v,%v,%v,%v,%v,\"%v\"\n", datefmted, sid, name, entstr, useage, mess)
+			csv += fmt.Sprintf("%v,%v,%v,%v,%v,\"%v\"\n", datefmted, ainsID, name, entstr, useage, mess)
 		} else {
-			csv += fmt.Sprintf("%v,%v,%v,%v,,\n", datefmted, sid, name, entstr)
+			csv += fmt.Sprintf("%v,%v,%v,%v,,\n", datefmted, ainsID, name, entstr)
 		}
 	}
 	err = rows.Close()
@@ -101,7 +103,7 @@ func sendMonthlyLog(d *sql.DB) error {
 		return err
 	}
 
-	if _, err = d.Exec(`delete from log`); err != nil {
+	if _, err = d.Exec(`DELETE FROM log`); err != nil {
 		return err
 	}
 	return nil
