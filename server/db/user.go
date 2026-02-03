@@ -92,7 +92,17 @@ func ForceLeave(d *sql.DB) error {
 	count := 0
 
 	// Select all users who are currently in the room
-	rows, err := tx.Query(`SELECT ainsID FROM log WHERE isEnter=1 AND time<?`, yesterdayStartTime)
+	rows, err := tx.Query(`
+       SELECT ainsID
+       FROM log l
+       WHERE time = (
+               SELECT MAX(time)
+               FROM log
+               WHERE ainsID = l.ainsID
+                 AND time >= ?
+       )
+       AND isEnter = 1
+    `, yesterdayStartTime)
 	if err != nil {
 		return fmt.Errorf("failed to query users in room: %w", err)
 	}
