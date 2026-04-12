@@ -136,9 +136,9 @@ func SlackNotifyReaderError(errMsg string, recovered bool) error {
 
 	var messageText string
 	if recovered {
-		messageText = ":white_check_mark: カードリーダーとの通信が回復しました。"
+		messageText = ":white_check_mark: 受付システム: カードリーダーとの通信が回復しました。"
 	} else {
-		messageText = fmt.Sprintf(":warning: カードリーダーとの通信ができなくなりました。エラー: %v", errMsg)
+		messageText = fmt.Sprintf(":warning: 受付システム: カードリーダーとの通信ができなくなりました。エラー: %v", errMsg)
 	}
 
 	_, _, err := client.PostMessage(
