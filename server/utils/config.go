@@ -11,7 +11,7 @@ type SlackInfo struct {
 	UserName        string `envconfig:"USER_NAME" default:"Logging Bot"`
 	IconEmoji       string `envconfig:"ICON_EMOJI" default:":robot_face:"`
 	ChannelID       string `envconfig:"CHANNEL_ID" default:"#enter_leave_log"`
-	ErrorChannelID  string `envconfig:"ERROR_CHANNEL_ID" default:""`
+	ErrorChannelID  string `envconfig:"ERROR_CHANNEL_ID" default:"#_sa_system"`
 	CSVLogToken     string `envconfig:"CSV_LOG_TOKEN" default:""`
 	CSVLogChannelID string `envconfig:"CSV_LOG_CHANNEL_ID" default:""`
 }
