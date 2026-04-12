@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/AizuGeekDojo/EnterLeaveSystem/server/db"
+	"github.com/AizuGeekDojo/EnterLeaveSystem/server/utils"
 	"golang.org/x/net/websocket"
 )
 
@@ -37,12 +38,22 @@ var (
 
 // ReadCard runs card reader program, wait card data and send to clients.
 func ReadCard(d *sql.DB) {
+	readerErrorActive := false
+
 	for {
 		var CardData IDCardInfo
 		data, err := exec.Command("python3", "server/nfc/nfc_reader.py").Output()
 		// data, err := exec.Command("python3", "server/test/nfc_reader.py").Output()
 		if err != nil {
 			log.Printf("socket: nfc reader error : %v\n", err)
+
+			// Notify Slack only on the first occurrence of a reader error.
+			if !readerErrorActive {
+				readerErrorActive = true
+				if notifyErr := utils.SlackNotifyReaderError(err.Error(), false); notifyErr != nil {
+					log.Printf("socket: failed to send Slack reader error notification: %v", notifyErr)
+				}
+			}
 
 			CardData.ReaderErr = err.Error()
 			CardData.IsCard = false
@@ -61,6 +72,14 @@ func ReadCard(d *sql.DB) {
 			clientsMutex.RUnlock()
 			time.Sleep(ReaderErrorRetryDelay)
 			continue
+		}
+
+		// Reader recovered from an error state – notify Slack.
+		if readerErrorActive {
+			readerErrorActive = false
+			if notifyErr := utils.SlackNotifyReaderError("", true); notifyErr != nil {
+				log.Printf("socket: failed to send Slack reader recovery notification: %v", notifyErr)
+			}
 		}
 
 		datstrspl := strings.Split(string(data), " ")

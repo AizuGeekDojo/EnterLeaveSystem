@@ -114,3 +114,43 @@ func SlackNotify(name string, uid string, isEnter bool, timestamp time.Time, ext
 
 	return nil
 }
+
+// SlackNotifyReaderError sends a Slack notification about a card reader error.
+// When recovered is true, it sends a recovery message instead of an error message.
+func SlackNotifyReaderError(errMsg string, recovered bool) error {
+	client := GetSlackClient()
+	if client == nil {
+		return errors.New("Slack client is not initialized")
+	}
+
+	cfg := GetSlackInfo()
+
+	// Use the dedicated error channel if configured, otherwise fall back to the main channel.
+	channelID := cfg.ErrorChannelID
+	if channelID == "" {
+		channelID = cfg.ChannelID
+	}
+	if channelID == "" {
+		return errors.New("Slack ChannelID is not defined")
+	}
+
+	var messageText string
+	if recovered {
+		messageText = ":white_check_mark: 受付システム: カードリーダーとの通信が回復しました。"
+	} else {
+		messageText = fmt.Sprintf(":warning: 受付システム: カードリーダーとの通信ができなくなりました。エラー: %v", errMsg)
+	}
+
+	_, _, err := client.PostMessage(
+		channelID,
+		slack.MsgOptionText(messageText, false),
+		slack.MsgOptionUsername(cfg.UserName),
+		slack.MsgOptionIconEmoji(cfg.IconEmoji),
+	)
+	if err != nil {
+		log.Printf("Failed to send Slack reader error message: %v", err)
+		return err
+	}
+
+	return nil
+}
