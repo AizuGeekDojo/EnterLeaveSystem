@@ -75,7 +75,7 @@ func run() error {
 
 	// Start NFC card reader in background
 	log.Println("Starting NFC card reader...")
-	go handler.ReadCard(d)
+	go handler.ReadCard(ctx, d)
 
 	// Start cron scheduler
 	log.Println("Starting cron scheduler...")

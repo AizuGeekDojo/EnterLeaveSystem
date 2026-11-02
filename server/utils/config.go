@@ -16,11 +16,22 @@ type SlackInfo struct {
 	CSVLogChannelID string `envconfig:"CSV_LOG_CHANNEL_ID" default:""`
 }
 
-var slackinfo SlackInfo
+// ReaderInfo is structure for card reader info in env
+type ReaderInfo struct {
+	// Mock reads cards from stdin instead of the RC-S380 (for development)
+	Mock bool `envconfig:"NFC_MOCK" default:"false"`
+}
+
+var (
+	slackinfo  SlackInfo
+	readerinfo ReaderInfo
+)
 
 func init() {
-	err := envconfig.Process("AGD", &slackinfo)
-	if err != nil {
+	if err := envconfig.Process("AGD", &slackinfo); err != nil {
+		panic(err)
+	}
+	if err := envconfig.Process("AGD", &readerinfo); err != nil {
 		panic(err)
 	}
 }
@@ -28,4 +39,9 @@ func init() {
 // GetSlackInfo returns slack config info
 func GetSlackInfo() SlackInfo {
 	return slackinfo
+}
+
+// GetReaderInfo returns card reader config info
+func GetReaderInfo() ReaderInfo {
+	return readerinfo
 }

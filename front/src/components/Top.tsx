@@ -49,7 +49,8 @@ function Top() {
     };
 
     ws.onerror = (e) => {
-      cardReaderError(e);
+      // A dropped socket is not a reader failure; onclose reconnects.
+      console.log('Card reader socket error', e);
     };
 
     ws.onclose = () => {
