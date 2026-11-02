@@ -25,7 +25,8 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: dist
-        path: ./front/dist
+        path: ./dist
+        if-no-files-found: error
 
   buildserver:
     runs-on: ubuntu-latest
@@ -56,3 +57,4 @@ jobs:
       with:
         name: elsystem
         path: ./elsystem
+        if-no-files-found: error
