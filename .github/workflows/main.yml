@@ -12,100 +12,47 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20.x'
-    - name: Make front build directory
-      run: |
-        mkdir -p fbuild/agd
-        mkdir -p fbuild/gl
-    - name: Restore cache
-      uses: actions/cache@v4
-      with:
-        path: ./front/node_modules
-        key: npm-front-${{ hashFiles('front/package-lock.json') }}
-        restore-keys: npm-front-
+        node-version: '22.x'
+        cache: npm
+        cache-dependency-path: front/package-lock.json
     - name: Install dependency
-      run: |
-        cd front
-        npm install
-    - name: Build front for AGD version
-      run: |
-        cd front
-        cp .env.agd .env.production
-        npm run build
-        mv dist ../fbuild/agd/
-    - name: Build front for GL version
-      run: |
-        cd front
-        cp .env.gl .env.production
-        npm run build
-        mv dist ../fbuild/gl/
-    - name: Persist front builds
+      working-directory: front
+      run: npm ci
+    - name: Build front
+      working-directory: front
+      run: npm run build
+    - name: Persist front build
       uses: actions/upload-artifact@v4
       with:
-        name: fbuild
-        path: ./fbuild
+        name: dist
+        path: ./front/dist
 
   buildserver:
     runs-on: ubuntu-latest
-    container: aizugeekdojo/cgo-arm:latest
 
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-    - name: Make server build directory
-      run: mkdir sbuild
-    - name: Restore cache
-      uses: actions/cache@v4
+    - name: Setup Go
+      uses: actions/setup-go@v5
       with:
-        path: /go/pkg/mod
-        key: gomod-${{ hashFiles('go.sum') }}
-        restore-keys: gomod-
-    - name: Build server
-      run: GO111MODULE=on go build -o sbuild/elsystem server/main.go
-    - name: Persist server builds
+        go-version-file: go.mod
+    - name: Vet
+      run: go vet ./server/...
+    - name: Test
+      run: go test ./server/...
+    - name: Install ARM cross compiler
+      run: sudo apt-get update && sudo apt-get install -y gcc-arm-linux-gnueabihf
+    - name: Build server for Raspberry Pi (ARMv7)
+      env:
+        CGO_ENABLED: '1'
+        GOOS: linux
+        GOARCH: arm
+        GOARM: '7'
+        CC: arm-linux-gnueabihf-gcc
+      run: go build -o elsystem ./server
+    - name: Persist server build
       uses: actions/upload-artifact@v4
       with:
-        name: sbuild
-        path: ./sbuild
-
-  release:
-    needs:
-    - buildfront
-    - buildserver
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-    - name: Restore front build
-      uses: actions/download-artifact@v4
-      with:
-        name: fbuild
-    - name: Restore server build
-      uses: actions/download-artifact@v4
-      with:
-        name: sbuild
-    - name: Make build directory
-      run: |
-        mkdir -p build/agd/EnterLeaveSystem
-        mkdir -p build/gl/EnterLeaveSystem
-    - name: Copy front build files
-      run: |
-        cp -r fbuild/agd/dist build/agd/EnterLeaveSystem/
-        cp -r fbuild/gl/dist build/gl/EnterLeaveSystem/
-    - name: Copy server build file
-      run: |
-        cp sbuild/elsystem build/agd/EnterLeaveSystem/
-        cp sbuild/elsystem build/gl/EnterLeaveSystem/
-    - name: Copy other install files
-      run: |
-        cp bin/* build/agd/EnterLeaveSystem/
-        cp bin/* build/gl/EnterLeaveSystem/
-    - name: Archive binary for AGD
-      run: cd build/agd && tar cvfz ../../agd.tar.gz EnterLeaveSystem/
-    - name: Archive binary for GL
-      run: cd build/gl && tar cvfz ../../gl.tar.gz EnterLeaveSystem/
-    - name: Calculate version for tag
-      run: ./build.sh
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        name: elsystem
+        path: ./elsystem

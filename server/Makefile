@@ -1,5 +1,5 @@
 run: main.go test/dist
-	export GO111MODULE=on && cd test && go run ../main.go
+	export GO111MODULE=on && cd test && AGD_NFC_MOCK=true go run ../main.go
 
 build: main.go
 #	GOOS=linux GOARCH=arm go build -o ../elsystem main.go
